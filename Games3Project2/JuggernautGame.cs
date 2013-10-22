@@ -9,12 +9,16 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using Claudy.Input;
+
 namespace Games3Project2
 {
     public class JuggernautGame : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        ClaudyInput input = ClaudyInput.Instance;
 
         public JuggernautGame()
         {
@@ -41,9 +45,11 @@ namespace Games3Project2
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (input.DetectBackPressedByAnyPlayer())
+            {
+                // TODO: Depending on the game state...behavior of back button will differ.
                 this.Exit();
-
+            }
             base.Update(gameTime);
         }
 
