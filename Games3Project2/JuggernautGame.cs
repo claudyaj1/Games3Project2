@@ -9,7 +9,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using BoundingVolumeRendering;
+using Broad.Camera;
+using Claudy.AxisReference;
 using Claudy.Input;
+
 
 namespace Games3Project2
 {
@@ -17,6 +21,23 @@ namespace Games3Project2
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        BroadCamera camera;
+        Axis_Reference axisReference;
+
+        //TODO: Add other Geometry?
+
+        #region Debug Mode
+        bool debugMode
+        #if DEBUG
+         = true;
+        #else
+         = false;
+        #endif
+        #endregion
+        //TODO: Add Game States.
+        public enum GameMode { MenuScreen, LobbyScreen, ScoreScreen};
+        public GameMode currentGameMode = GameMode.MenuScreen;
+        //TODO: Add Cole's Menu class code.
 
         ClaudyInput input = ClaudyInput.Instance;
 
@@ -24,10 +45,20 @@ namespace Games3Project2
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+#if WINDOWS
+            //Preserves the 1.7777 aspect ratio of 1920x1080 (16/9)
+            //verses the 1.6 of 1280x800.
+            //1280 / (16/9) = 720
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+#endif
         }
 
         protected override void Initialize()
         {
+            axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
+            camera = new BroadCamera(this, new Vector3(-5f, 2f, -10f),
+                Vector3.Zero, Vector3.Up);
 
             base.Initialize();
         }
@@ -57,6 +88,11 @@ namespace Games3Project2
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            if (debugMode)
+            {
+                axisReference.Draw(Matrix.Identity, camera.view, camera.projection);
+            }
 
             base.Draw(gameTime);
         }

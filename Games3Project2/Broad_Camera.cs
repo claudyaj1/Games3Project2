@@ -8,7 +8,7 @@ using Claudy.Input;
 
 namespace Broad.Camera
 {
-    public class Camera : Microsoft.Xna.Framework.GameComponent
+    public class BroadCamera : Microsoft.Xna.Framework.GameComponent
     {
         public const float MOVEMENT_VELOCITY = 0.01f;
         public const float SPIN_RATE = 5f;
@@ -34,7 +34,7 @@ namespace Broad.Camera
 
         private ClaudyInput input;
 
-        public Camera(Game game, Vector3 pos, Vector3 target, Vector3 up)
+        public BroadCamera(Game game, Vector3 pos, Vector3 target, Vector3 up)
             : base(game)
         {
             //Initialize view matrix
@@ -63,7 +63,7 @@ namespace Broad.Camera
         }
 
         /// <summary>
-        /// Updates the Camera.
+        /// Updates the BroadCamera.
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="debugMode">Typically false. Consider adjusting the call
