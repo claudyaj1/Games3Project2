@@ -157,6 +157,7 @@ namespace Claudy.Input
             #if WINDOWS
             mousePrevious = mouseCurrent;       // Initialize previous as "no action occurring".
             mouseCurrent = Mouse.GetState();
+            mouseDelta = Vector2.Zero;
             #endif
 
             gamePadPrevious1 = gamePadCurrent1; // Initialize previous as "no action occurring".
@@ -343,7 +344,6 @@ namespace Claudy.Input
         /// <summary>
         /// Debounced version of Left Mouse Button is clicked.
         /// </summary>
-        /// <returns></returns>
         public bool isLeftMouseButtonReleased()
         {
             return (mouseCurrent.LeftButton == ButtonState.Released && mousePrevious.LeftButton == ButtonState.Pressed);
@@ -356,6 +356,7 @@ namespace Claudy.Input
         {
             return (mouseCurrent.RightButton == ButtonState.Released && mousePrevious.RightButton == ButtonState.Pressed);
         }
+
 
         /// <summary>
         /// For those who need a Point structure instead of using the public accessor.

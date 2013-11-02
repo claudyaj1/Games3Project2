@@ -1,13 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 using Claudy.Input;
 
@@ -37,7 +32,7 @@ namespace Broad.Camera
 
         public Vector3 lastPosition { get; protected set; }
 
-        ClaudyInput input = ClaudyInput.Instance;
+        private ClaudyInput input;
 
         public Camera(Game game, Vector3 pos, Vector3 target, Vector3 up)
             : base(game)
@@ -57,6 +52,8 @@ namespace Broad.Camera
                 1, 250);
 
             BoundingSphere = new BoundingSphere(pos, 1.5f);
+            input = ClaudyInput.Instance;
+            this.Initialize();
         }
 
        
@@ -77,25 +74,28 @@ namespace Broad.Camera
             dir = -input.get3DMovement14Directions(!debugMode);
 
             float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+//TODO: ONLY WORKS ON WINDOWS RIGHT NOW
+#if WINDOWS
+            Vector2 mouseDelta = input.getMouseDelta();
 
-            if (input.getMouseDelta().X < 0)
+            if (mouseDelta.X < 0)
             {
-                yaw += (SPIN_RATE * timeDelta * -input.getMouseDelta().X);
+                yaw += (SPIN_RATE * timeDelta * -mouseDelta.X);
             }
-            else if (input.getMouseDelta().X > 0)
+            else if (mouseDelta.X > 0)
             {
-                yaw -= (SPIN_RATE * timeDelta * input.getMouseDelta().X);
+                yaw -= (SPIN_RATE * timeDelta * mouseDelta.X);
             }
             if (yaw > 360)
                 yaw -= 360;
             else if (yaw < 0)
-                yaw += 360;            
-            
-            if (input.getMouseDelta().Y < 0)
+                yaw += 360;
+
+            if (mouseDelta.Y < 0)
             {
                 pitch -= (SPIN_RATE * timeDelta);
             }
-            else if (input.getMouseDelta().Y > 0)
+            else if (mouseDelta.Y > 0)
             {
                 pitch += (SPIN_RATE * timeDelta);
             }
@@ -103,8 +103,9 @@ namespace Broad.Camera
                 pitch -= 360;
             else if (pitch < 0)
                 pitch += 360;          
+#endif
 
-            //Uncomment if ROLL is needed for the game.
+            //These lines will need uncommented if ROLL is needed for the game.
             //if (input.ScrollWheelDelta > 0)
             //{
             //    roll++;
