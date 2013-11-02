@@ -134,7 +134,7 @@ namespace Broad.Camera
                 cameraPos += dt;
             }
 
-            // Updating collision BoundingSphere position.
+            // Updating collision BoundingSphere Position.
             BoundingSphere.Center = cameraPos;
 
             //// LookAt update ////

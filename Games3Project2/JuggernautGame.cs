@@ -13,7 +13,7 @@ using BoundingVolumeRendering;
 using Broad.Camera;
 using Claudy.AxisReference;
 using Claudy.Input;
-
+using DeLeone.Cursor;
 
 namespace Games3Project2
 {
@@ -24,7 +24,10 @@ namespace Games3Project2
         BroadCamera camera;
         Axis_Reference axisReference;
 
+        //Game Generic Geometry
+        DeLeone_Cursor cursor;
         //TODO: Add other Geometry?
+
 
         #region Debug Mode
         bool debugMode
@@ -59,7 +62,10 @@ namespace Games3Project2
             axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
             camera = new BroadCamera(this, new Vector3(-5f, 2f, -10f),
                 Vector3.Zero, Vector3.Up);
+            cursor = new DeLeone_Cursor(this, camera);
+            Components.Add(cursor);
 
+            this.IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -67,6 +73,9 @@ namespace Games3Project2
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            //TODO: Threaded Media Player from cliffhanger
+
         }
 
         protected override void UnloadContent()
