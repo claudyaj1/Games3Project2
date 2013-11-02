@@ -6,7 +6,8 @@ using Microsoft.Xna.Framework.Input;
 /// <author>Andrew Claudy</author>
 /// <email>andrew.claudy@live.com</email>
 /// <!--
-/// [current version] 1.6
+/// [current version] 1.6.1
+/// 1.6.1   Adds JT's get3DMovement14Directions(bool ignoreYAxis) function...needs tested
 /// 1.6     Line 461 - Debounced the escape button for DetectBackPressedByAnyPlayer()
 /// 1.5     Uses singleton design, revision of the GetAs8DirectionLeft and RightThumbStick().
 /// 1.4     Adds indexing of Gamepad by int or by PlayerIndex. <device><current || previous><[index]>.
@@ -307,6 +308,33 @@ namespace Claudy.Input
             if (keyboardCurrent.IsKeyDown(Keys.Right))
                 movement.X++;
             return movement; // Return will logically need to occur regardless.
+        }
+
+
+        /// <summary>
+        /// New input function that takes WASD and returns the movement direction
+        /// uses a Vector3 for 3D movement.
+        /// Added by JT Broad in the GrannyCrosswalk project.
+        /// </summary>
+        /// <param name="ignoreYAxis">False, unless player shall not fly in which case set to True.</param>
+        public Vector3 get3DMovement14Directions(bool ignoreYAxis)
+        {
+            Vector3 movement = new Vector3(0f, 0f, 0f);
+            if (keyboardCurrent.IsKeyDown(Keys.W))
+                movement.Z--;
+            if (keyboardCurrent.IsKeyDown(Keys.S))
+                movement.Z++;
+            if (keyboardCurrent.IsKeyDown(Keys.A))
+                movement.X--;
+            if (keyboardCurrent.IsKeyDown(Keys.D))
+                movement.X++;
+            if (movement != Vector3.Zero) movement.Normalize();
+            if (!ignoreYAxis)
+            {
+                if (keyboardCurrent.IsKeyDown(Keys.Z)) movement.Y++;
+                if (keyboardCurrent.IsKeyDown(Keys.X)) movement.Y--;
+            }
+            return movement;
         }
         #endregion
 
