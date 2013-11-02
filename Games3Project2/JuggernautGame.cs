@@ -13,6 +13,7 @@ using BoundingVolumeRendering;
 using Broad.Camera;
 using Claudy.AxisReference;
 using Claudy.Input;
+using Claudy.Music;
 using DeLeone.Cursor;
 
 namespace Games3Project2
@@ -44,6 +45,8 @@ namespace Games3Project2
 
         ClaudyInput input = ClaudyInput.Instance;
 
+        Music music;
+
         public JuggernautGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -74,12 +77,13 @@ namespace Games3Project2
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //TODO: Threaded Media Player from cliffhanger
-
+            music = new Music(this);
+            music.playBackgroundMusic();
         }
 
         protected override void UnloadContent()
         {
+            music.stopBackgroundMusic();
         }
 
         protected override void Update(GameTime gameTime)
