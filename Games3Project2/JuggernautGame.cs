@@ -95,6 +95,11 @@ namespace Games3Project2
                 // TODO: Depending on the game state...behavior of back button will differ.
                 this.Exit();
             }
+
+            //If in the game session.
+            camera.Update(gameTime, debugMode);
+            cursor.Update(gameTime); //currently nop.
+
             base.Update(gameTime);
         }
 
@@ -102,6 +107,7 @@ namespace Games3Project2
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            //If in the game session and in debug mode.
             if (debugMode)
             {
                 axisReference.Draw(Matrix.Identity, camera.view, camera.projection);

@@ -71,11 +71,13 @@ namespace Broad.Camera
         public void Update(GameTime gameTime, bool debugMode)
         {
             Vector3 dir;
-            dir = -input.get3DMovement14Directions(!debugMode);
-
+            dir = -input.get3DMovement14Directions(false, PlayerIndex.One);
+            int x = input.toInt(PlayerIndex.Four);
             float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            yaw += SPIN_RATE * timeDelta * input.GamepadByID[1].ThumbSticks.Right.X;
+
 //TODO: ONLY WORKS ON WINDOWS RIGHT NOW
-#if WINDOWS
+#if false
             Vector2 mouseDelta = input.getMouseDelta();
 
             if (mouseDelta.X < 0)

@@ -225,6 +225,11 @@ namespace Claudy.Input
             previousGamepadByID[4] = gamePadPrevious4;
         }
 
+        public int toInt(PlayerIndex p_)
+        {
+            return (int)p_ + 1;
+        }
+
         #region Keyboard controls
         /// <summary>
         /// Returns true if that key is currently being pressed. Repeat results of true are likely.
@@ -316,6 +321,7 @@ namespace Claudy.Input
         /// New input function that takes WASD and returns the movement direction
         /// uses a Vector3 for 3D movement.
         /// Added by JT Broad in the GrannyCrosswalk project.
+        /// There exists an overload that will do this on an Xbox Controller
         /// </summary>
         /// <param name="ignoreYAxis">False, unless player shall not fly in which case set to True.</param>
         public Vector3 get3DMovement14Directions(bool ignoreYAxis)
@@ -658,6 +664,53 @@ namespace Claudy.Input
                 movement.X++;
             if (movement != Vector2.Zero)
                 movement.Normalize();
+            return movement;
+        }
+
+        /// <summary>
+        /// New input function that gets the Xbox 360 gamepad thumbsticks
+        /// and generates a Vector3 for 3D movement.
+        /// Adapted from GrannyCrosswalk code.
+        /// </summary>
+        /// <param name="ignoreYAxis">False, unless player shall not fly in which case set to True.</param>
+        public Vector3 get3DMovement14Directions(bool ignoreYAxis, /*bool invertY or X,*/ PlayerIndex p_)
+        {
+            switch (p_)
+            {
+                case PlayerIndex.Four:
+                    return get3DMovement14Directions(ignoreYAxis, 4);
+                case PlayerIndex.One:
+                    return get3DMovement14Directions(ignoreYAxis, 1);
+                case PlayerIndex.Three:
+                    return get3DMovement14Directions(ignoreYAxis, 3);
+                case PlayerIndex.Two:
+                    return get3DMovement14Directions(ignoreYAxis, 2);
+                default: break;
+            }
+            return Vector3.Zero;
+        }
+
+        /// <summary>
+        /// New input function that gets the Xbox 360 gamepad thumbsticks
+        /// and generates a Vector3 for 3D movement.
+        /// Adapted from GrannyCrosswalk code.
+        /// </summary>
+        /// <param name="ignoreYAxis">False, unless player shall not fly in which case set to True.</param>
+        public Vector3 get3DMovement14Directions(bool ignoreYAxis, /*bool invertY or X,*/ int index)
+        {
+            if (!gamepadByID[index].IsConnected)
+                return Vector3.Zero;
+
+            Vector3 movement = Vector3.Zero;
+            movement.X = gamepadByID[index].ThumbSticks.Left.X;
+            if (!ignoreYAxis)
+            {
+                movement.Y = gamepadByID[index].ThumbSticks.Right.Y;
+            }
+            movement.Z = gamepadByID[index].ThumbSticks.Left.Y;
+
+            if (movement != Vector3.Zero) movement.Normalize();
+
             return movement;
         }
 
