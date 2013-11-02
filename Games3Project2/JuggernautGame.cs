@@ -44,6 +44,7 @@ namespace Games3Project2
 
         protected override void Update(GameTime gameTime)
         {
+            input.Update();
             // Allows the game to exit
             if (input.DetectBackPressedByAnyPlayer())
             {
