@@ -10,8 +10,8 @@ namespace Broad.Camera
 {
     public class BroadCamera : Microsoft.Xna.Framework.GameComponent
     {
-        public const float MOVEMENT_VELOCITY = 0.01f;
-        public const float SPIN_RATE = 5f;
+        public const float MOVEMENT_VELOCITY = 1f;
+        public const float SPIN_RATE = 50f;
 
         public Matrix view { get;  set; }
         public Matrix projection { get;  set; }
@@ -70,11 +70,11 @@ namespace Broad.Camera
         /// depending on Debug or Release</param>
         public void Update(GameTime gameTime, bool debugMode)
         {
-            Vector3 dir;
-            dir = -input.get3DMovement14Directions(false, PlayerIndex.One);
-            int x = input.toInt(PlayerIndex.Four);
             float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            yaw += SPIN_RATE * timeDelta * input.GamepadByID[1].ThumbSticks.Right.X;
+            Vector3 dir;
+            dir = timeDelta * input.get3DMovement14Directions(false, PlayerIndex.One);
+            int x = input.toInt(PlayerIndex.Four);
+            yaw -= SPIN_RATE * timeDelta * input.GamepadByID[1].ThumbSticks.Right.X;
 
 //TODO: ONLY WORKS ON WINDOWS RIGHT NOW
 #if false

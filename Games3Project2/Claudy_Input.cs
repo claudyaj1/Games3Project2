@@ -702,7 +702,7 @@ namespace Claudy.Input
                 return Vector3.Zero;
 
             Vector3 movement = Vector3.Zero;
-            movement.X = gamepadByID[index].ThumbSticks.Left.X;
+            movement.X -= gamepadByID[index].ThumbSticks.Left.X;
             if (!ignoreYAxis)
             {
                 movement.Y = gamepadByID[index].ThumbSticks.Right.Y;
