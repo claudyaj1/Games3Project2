@@ -31,6 +31,7 @@ namespace Games3Project2
 
 
         #region Debug Mode
+        readonly Color debugColor = Color.DimGray;
         bool debugMode
         #if DEBUG
          = true;
@@ -42,6 +43,9 @@ namespace Games3Project2
         public enum GameMode { MenuScreen, LobbyScreen, ScoreScreen};
         public GameMode currentGameMode = GameMode.MenuScreen;
         //TODO: Add Cole's Menu class code.
+
+        SpriteFont consolas;
+        SpriteFont tahoma;
 
         ClaudyInput input = ClaudyInput.Instance;
 
@@ -79,6 +83,9 @@ namespace Games3Project2
 
             music = new Music(this);
             music.playBackgroundMusic();
+
+            consolas = Content.Load<SpriteFont>(@"Fonts/Consolas");
+            tahoma = Content.Load<SpriteFont>(@"Fonts/Tahoma");
         }
 
         protected override void UnloadContent()
@@ -95,6 +102,11 @@ namespace Games3Project2
                 // TODO: Depending on the game state...behavior of back button will differ.
                 this.Exit();
             }
+            if (input.isFirstPress(Keys.OemTilde))
+            {
+                //Flip mode
+                debugMode = !debugMode;
+            }
 
             //If in the game session.
             camera.Update(gameTime, debugMode);
@@ -106,12 +118,28 @@ namespace Games3Project2
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+
+            //TODO: Put drawing code here that expects spritebatch to have begun already.
 
             //If in the game session and in debug mode.
             if (debugMode)
             {
                 axisReference.Draw(Matrix.Identity, camera.view, camera.projection);
+                spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
+                        new Vector2(5f, 35f), Color.PaleGreen);
+                spriteBatch.DrawString(consolas, "Camera Position and View= " +
+                    "X:" + camera.cameraPos.X.ToString() +
+                    " Y:" + camera.cameraPos.Y.ToString() +
+                    " Z:" + camera.cameraPos.Z.ToString(),
+                    new Vector2(5f, 53f), debugColor);
+                spriteBatch.DrawString(consolas,
+                    "Up:" + camera.view.Up.ToString() +
+                    " LookAt: " + camera.view.Forward.ToString() +
+                    " Right: " + camera.view.Right.ToString(),
+                    new Vector2(5f, 70f), debugColor);
             }
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

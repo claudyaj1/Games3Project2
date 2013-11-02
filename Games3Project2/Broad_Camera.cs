@@ -11,7 +11,7 @@ namespace Broad.Camera
     public class BroadCamera : Microsoft.Xna.Framework.GameComponent
     {
         public const float MOVEMENT_VELOCITY = 1f;
-        public const float SPIN_RATE = 50f;
+        public const float SPIN_RATE = 100f;
 
         public Matrix view { get;  set; }
         public Matrix projection { get;  set; }
@@ -72,9 +72,9 @@ namespace Broad.Camera
         {
             float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector3 dir;
-            dir = timeDelta * input.get3DMovement14Directions(false, PlayerIndex.One);
-            int x = input.toInt(PlayerIndex.Four);
+            dir = timeDelta * input.get3DMovement14Directions(true, PlayerIndex.One);
             yaw -= SPIN_RATE * timeDelta * input.GamepadByID[1].ThumbSticks.Right.X;
+            pitch -= SPIN_RATE * timeDelta * input.GamepadByID[1].ThumbSticks.Right.Y;
 
 //TODO: ONLY WORKS ON WINDOWS RIGHT NOW
 #if false
@@ -126,7 +126,8 @@ namespace Broad.Camera
             Matrix rollr = Matrix.CreateRotationZ(MathHelper.ToRadians(roll));
 
             //Matrix dirRotation = Matrix.Identity;
-            Matrix dirRotation = yawR;
+            // I don't think you want to have pitch here because otherwise the player will fly.
+            Matrix dirRotation = yawR; 
             
             //// cameraPos update ////
             if (dir != Vector3.Zero)
@@ -141,14 +142,14 @@ namespace Broad.Camera
 
             //// LookAt update ////
             
-            //rotates lookat
+            //Rotates lookat
             //lookRotation = Matrix.Identity;
-            lookRotation =  yawR;
+            lookRotation = pitchR * yawR;
 
             SetCamera(lookRotation);
             
             roll = 0;
-            //base.Update(gameTime);
+            base.Update(gameTime);
         }
 
         /// <summary>
