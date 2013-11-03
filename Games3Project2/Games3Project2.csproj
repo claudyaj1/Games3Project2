@@ -118,6 +118,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="JuggernautGame.cs" />
     <Compile Include="Sandham_Ball.cs" />
+    <Compile Include="Sandham_Bastion.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

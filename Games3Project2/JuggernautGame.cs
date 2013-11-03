@@ -30,6 +30,7 @@ namespace Games3Project2
         DeLeone_Cursor cursor;
         //TODO: Add other Geometry?
         Sandham_Ball sandball;
+        Sandham_Bastion sandColumn;
 
         #region Debug Mode
         readonly Color debugColor = Color.DimGray;
@@ -77,6 +78,11 @@ namespace Games3Project2
             sandball = new Sandham_Ball(this, Color.Red, Vector3.One);
             sandball.SetCullMode(2);
             sandball.SetWireframe(0);
+            sandColumn = new Sandham_Bastion(this, Color.Blue, 
+                new Vector3(-3f, 0f, -3f));
+            sandColumn.SetCullMode(2);
+            sandColumn.SetWireframe(0);
+
 
             this.IsMouseVisible = true;
             base.Initialize();
@@ -118,6 +124,10 @@ namespace Games3Project2
             camera.Update(gameTime, debugMode, PlayerIndex.One);
             cursor.Update(gameTime); //currently nop.
 
+            //TODO: Remove or relocate these.
+            sandball.Update(gameTime);
+            sandColumn.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -128,6 +138,7 @@ namespace Games3Project2
 
             //TODO: Put drawing code here that expects spritebatch to have begun already.
             sandball.Draw(camera);
+            sandColumn.Draw(camera);
 
             //If in the game session and in debug mode.
             if (debugMode)
