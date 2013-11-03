@@ -308,10 +308,16 @@ namespace Sandham.Primative
 
             }
         }
+        /// <summary>
+        /// 0 = Wireframe | 1 = Filled
+        /// </summary>
         public void SetWireframe(int wireBool)
         {
             wireFrame = wireBool;
         }
+        /// <summary>
+        /// 0 = None | 1 = Clockwise | 2 = CounterClockwise
+        /// </summary>
         public void SetCullMode(int mode)
         {
             cullMode = mode;

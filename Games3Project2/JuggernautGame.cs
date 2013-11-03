@@ -75,6 +75,8 @@ namespace Games3Project2
 
             //Geometry
             sandball = new Sandham_Ball(this, Color.Red, Vector3.One);
+            sandball.SetCullMode(2);
+            sandball.SetWireframe(0);
 
             this.IsMouseVisible = true;
             base.Initialize();
