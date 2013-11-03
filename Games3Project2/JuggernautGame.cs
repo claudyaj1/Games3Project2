@@ -15,6 +15,7 @@ using Claudy.AxisReference;
 using Claudy.Input;
 using Claudy.Music;
 using DeLeone.Cursor;
+using Sandham.Primative;
 
 namespace Games3Project2
 {
@@ -28,7 +29,7 @@ namespace Games3Project2
         //Game Generic Geometry
         DeLeone_Cursor cursor;
         //TODO: Add other Geometry?
-
+        Sandham_Ball sandball;
 
         #region Debug Mode
         readonly Color debugColor = Color.DimGray;
@@ -72,6 +73,9 @@ namespace Games3Project2
             cursor = new DeLeone_Cursor(this, camera);
             Components.Add(cursor);
 
+            //Geometry
+            sandball = new Sandham_Ball(this, Color.Red, Vector3.One);
+
             this.IsMouseVisible = true;
             base.Initialize();
         }
@@ -109,7 +113,7 @@ namespace Games3Project2
             }
 
             //If in the game session.
-            camera.Update(gameTime, debugMode);
+            camera.Update(gameTime, debugMode, PlayerIndex.One);
             cursor.Update(gameTime); //currently nop.
 
             base.Update(gameTime);
@@ -121,6 +125,7 @@ namespace Games3Project2
             spriteBatch.Begin();
 
             //TODO: Put drawing code here that expects spritebatch to have begun already.
+            sandball.Draw(camera);
 
             //If in the game session and in debug mode.
             if (debugMode)

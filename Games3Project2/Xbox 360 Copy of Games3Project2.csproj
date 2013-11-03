@@ -74,6 +74,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="JuggernautGame.cs" />
+    <Compile Include="Sandham_Ball.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

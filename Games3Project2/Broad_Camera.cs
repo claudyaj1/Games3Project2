@@ -68,7 +68,8 @@ namespace Broad.Camera
         /// <param name="gameTime"></param>
         /// <param name="debugMode">Typically false. Consider adjusting the call
         /// depending on Debug or Release</param>
-        public void Update(GameTime gameTime, bool debugMode)
+        /// <param name="p_">Typically PlayerIndex.One</param>
+        public void Update(GameTime gameTime, bool debugMode, PlayerIndex p_)
         {
             float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector3 dir;
@@ -76,36 +77,44 @@ namespace Broad.Camera
             yaw -= SPIN_RATE * timeDelta * input.GamepadByID[1].ThumbSticks.Right.X;
             pitch -= SPIN_RATE * timeDelta * input.GamepadByID[1].ThumbSticks.Right.Y;
 
-//TODO: ONLY WORKS ON WINDOWS RIGHT NOW
-#if false
-            Vector2 mouseDelta = input.getMouseDelta();
+            #region If DEBUG && WINDOWS && (No Controller) Then Keyboard-n-Mouse does control
+#if DEBUG && WINDOWS
+            if (!input.isConnected(PlayerIndex.One))
+            {
+                const float MOUSE_SENSITIVITY = 20f;
+                const float KEYBOARD_SENSITIVITY = 0.04f;
+                dir -= input.get3DMovement14Directions(false);
+                dir *= KEYBOARD_SENSITIVITY;
+                Vector2 mouseDelta = input.getMouseDelta();
 
-            if (mouseDelta.X < 0)
-            {
-                yaw += (SPIN_RATE * timeDelta * -mouseDelta.X);
-            }
-            else if (mouseDelta.X > 0)
-            {
-                yaw -= (SPIN_RATE * timeDelta * mouseDelta.X);
-            }
-            if (yaw > 360)
-                yaw -= 360;
-            else if (yaw < 0)
-                yaw += 360;
+                if (mouseDelta.X < 0)
+                {
+                    yaw += (MOUSE_SENSITIVITY * timeDelta * -mouseDelta.X);
+                }
+                else if (mouseDelta.X > 0)
+                {
+                    yaw -= (MOUSE_SENSITIVITY * timeDelta * mouseDelta.X);
+                }
+                if (yaw > 360)
+                    yaw -= 360;
+                else if (yaw < 0)
+                    yaw += 360;
 
-            if (mouseDelta.Y < 0)
-            {
-                pitch -= (SPIN_RATE * timeDelta);
+                if (mouseDelta.Y < 0)
+                {
+                    pitch -= (MOUSE_SENSITIVITY * timeDelta);
+                }
+                else if (mouseDelta.Y > 0)
+                {
+                    pitch += (MOUSE_SENSITIVITY * timeDelta);
+                }
+                if (pitch > 360)
+                    pitch -= 360;
+                else if (pitch < 0)
+                    pitch += 360;  
             }
-            else if (mouseDelta.Y > 0)
-            {
-                pitch += (SPIN_RATE * timeDelta);
-            }
-            if (pitch > 360)
-                pitch -= 360;
-            else if (pitch < 0)
-                pitch += 360;          
 #endif
+            #endregion
 
             //These lines will need uncommented if ROLL is needed for the game.
             //if (input.ScrollWheelDelta > 0)
