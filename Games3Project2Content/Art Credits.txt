@@ -1,1 +1,4 @@
 Xbox Glyphs by http://deadrisingwiki.com/wiki/XBox_360_buttons
+Icon under MIT License from http://ionicons.com
+All fonts are property of Microsoft.
+Unless specficed elsewhere, all audio is from Freesound.org, which hosts audio snippets for release under creative commons.

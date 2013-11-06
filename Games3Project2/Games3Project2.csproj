@@ -114,6 +114,7 @@
     <Compile Include="DeLeone_Cursor.cs" />
     <Compile Include="Line_Primitive.cs" />
     <Compile Include="Music.cs" />
+    <Compile Include="NetworkManagement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="JuggernautGame.cs" />
