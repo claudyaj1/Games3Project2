@@ -23,6 +23,7 @@ namespace Games3Project2
             {
                 position = value;
                 translation = Matrix.CreateTranslation(position.X, position.Y, position.Z);
+                calculateNormal();
             }
         }
         public float Width
@@ -47,6 +48,7 @@ namespace Games3Project2
         #endregion
         //general properties
         Vector3 position;
+        Vector3 normal = new Vector3(0, 1, 0);
         float length;
         float width;
         public Texture2D texture;
@@ -70,6 +72,25 @@ namespace Games3Project2
             rotation = Matrix.Identity;
         }
 
+        public void collide(Collidable collider)
+        {
+            Vector3 diffVector = collider.position - position;
+            float distance = Vector3.Dot(diffVector, normal);
+            if (distance > collider.radius)
+            {
+                //no collision
+            }
+            else
+            {
+                //collision
+            }
+        }
+
+        void calculateNormal()
+        {
+            
+        }
+
         public void update()
         {
 
@@ -77,7 +98,7 @@ namespace Games3Project2
 
         public void draw(GameTime gt, BroadCamera camera)
         {
-            quad.Draw(gt, scale * translation * rotation, camera.view, camera.projection);
+            quad.Draw(gt, scale * rotation * translation, camera.view, camera.projection);
         }
     }
 }

@@ -15,6 +15,7 @@ using Claudy.AxisReference;
 using Claudy.Input;
 using Claudy.Music;
 using DeLeone.Cursor;
+using Geometry;
 using Sandham.Primative;
 
 namespace Games3Project2
@@ -52,6 +53,9 @@ namespace Games3Project2
         ClaudyInput input = ClaudyInput.Instance;
 
         Music music;
+
+        Texture2D cursorTex;
+        LevelOne levelOne;
 
         public JuggernautGame()
         {
@@ -94,10 +98,13 @@ namespace Games3Project2
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             music = new Music(this);
-            music.playBackgroundMusic();
+            //music.playBackgroundMusic();
 
             consolas = Content.Load<SpriteFont>(@"Fonts/Consolas");
             tahoma = Content.Load<SpriteFont>(@"Fonts/Tahoma");
+            cursorTex = Content.Load<Texture2D>(@"Textures\cursor");
+
+            levelOne = new LevelOne(this);
         }
 
         protected override void UnloadContent()
@@ -137,8 +144,9 @@ namespace Games3Project2
             spriteBatch.Begin();
 
             //TODO: Put drawing code here that expects spritebatch to have begun already.
-            sandball.Draw(camera);
-            sandColumn.Draw(camera);
+            //sandball.Draw(camera);
+            //sandColumn.Draw(camera);
+            levelOne.draw(gameTime, camera);
 
             //If in the game session and in debug mode.
             if (debugMode)

@@ -10,7 +10,7 @@ namespace Broad.Camera
 {
     public class BroadCamera : Microsoft.Xna.Framework.GameComponent
     {
-        public const float MOVEMENT_VELOCITY = 1f;
+        public const float MOVEMENT_VELOCITY = 5f;
         public const float SPIN_RATE = 100f;
 
         public Matrix view { get;  set; }

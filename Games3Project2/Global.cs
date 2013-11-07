@@ -18,8 +18,8 @@ namespace Games3Project2
 
         public static class Constants
         {
-            public static float LevelOneWidth = 150;
-            public static float LevelOneHeight = 300;
+            public static float LevelOneWidth = 50;
+            public static float LevelOneHeight = 100;
         }
     }
 }
