@@ -85,8 +85,8 @@ namespace Geometry
                 if (mirrorTexture)
                 {
                     SamplerState ss = new SamplerState();
-                    ss.AddressU = TextureAddressMode.Mirror;
-                    ss.AddressV = TextureAddressMode.Mirror;
+                    ss.AddressU = TextureAddressMode.Clamp;
+                    ss.AddressV = TextureAddressMode.Clamp;
                     ss.Filter = TextureFilter.Anisotropic;
                     gd.SamplerStates[0] = ss;
                 }

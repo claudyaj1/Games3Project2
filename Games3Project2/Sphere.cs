@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+Author: Clayton Sandham
+Description: A simple sphere.
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +12,9 @@ using Microsoft.Xna.Framework.Audio;
 
 using Broad.Camera;
 
-namespace Sandham.Primative
+namespace Geometry
 {
-    public class Sandham_Ball : Microsoft.Xna.Framework.GameComponent
+    public class Sphere : Microsoft.Xna.Framework.GameComponent
     {
         public const float BALL_SPEED_INITIAL = 0.08f;
         public Vector3 Position, Velocity;
@@ -33,7 +37,7 @@ namespace Sandham.Primative
         int wireFrame;
         int cullMode;
 
-        public Sandham_Ball(Game game, Color color, Vector3 centerPoint)
+        public Sphere(Game game, Color color, Vector3 centerPoint)
             : base(game)
         {
             Position = centerPoint;

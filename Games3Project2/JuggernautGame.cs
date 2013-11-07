@@ -16,7 +16,6 @@ using Claudy.Input;
 using Claudy.Music;
 using DeLeone.Cursor;
 using Geometry;
-using Sandham.Primative;
 
 namespace Games3Project2
 {
@@ -30,8 +29,8 @@ namespace Games3Project2
         //Game Generic Geometry
         DeLeone_Cursor cursor;
         //TODO: Add other Geometry?
-        Sandham_Ball sandball;
-        Sandham_Bastion sandColumn;
+        Sphere sandball;
+        Cylinder sandColumn;
 
         #region Debug Mode
         readonly Color debugColor = Color.DimGray;
@@ -79,10 +78,10 @@ namespace Games3Project2
             Components.Add(cursor);
 
             //Geometry
-            sandball = new Sandham_Ball(this, Color.Red, Vector3.One);
+            sandball = new Sphere(this, Color.Red, Vector3.One);
             sandball.SetCullMode(2);
             sandball.SetWireframe(0);
-            sandColumn = new Sandham_Bastion(this, Color.Blue, 
+            sandColumn = new Cylinder(this, Color.Blue, 
                 new Vector3(-3f, 0f, -3f));
             sandColumn.SetCullMode(2);
             sandColumn.SetWireframe(0);

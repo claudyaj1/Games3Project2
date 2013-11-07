@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+Author: Clayton Sandham
+Description: A simple 8-sided cylinder
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +11,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 using Broad.Camera;
 
-namespace Sandham.Primative
+namespace Geometry
 {
-    public class Sandham_Bastion : Microsoft.Xna.Framework.GameComponent
+    public class Cylinder : Microsoft.Xna.Framework.GameComponent
     {
         public Vector3 Position;
         public Matrix cubeScale = Matrix.CreateScale(1f, 1f, 1f);
@@ -36,7 +40,7 @@ namespace Sandham.Primative
         int wireFrame;
         int cullMode;
 
-        public Sandham_Bastion(Game game, Color color, Vector3 centerPoint)
+        public Cylinder(Game game, Color color, Vector3 centerPoint)
             : base(game)
         {
             Position = centerPoint;

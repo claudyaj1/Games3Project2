@@ -11,18 +11,18 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Games3Project2
 {
-    class Collidable : Microsoft.Xna.Framework.GameComponent
+    public class Collidable : Microsoft.Xna.Framework.GameComponent
     {
         public Vector3 position;
         public Vector3 velocity;
         public float radius;
 
-        public Collidable(Game game, Vector3 pos, Vector3 vel, float radius_):
+        public Collidable(Game game, Vector3 pos, Vector3 vel, float radius):
             base(game)
         {
             position = pos;
             velocity = vel;
-            radius = radius_;
+            this.radius = radius;
         }
     }
 }
