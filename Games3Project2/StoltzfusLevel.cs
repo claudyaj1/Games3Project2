@@ -41,6 +41,14 @@ namespace Games3Project2
 
             //platforms
             platforms.Add(new Platform(game, Vector3.Zero, 10, 10, platformTexture));
+            platforms.Add(new Platform(game, new Vector3(-20, 20, 20), 5, 5, platformTexture));
+            platforms.Add(new Platform(game, new Vector3(-20, 20, -20), 5, 5, platformTexture));
+            platforms.Add(new Platform(game, new Vector3(-20, -20, 20), 5, 5, platformTexture));
+            platforms.Add(new Platform(game, new Vector3(-20, -20, -20), 5, 5, platformTexture));
+            platforms.Add(new Platform(game, new Vector3(20, 20, 20), 5, 5, platformTexture));
+            platforms.Add(new Platform(game, new Vector3(20, -20, 20), 5, 5, platformTexture));
+            platforms.Add(new Platform(game, new Vector3(20, -20, -20), 5, 5, platformTexture));
+            platforms.Add(new Platform(game, new Vector3(20, 20, -20), 5, 5, platformTexture));
         }
 
         public void checkCollision(Collidable collidable, GameTime gt)
