@@ -36,7 +36,6 @@ namespace Claudy.Music
         public void stopBackgroundMusic()
         {
             MediaPlayer.Stop();
-            thread.Abort();
         }
 
 

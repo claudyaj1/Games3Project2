@@ -225,6 +225,11 @@ namespace Claudy.Input
             previousGamepadByID[4] = gamePadPrevious4;
         }
 
+        /// <summary>
+        /// Helper function to convert PlayerIndex into a player 1 2 3 or 4.
+        /// </summary>
+        /// <param name="p_"></param>
+        /// <returns></returns>
         public int toInt(PlayerIndex p_)
         {
             return (int)p_ + 1;

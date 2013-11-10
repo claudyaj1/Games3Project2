@@ -25,7 +25,7 @@ namespace Broad.Camera
 
         private float yaw;
         private float pitch;
-        private float roll; //To be used later
+        private float roll; //To be used maybe never
 
         public BoundingSphere BoundingSphere;
         public Matrix lookRotation = Matrix.Identity;
@@ -33,6 +33,10 @@ namespace Broad.Camera
         public Vector3 lastPosition { get; protected set; }
 
         private ClaudyInput input;
+        public float jetPackThrust = 0;
+        public const float JET_PACK_DECREMENT = 0.00002f; //Yes, this must remain positive.
+        public const float JET_PACK_INCREMENT = 0.000025f;
+        public const float GRAVITY = 0.0003f;
 
         public BroadCamera(Game game, Vector3 pos, Vector3 target, Vector3 up)
             : base(game)
@@ -74,10 +78,29 @@ namespace Broad.Camera
             float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector3 dir;
             dir = timeDelta * input.get3DMovement14Directions(true, PlayerIndex.One);
-            yaw -= SPIN_RATE * timeDelta * input.GamepadByID[1].ThumbSticks.Right.X;
-            pitch -= SPIN_RATE * timeDelta * input.GamepadByID[1].ThumbSticks.Right.Y;
+            yaw -= SPIN_RATE * timeDelta * input.GamepadByID[input.toInt(p_)].ThumbSticks.Right.X;
+            pitch -= SPIN_RATE * timeDelta * input.GamepadByID[input.toInt(p_)].ThumbSticks.Right.Y;
+            
+            //Jetpack related calculations
+            jetPackThrust -= JET_PACK_DECREMENT;
 
-            #region If DEBUG && WINDOWS && (No Controller) Then Keyboard-n-Mouse does control
+            if (input.isPressed(Buttons.RightShoulder) ||
+                input.isPressed(Buttons.LeftShoulder) ||
+                input.GamepadByID[input.toInt(p_)].Triggers.Left > 0f)
+            {
+                jetPackThrust += JET_PACK_INCREMENT;
+                //TODO: Jet Fuel subtraction.
+            }
+            else if(input.GamepadByID[input.toInt(p_)].IsConnected)
+            {
+                //TODO: Jet Fuel addition only if the controller is plugged in.
+                jetPackThrust -= JET_PACK_DECREMENT;
+                if (jetPackThrust < 0)
+                    jetPackThrust = 0;
+            }
+            //End Jetpack related calculations
+
+            #region If DEBUG && WINDOWS && (No Controller) Then Keyboard-and-Mouse does control
 #if DEBUG && WINDOWS
             if (!input.isConnected(PlayerIndex.One))
             {
@@ -111,8 +134,19 @@ namespace Broad.Camera
                 if (pitch > 360)
                     pitch -= 360;
                 else if (pitch < 0)
-                    pitch += 360;  
-            }
+                    pitch += 360;
+
+                if (input.isPressed(Keys.Space))
+                {
+                    jetPackThrust += JET_PACK_INCREMENT;
+                }
+                else
+                {
+                    jetPackThrust -= JET_PACK_DECREMENT;
+                    if (jetPackThrust < 0)
+                        jetPackThrust = 0;
+                }
+            } //END
 #endif
             #endregion
 
@@ -138,6 +172,10 @@ namespace Broad.Camera
             // I don't think you want to have pitch here because otherwise the player will fly.
             Matrix dirRotation = yawR; 
             
+            //JetPack
+            dir.Y += jetPackThrust * gameTime.ElapsedGameTime.Milliseconds;
+            dir.Y -= GRAVITY * gameTime.ElapsedGameTime.Milliseconds;
+
             //// cameraPos update ////
             if (dir != Vector3.Zero)
             {

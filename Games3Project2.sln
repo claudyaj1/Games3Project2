@@ -39,6 +39,7 @@ Global
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Debug|Mixed Platforms.Build.0 = Debug|Xbox 360
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Debug|Mixed Platforms.Deploy.0 = Debug|Xbox 360
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Debug|x86.ActiveCfg = Debug|Xbox 360
+		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Debug|x86.Build.0 = Debug|Xbox 360
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Debug|Xbox 360.Deploy.0 = Debug|Xbox 360
@@ -46,6 +47,7 @@ Global
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Release|Mixed Platforms.Build.0 = Release|Xbox 360
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Release|Mixed Platforms.Deploy.0 = Release|Xbox 360
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Release|x86.ActiveCfg = Release|Xbox 360
+		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Release|x86.Build.0 = Release|Xbox 360
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Release|Xbox 360.Build.0 = Release|Xbox 360
 		{3917BA0D-6E77-4F69-BECE-924ABEDEE8A1}.Release|Xbox 360.Deploy.0 = Release|Xbox 360
