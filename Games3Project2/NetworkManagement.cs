@@ -15,7 +15,7 @@ namespace Games3Project2
         public bool isHost;
 
         //Objects
-        private NetworkSession networkSession;
+        public NetworkSession networkSession;
         private PacketReader packetReader;
         private PacketWriter packetWriter;
         private NetworkSessionProperties networkSessionProperties;
@@ -52,8 +52,21 @@ namespace Games3Project2
 
         public override void Update(GameTime gameTime)
         {
+            if (networkSession == null)
+            {
+                //TODO: Implement a menu screen in some other class.
+                // If we are not in a network session, update the
+                // menu screen that will let us create or join one.
+                //UpdateMenuScreen();
+            }
+
+
             if (networkSession != null)
             {
+                //TODO: Implement some sort of message type determination system.
+
+
+                UpdateNetworkSession();
                 numBytesSent = networkSession.BytesPerSecondSent;
                 numBytesReceived = networkSession.BytesPerSecondReceived;
                 string msg = "Bytes sent: " + numBytesSent.ToString() + " Bytes received: " + numBytesReceived.ToString();
@@ -127,7 +140,6 @@ namespace Games3Project2
             //Always finish this function with this line:
             gamer.SendData(packetWriter, SendDataOptions.Reliable);
         }//WriteOutgoingPackets
-
         private void ReadIncomingPackets(LocalNetworkGamer gamer)
         {
             MessageTypes mt;

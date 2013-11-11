@@ -54,6 +54,8 @@ namespace Games3Project2
 
         Music music;
 
+        NetworkManagement networkManager;
+
         Texture2D cursorTex;
         LevelOne levelOne;
 
@@ -104,6 +106,8 @@ namespace Games3Project2
             }
             //End Counting the # of gamers
 
+            networkManager = new NetworkManagement(this);
+
             this.IsMouseVisible = true;
             base.Initialize();
         }
@@ -139,13 +143,14 @@ namespace Games3Project2
             }
             if (input.isFirstPress(Keys.OemTilde))
             {
-                //Flip mode
-                debugMode = !debugMode;
+                debugMode = !debugMode; //Toggle mode
             }
 
-            //If in the game session.
+            //If in the game session. e.g. if(networkManager.networkSession != null)
             camera.Update(gameTime, debugMode, PlayerIndex.One);
             cursor.Update(gameTime); //currently nop.
+
+            networkManager.Update(gameTime);
 
             //TODO: Remove or relocate these.
             sandball.Update(gameTime);
