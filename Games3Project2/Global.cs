@@ -14,10 +14,16 @@ namespace Games3Project2.Globals
     {
         public static ClaudyInput input = ClaudyInput.Instance;
 
+        /// <summary>
+        /// Describes the total number of gamers in the network session.
+        /// </summary>
+        public static byte numTotalGamers = 0;
+        public static byte numLocalGamers = 0;
+
         public static class Constants
         {
-            public static readonly int MAX_PLAYERS_TOTAL = 4;
-            public static readonly int MAX_PLAYERS_LOCAL = 4;
+            public static readonly byte MAX_PLAYERS_TOTAL = 4;
+            public static readonly byte MAX_PLAYERS_LOCAL = 4;
 
             public static readonly float LevelOneWidth = 50;
             public static readonly float LevelOneHeight = 100;
@@ -41,6 +47,8 @@ namespace Games3Project2.Globals
             public static readonly string HUD_JET = "JETFUEL: ";
             public static readonly string HUD_SCORE = "YOUR SCORE: ";
             public static readonly string HUD_YOU_JUG = "YOU ARE THE JUGGERNAUT";
+            public static readonly string MSG_JOINED = " joined";
+            public static readonly string MSG_DISCONNECTED = " disconnected";
         }
     }
 }

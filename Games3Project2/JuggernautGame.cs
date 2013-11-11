@@ -16,6 +16,7 @@ using Claudy.Input;
 using Claudy.Music;
 using DeLeone.Cursor;
 using Geometry;
+using Games3Project2.Globals;
 
 namespace Games3Project2
 {
@@ -86,6 +87,22 @@ namespace Games3Project2
             sandColumn.SetCullMode(2);
             sandColumn.SetWireframe(0);
 
+            //Count the number of local players based upon controller count.
+            for (int i = 1; i <= 4; i++)
+            {
+                if (input.isConnected(i))
+                {
+                    Global.numLocalGamers++;
+                    Global.numTotalGamers++;
+                }
+            }
+            if (Global.numLocalGamers == 0)
+            {
+                //Hint: Keyboard.
+                Global.numLocalGamers = 1;
+                Global.numTotalGamers = 1;
+            }
+            //End Counting the # of gamers
 
             this.IsMouseVisible = true;
             base.Initialize();
