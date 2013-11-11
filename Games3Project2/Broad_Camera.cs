@@ -4,15 +4,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Games3Project2.Globals;
 using Claudy.Input;
 
 namespace Broad.Camera
 {
     public class BroadCamera : Microsoft.Xna.Framework.GameComponent
     {
-        public const float MOVEMENT_VELOCITY = 5f;
-        public const float SPIN_RATE = 100f;
-
         public Matrix view { get;  set; }
         public Matrix projection { get;  set; }
         public Vector3 cameraPos { get; set; }
@@ -34,9 +32,7 @@ namespace Broad.Camera
 
         private ClaudyInput input;
         public float jetPackThrust = 0;
-        public const float JET_PACK_DECREMENT = 0.00002f; //Yes, this must remain positive.
-        public const float JET_PACK_INCREMENT = 0.000025f;
-        public const float GRAVITY = 0.0003f;
+
 
         public BroadCamera(Game game, Vector3 pos, Vector3 target, Vector3 up)
             : base(game)
@@ -78,23 +74,23 @@ namespace Broad.Camera
             float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector3 dir;
             dir = timeDelta * input.get3DMovement14Directions(true, PlayerIndex.One);
-            yaw -= SPIN_RATE * timeDelta * input.GamepadByID[input.toInt(p_)].ThumbSticks.Right.X;
-            pitch -= SPIN_RATE * timeDelta * input.GamepadByID[input.toInt(p_)].ThumbSticks.Right.Y;
+            yaw -= Global.Constants.SPIN_RATE * timeDelta * input.GamepadByID[input.toInt(p_)].ThumbSticks.Right.X;
+            pitch -= Global.Constants.SPIN_RATE * timeDelta * input.GamepadByID[input.toInt(p_)].ThumbSticks.Right.Y;
             
             //Jetpack related calculations
-            jetPackThrust -= JET_PACK_DECREMENT;
+            jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
 
             if (input.isPressed(Buttons.RightShoulder) ||
                 input.isPressed(Buttons.LeftShoulder) ||
                 input.GamepadByID[input.toInt(p_)].Triggers.Left > 0f)
             {
-                jetPackThrust += JET_PACK_INCREMENT;
+                jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
                 //TODO: Jet Fuel subtraction.
             }
             else if(input.GamepadByID[input.toInt(p_)].IsConnected)
             {
                 //TODO: Jet Fuel addition only if the controller is plugged in.
-                jetPackThrust -= JET_PACK_DECREMENT;
+                jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
                 if (jetPackThrust < 0)
                     jetPackThrust = 0;
             }
@@ -138,11 +134,11 @@ namespace Broad.Camera
 
                 if (input.isPressed(Keys.Space))
                 {
-                    jetPackThrust += JET_PACK_INCREMENT;
+                    jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
                 }
                 else
                 {
-                    jetPackThrust -= JET_PACK_DECREMENT;
+                    jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
                     if (jetPackThrust < 0)
                         jetPackThrust = 0;
                 }
@@ -174,12 +170,12 @@ namespace Broad.Camera
             
             //JetPack
             dir.Y += jetPackThrust * gameTime.ElapsedGameTime.Milliseconds;
-            dir.Y -= GRAVITY * gameTime.ElapsedGameTime.Milliseconds;
+            dir.Y -= Global.Constants.GRAVITY * gameTime.ElapsedGameTime.Milliseconds;
 
             //// cameraPos update ////
             if (dir != Vector3.Zero)
             {
-                Vector3 dt = MOVEMENT_VELOCITY * dir * gameTime.ElapsedGameTime.Milliseconds;
+                Vector3 dt = Global.Constants.MOVEMENT_VELOCITY * dir * gameTime.ElapsedGameTime.Milliseconds;
                 Vector3.Transform(ref dt, ref dirRotation, out dt);
                 cameraPos += dt;
             }

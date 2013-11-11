@@ -9,16 +9,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using Games3Project2.Globals;
 
 namespace Games3Project2
 {
     public class NetworkManagement : Microsoft.Xna.Framework.GameComponent
     {
-        public const int MAX_PLAYERS_TOTAL = 4;
-        public const int MAX_PLAYERS_LOCAL = 4;
-
         
-
         public NetworkManagement(Game game)
             : base(game)
         {
