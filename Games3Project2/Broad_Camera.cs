@@ -169,6 +169,10 @@ namespace Broad.Camera
             Matrix dirRotation = yawR; 
             
             //JetPack
+            if (jetPackThrust > Global.Constants.JET_PACK_Y_VELOCITY_CAP)
+            {
+                jetPackThrust = Global.Constants.JET_PACK_Y_VELOCITY_CAP;
+            }
             dir.Y += jetPackThrust * gameTime.ElapsedGameTime.Milliseconds;
             dir.Y -= Global.Constants.GRAVITY * gameTime.ElapsedGameTime.Milliseconds;
 

@@ -28,12 +28,13 @@ namespace Games3Project2.Globals
             public static readonly float LevelOneWidth = 50;
             public static readonly float LevelOneHeight = 100;
 
-            public static readonly float JET_PACK_DECREMENT = 0.00002f; //Yes, this must remain positive.
-            public static readonly float JET_PACK_INCREMENT = 0.000025f;
+            public static readonly float JET_PACK_INCREMENT = 0.00003f;
+            public static readonly float JET_PACK_DECREMENT = JET_PACK_INCREMENT * 0.6f; //Yes, this must remain positive.
+            public static readonly float JET_PACK_Y_VELOCITY_CAP = 0.0007f;
             public static readonly float GRAVITY = 0.0003f;
             public static readonly float MAX_JET_FUEL = 100f;
 
-            public static readonly float MOVEMENT_VELOCITY = 5f;
+            public static readonly float MOVEMENT_VELOCITY = 3f;
             public static readonly float SPIN_RATE = 100f;
 
             public static readonly int START_HEALTH = 100;
