@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Geometry;
 using Broad.Camera;
+using Games3Project2.Globals;
 
 namespace Games3Project2
 {
@@ -74,6 +75,7 @@ namespace Games3Project2
 
         public void collide(Collidable collider)
         {
+            //needs bound checking to limit the plane
             Vector3 diffVector = collider.position - position;
             float distance = Vector3.Dot(diffVector, normal);
             if (distance > collider.radius)
@@ -96,9 +98,9 @@ namespace Games3Project2
 
         }
 
-        public void draw(GameTime gt, BroadCamera camera)
+        public void draw(Camera camera)
         {
-            quad.Draw(gt, scale * rotation * translation, camera.view, camera.projection);
+            quad.Draw(Global.gameTime, scale * rotation * translation, camera.view, camera.projection);
         }
     }
 }

@@ -23,15 +23,14 @@ namespace Games3Project2
     public class JuggernautGame : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        BroadCamera camera;
+        Camera camera;
         Axis_Reference axisReference;
 
         //Game Generic Geometry
-        DeLeone_Cursor cursor;
+        Cursor cursor;
         //TODO: Add other Geometry?
-        Sphere sandball;
-        Cylinder sandColumn;
+        Sphere ball;
+        Cylinder column;
 
         #region Debug Mode
         readonly Color debugColor = Color.DimGray;
@@ -50,7 +49,7 @@ namespace Games3Project2
         SpriteFont consolas;
         SpriteFont tahoma;
 
-        ClaudyInput input = ClaudyInput.Instance;
+        Input input = Input.Instance;
 
         Music music;
 
@@ -74,20 +73,21 @@ namespace Games3Project2
 
         protected override void Initialize()
         {
+            Global.game = this;
             axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
-            camera = new BroadCamera(this, new Vector3(-5f, 2f, -10f),
+            camera = new Camera(this, new Vector3(-5f, 2f, -10f),
                 Vector3.Zero, Vector3.Up);
-            cursor = new DeLeone_Cursor(this, camera);
-            Components.Add(cursor);
+            cursor = new Cursor(this, camera);
+            cursor.Position = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
 
             //Geometry
-            sandball = new Sphere(this, Color.Red, Vector3.One);
-            sandball.SetCullMode(2);
-            sandball.SetWireframe(0);
-            sandColumn = new Cylinder(this, Color.Blue, 
+            ball = new Sphere(this, Color.Red, Vector3.One);
+            ball.SetCullMode(2);
+            ball.SetWireframe(0);
+            column = new Cylinder(this, Color.Blue, 
                 new Vector3(-3f, 0f, -3f));
-            sandColumn.SetCullMode(2);
-            sandColumn.SetWireframe(0);
+            column.SetCullMode(2);
+            column.SetWireframe(0);
 
             //Count the number of local players based upon controller count.
             for (int i = 1; i <= 4; i++)
@@ -115,7 +115,7 @@ namespace Games3Project2
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            Global.spriteBatch = new SpriteBatch(GraphicsDevice);
 
             music = new Music(this);
             //music.playBackgroundMusic();
@@ -134,6 +134,7 @@ namespace Games3Project2
 
         protected override void Update(GameTime gameTime)
         {
+            Global.gameTime = gameTime;
             input.Update();
             // Allows the game to exit
             if (input.DetectBackPressedByAnyPlayer())
@@ -147,46 +148,47 @@ namespace Games3Project2
             }
 
             //If in the game session. e.g. if(networkManager.networkSession != null)
-            camera.Update(gameTime, debugMode, PlayerIndex.One);
-            cursor.Update(gameTime); //currently nop.
+            camera.Update(debugMode, PlayerIndex.One);
+            cursor.Update(); //currently nop.
 
             networkManager.Update(gameTime);
 
             //TODO: Remove or relocate these.
-            sandball.Update(gameTime);
-            sandColumn.Update(gameTime);
+            ball.Update(gameTime);
+            column.Update(gameTime);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            Global.gameTime = gameTime;
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
+            Global.spriteBatch.Begin();
 
             //TODO: Put drawing code here that expects spritebatch to have begun already.
             //sandball.Draw(camera);
             //sandColumn.Draw(camera);
-            levelOne.draw(gameTime, camera);
-
+            levelOne.draw(camera);
+            cursor.Draw();
             //If in the game session and in debug mode.
             if (debugMode)
             {
                 axisReference.Draw(Matrix.Identity, camera.view, camera.projection);
-                spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
+                Global.spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
                         new Vector2(5f, 35f), Color.PaleGreen);
-                spriteBatch.DrawString(consolas, "Camera Position and View= " +
+                Global.spriteBatch.DrawString(consolas, "Camera Position and View= " +
                     "X:" + camera.cameraPos.X.ToString() +
                     " Y:" + camera.cameraPos.Y.ToString() +
                     " Z:" + camera.cameraPos.Z.ToString(),
                     new Vector2(5f, 53f), debugColor);
-                spriteBatch.DrawString(consolas,
+                Global.spriteBatch.DrawString(consolas,
                     "Up:" + camera.view.Up.ToString() +
                     " LookAt: " + camera.view.Forward.ToString() +
                     " Right: " + camera.view.Right.ToString(),
                     new Vector2(5f, 70f), debugColor);
             }
-            spriteBatch.End();
+            Global.spriteBatch.End();
 
             base.Draw(gameTime);
         }

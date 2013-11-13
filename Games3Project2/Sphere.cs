@@ -258,7 +258,7 @@ namespace Geometry
          
         }
 
-        public void Draw(BroadCamera camera)
+        public void Draw(Camera camera)
         {
             SamplerState ss = new SamplerState();
             ss.AddressU = TextureAddressMode.Clamp;

@@ -29,10 +29,10 @@ namespace Claudy.Input
     /// Stores the current and previous keyboard and mouse and GamePad states 
     /// so that the Game class doesn't need to.
     /// </summary>
-    public sealed class ClaudyInput
+    public sealed class Input
     {
         //Singleton with public field design: See http://www.dotnetperls.com/singleton
-        public static readonly ClaudyInput Instance = new ClaudyInput(); 
+        public static readonly Input Instance = new Input(); 
         ////////////////////////////////////////////////////////////////
 
         // Note to self: members are only public if explicitly, individually defined as public.
@@ -149,7 +149,7 @@ namespace Claudy.Input
         #endregion
 
         // CTOR
-        private ClaudyInput()
+        private Input()
         {
             keyboardPrevious = keyboardCurrent; // Initialize previous as "no action occurring".
             keyboardCurrent = Keyboard.GetState();

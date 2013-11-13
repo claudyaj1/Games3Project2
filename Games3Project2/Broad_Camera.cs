@@ -9,32 +9,31 @@ using Claudy.Input;
 
 namespace Broad.Camera
 {
-    public class BroadCamera : Microsoft.Xna.Framework.GameComponent
+    public class Camera : Microsoft.Xna.Framework.GameComponent
     {
-        public Matrix view { get;  set; }
-        public Matrix projection { get;  set; }
-        public Vector3 cameraPos { get; set; }
-        public Vector3 cameraPrevPos { get; set; }
+        public Matrix view;
+        public Matrix projection;
+        public Vector3 cameraPos;
+        public Vector3 cameraPrevPos;
 
-        private Vector3 lookAt;
-        private Vector3 cameraTarget = Vector3.Zero;
-        private Vector3 cameraUpVector = Vector3.Up;
-        private Vector3 cameraReference = new Vector3(0.0f, 0.0f, 1.0f);
+        public Vector3 lookAt;
+        public Vector3 cameraTarget = Vector3.Zero;
+        public Vector3 cameraUpVector = Vector3.Up;
+        public Vector3 cameraReference = new Vector3(0.0f, 0.0f, 1.0f);
 
-        private float yaw;
-        private float pitch;
-        private float roll; //To be used maybe never
+        public float yaw;
+        public float pitch;
+        public float roll; //To be used maybe never
 
         public BoundingSphere BoundingSphere;
         public Matrix lookRotation = Matrix.Identity;
 
         public Vector3 lastPosition { get; protected set; }
 
-        private ClaudyInput input;
         public float jetPackThrust = 0;
 
 
-        public BroadCamera(Game game, Vector3 pos, Vector3 target, Vector3 up)
+        public Camera(Game game, Vector3 pos, Vector3 target, Vector3 up)
             : base(game)
         {
             //Initialize view matrix
@@ -52,7 +51,6 @@ namespace Broad.Camera
                 1, 250);
 
             BoundingSphere = new BoundingSphere(pos, 1.5f);
-            input = ClaudyInput.Instance;
             this.Initialize();
         }
 
@@ -69,25 +67,25 @@ namespace Broad.Camera
         /// <param name="debugMode">Typically false. Consider adjusting the call
         /// depending on Debug or Release</param>
         /// <param name="p_">Typically PlayerIndex.One</param>
-        public void Update(GameTime gameTime, bool debugMode, PlayerIndex p_)
+        public void Update(bool debugMode, PlayerIndex p_)
         {
-            float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float timeDelta = (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
             Vector3 dir;
-            dir = timeDelta * input.get3DMovement14Directions(true, PlayerIndex.One);
-            yaw -= Global.Constants.SPIN_RATE * timeDelta * input.GamepadByID[input.toInt(p_)].ThumbSticks.Right.X;
-            pitch -= Global.Constants.SPIN_RATE * timeDelta * input.GamepadByID[input.toInt(p_)].ThumbSticks.Right.Y;
+            dir = timeDelta * Global.input.get3DMovement14Directions(true, PlayerIndex.One);
+            yaw -= Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(p_)].ThumbSticks.Right.X;
+            pitch -= Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(p_)].ThumbSticks.Right.Y;
             
             //Jetpack related calculations
             jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
 
-            if (input.isPressed(Buttons.RightShoulder) ||
-                input.isPressed(Buttons.LeftShoulder) ||
-                input.GamepadByID[input.toInt(p_)].Triggers.Left > 0f)
+            if (Global.input.isPressed(Buttons.RightShoulder) ||
+                Global.input.isPressed(Buttons.LeftShoulder) ||
+                Global.input.GamepadByID[Global.input.toInt(p_)].Triggers.Left > 0f)
             {
                 jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
                 //TODO: Jet Fuel subtraction.
             }
-            else if(input.GamepadByID[input.toInt(p_)].IsConnected)
+            else if(Global.input.GamepadByID[Global.input.toInt(p_)].IsConnected)
             {
                 //TODO: Jet Fuel addition only if the controller is plugged in.
                 jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
@@ -98,13 +96,13 @@ namespace Broad.Camera
 
             #region If DEBUG && WINDOWS && (No Controller) Then Keyboard-and-Mouse does control
 #if DEBUG && WINDOWS
-            if (!input.isConnected(PlayerIndex.One))
+            if (!Global.input.isConnected(PlayerIndex.One))
             {
                 const float MOUSE_SENSITIVITY = 20f;
                 const float KEYBOARD_SENSITIVITY = 0.04f;
-                dir -= input.get3DMovement14Directions(false);
+                dir -= Global.input.get3DMovement14Directions(false);
                 dir *= KEYBOARD_SENSITIVITY;
-                Vector2 mouseDelta = input.getMouseDelta();
+                Vector2 mouseDelta = Global.input.getMouseDelta();
 
                 if (mouseDelta.X < 0)
                 {
@@ -132,7 +130,7 @@ namespace Broad.Camera
                 else if (pitch < 0)
                     pitch += 360;
 
-                if (input.isPressed(Keys.Space))
+                if (Global.input.isPressed(Keys.Space))
                 {
                     jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
                 }
@@ -173,13 +171,13 @@ namespace Broad.Camera
             {
                 jetPackThrust = Global.Constants.JET_PACK_Y_VELOCITY_CAP;
             }
-            dir.Y += jetPackThrust * gameTime.ElapsedGameTime.Milliseconds;
-            dir.Y -= Global.Constants.GRAVITY * gameTime.ElapsedGameTime.Milliseconds;
+            dir.Y += jetPackThrust * Global.gameTime.ElapsedGameTime.Milliseconds;
+            dir.Y -= Global.Constants.GRAVITY * Global.gameTime.ElapsedGameTime.Milliseconds;
 
             //// cameraPos update ////
             if (dir != Vector3.Zero)
             {
-                Vector3 dt = Global.Constants.MOVEMENT_VELOCITY * dir * gameTime.ElapsedGameTime.Milliseconds;
+                Vector3 dt = Global.Constants.MOVEMENT_VELOCITY * dir * Global.gameTime.ElapsedGameTime.Milliseconds;
                 Vector3.Transform(ref dt, ref dirRotation, out dt);
                 cameraPos += dt;
             }
@@ -196,7 +194,7 @@ namespace Broad.Camera
             SetCamera(lookRotation);
             
             roll = 0;
-            base.Update(gameTime);
+            base.Update(Global.gameTime);
         }
 
         /// <summary>

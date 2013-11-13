@@ -6,15 +6,21 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 
 using Games3Project2.Globals;
+using Broad.Camera;
+using DeLeone.Cursor;
 
 namespace Games3Project2
 {
-    public class Player : Collidable
+    public class LocalPlayer : Collidable
     {
-        public Player(Game game, Vector3 pos, Vector3 vel, float radius)
-            : base(game, pos, vel, radius)
+        public Camera camera;
+        public Viewport viewport;
+        public Cursor cursor;
+
+        public LocalPlayer(Game game, Vector3 pos)
+            : base(game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
-            // TODO: Construct any child components here
+            camera = new Camera(game, pos, Vector3.Zero, Vector3.Up);
         }
 
         public override void Initialize()

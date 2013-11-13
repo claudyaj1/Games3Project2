@@ -120,6 +120,7 @@
     <Compile Include="NetworkManagement.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Quad.cs" />
+    <Compile Include="RemotePlayer.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="StoltzfusLevel.cs" />
     <Compile Include="StoltzfusPlatform.cs" />

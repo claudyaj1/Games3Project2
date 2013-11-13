@@ -80,6 +80,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="JuggernautGame.cs" />
     <Compile Include="Quad.cs" />
+    <Compile Include="RemotePlayer.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="StoltzfusLevel.cs" />
     <Compile Include="StoltzfusPlatform.cs" />

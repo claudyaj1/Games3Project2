@@ -71,16 +71,16 @@ namespace Games3Project2
             }
         }
 
-        public void update(GameTime gt)
+        public void update()
         {
             
         }
 
-        public void draw(GameTime gt, BroadCamera camera)
+        public void draw(Camera camera)
         {
             foreach (Platform platform in platforms)
             {
-                platform.draw(gt, camera);
+                platform.draw(camera);
             }
         }
     }

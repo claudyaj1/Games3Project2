@@ -12,8 +12,11 @@ namespace Games3Project2.Globals
 {
     public static class Global
     {
-        public static ClaudyInput input = ClaudyInput.Instance;
-
+        public static Input input = Input.Instance;
+        public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();
+        public static SpriteBatch spriteBatch;
+        public static GameTime gameTime;
+        public static Game game;
         /// <summary>
         /// Describes the total number of gamers in the network session.
         /// </summary>
@@ -36,6 +39,7 @@ namespace Games3Project2.Globals
 
             public static readonly float MOVEMENT_VELOCITY = 3f;
             public static readonly float SPIN_RATE = 100f;
+            public static readonly float PLAYER_RADIUS = 5f;
 
             public static readonly int START_HEALTH = 100;
             public static readonly int BULLET_HIT_HEALTH_IMPACT = 10;
