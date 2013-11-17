@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using Games3Project2.Globals;
-using Claudy.Input;
+using InputHandler;
 
-namespace Broad.Camera
+namespace Camera3D
 {
     public class Camera : Microsoft.Xna.Framework.GameComponent
     {

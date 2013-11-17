@@ -6,8 +6,8 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 
 using Games3Project2.Globals;
-using Broad.Camera;
-using DeLeone.Cursor;
+using Camera3D;
+using ReticuleCursor;
 
 namespace Games3Project2
 {

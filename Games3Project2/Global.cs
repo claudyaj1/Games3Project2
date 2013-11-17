@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 
-using Claudy.Input;
+using InputHandler;
 
 namespace Games3Project2.Globals
 {

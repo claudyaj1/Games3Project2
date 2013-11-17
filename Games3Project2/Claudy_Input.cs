@@ -18,7 +18,7 @@ using Microsoft.Xna.Framework.Input;
 /// 
 /// Works with MS Visual Studio 10.0, XNA Framework 4.0
 /// -->
-namespace Claudy.Input
+namespace InputHandler
 {
     /// <summary>
     /// A singleton wrapper class for listening for certain key presses. 

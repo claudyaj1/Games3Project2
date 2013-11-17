@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Claudy.Primitive
+namespace Primatives
 {
     /// <summary>
     /// Author: Andrew Claudy

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 
 using Games3Project2.Globals;
-using Broad.Camera;
+using Camera3D;
 
 
 namespace Games3Project2

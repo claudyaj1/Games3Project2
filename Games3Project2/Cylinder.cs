@@ -9,7 +9,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using Broad.Camera;
+using Camera3D;
 
 namespace Geometry
 {

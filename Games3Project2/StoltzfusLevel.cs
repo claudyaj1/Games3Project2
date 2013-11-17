@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using Games3Project2.Globals;
-using Broad.Camera;
+using Camera3D;
 
 namespace Games3Project2
 {

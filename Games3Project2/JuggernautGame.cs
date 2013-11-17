@@ -10,11 +10,11 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using BoundingVolumeRendering;
-using Broad.Camera;
-using Claudy.AxisReference;
-using Claudy.Input;
-using Claudy.Music;
-using DeLeone.Cursor;
+using Camera3D;
+using AxisReference;
+using InputHandler;
+using MusicClasses;
+using ReticuleCursor;
 using Geometry;
 using Games3Project2.Globals;
 

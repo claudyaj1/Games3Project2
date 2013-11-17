@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Claudy.AxisReference
+namespace AxisReference
 {
     /// <summary>
     /// Draws a single unit sized axis indicator.

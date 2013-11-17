@@ -6,12 +6,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using Broad.Camera;
-using Claudy.Primitive;
+using Camera3D;
+using Primatives;
 using Games3Project2.Globals;
 
 // This class was derived from the Picking example code provided in class
-namespace DeLeone.Cursor
+namespace ReticuleCursor
 {
     /// <summary>
     /// Author: Tony DeLeone
