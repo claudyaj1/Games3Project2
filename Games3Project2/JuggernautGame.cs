@@ -90,8 +90,9 @@ namespace Games3Project2
             }
             //End Counting the # of gamers
 
+
             localPlayers = new List<LocalPlayer>();
-            localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.One, 0, 1));
+            localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.One, 1));
 
             networkManager = new NetworkManagement(this);
 
@@ -148,11 +149,12 @@ namespace Games3Project2
         {
             Global.gameTime = gameTime;
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            Global.spriteBatch.Begin();
 
             foreach (LocalPlayer player in localPlayers)
             {
                 Global.CurrentCamera = player.camera;
+                Global.spriteBatch.Begin();
+
                 levelOne.draw();
                 foreach (LocalPlayer drawPlayer in localPlayers)
                 {
@@ -175,9 +177,10 @@ namespace Games3Project2
                         " Right: " + Global.CurrentCamera.view.Right.ToString(),
                         new Vector2(5f, 70f), debugColor);
                 }
+
+                Global.spriteBatch.End();
             }
 
-            Global.spriteBatch.End();
             base.Draw(gameTime);
         }
 

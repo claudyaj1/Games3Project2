@@ -16,40 +16,71 @@ namespace Games3Project2
     public class LocalPlayer : Collidable
     {
         public Camera camera;
-        public Viewport viewport;
         public Cursor cursor;
         public Vector3 lastPosition;
         public PlayerIndex playerIndex;
         public int localPlayerIndex;
         public float jetPackThrust = 0;
 
-        public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex, int totalLocalPlayers)
+        public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex)
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             playerIndex = index;
             localPlayerIndex = localIndex;
             lastPosition = pos;
+            Viewport viewport = new Viewport();
 
             //split up viewport
-            switch (totalLocalPlayers)
+            switch (Global.numLocalGamers)
             {
                 case 1:
-
+                    viewport = new Viewport(Global.viewPort.Left, Global.viewPort.Top, Global.viewPort.Width, Global.viewPort.Height);
                     break;
                 case 2:
-
+                    switch (localPlayerIndex)
+                    {
+                        case 1:
+                            viewport = new Viewport(Global.viewPort.Left, Global.viewPort.Top, Global.viewPort.Width / 2, Global.viewPort.Height);
+                            break;
+                        case 2:
+                            viewport = new Viewport(Global.viewPort.Left + Global.viewPort.Width / 2, Global.viewPort.Top, Global.viewPort.Width / 2, Global.viewPort.Height);
+                            break;
+                    }
                     break;
                 case 3:
-
+                    switch (localPlayerIndex)
+                    {
+                        case 1:
+                            viewport = new Viewport(Global.viewPort.Left, Global.viewPort.Top, Global.viewPort.Width / 2, Global.viewPort.Height / 2);
+                            break;
+                        case 2:
+                            viewport = new Viewport(Global.viewPort.Left + Global.viewPort.Width / 2, Global.viewPort.Top, Global.viewPort.Width / 2, Global.viewPort.Height / 2);
+                            break;
+                        case 3:
+                            viewport = new Viewport(Global.viewPort.Left, Global.viewPort.Top + Global.viewPort.Height / 2, Global.viewPort.Width / 2, Global.viewPort.Height / 2);
+                            break;
+                    }
                     break;
                 case 4:
-
+                    switch (localPlayerIndex)
+                    {
+                        case 1:
+                            viewport = new Viewport(Global.viewPort.Left, Global.viewPort.Top, Global.viewPort.Width / 2, Global.viewPort.Height / 2);
+                            break;
+                        case 2:
+                            viewport = new Viewport(Global.viewPort.Left + Global.viewPort.Width / 2, Global.viewPort.Top, Global.viewPort.Width / 2, Global.viewPort.Height / 2);
+                            break;
+                        case 3:
+                            viewport = new Viewport(Global.viewPort.Left, Global.viewPort.Top + Global.viewPort.Height / 2, Global.viewPort.Width / 2, Global.viewPort.Height / 2);
+                            break;
+                        case 4:
+                            viewport = new Viewport(Global.viewPort.Left + Global.viewPort.Width / 2, Global.viewPort.Top + Global.viewPort.Height / 2, Global.viewPort.Width / 2, Global.viewPort.Height / 2);
+                            break;
+                    }
                     break;
             }
-            //temporary viewport assignment
-            viewport = new Viewport(0, 0, Global.viewPort.Width, Global.viewPort.Height);
             camera = new Camera(pos, Vector3.Zero, Vector3.Up, viewport);
-            cursor = new Cursor(new Vector2(Global.viewPort.Center.X, Global.viewPort.Center.Y));
+            cursor = new Cursor(new Vector2(viewport.Width / 2, viewport.Height / 2));
         }
 
         public void update()
