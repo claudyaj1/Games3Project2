@@ -98,9 +98,9 @@ namespace Games3Project2
 
         }
 
-        public void draw(Camera camera)
+        public void draw()
         {
-            quad.Draw(Global.gameTime, scale * rotation * translation, camera.view, camera.projection);
+            quad.Draw(Global.gameTime, scale * rotation * translation, Global.CurrentCamera.view, Global.CurrentCamera.projection);
         }
     }
 }

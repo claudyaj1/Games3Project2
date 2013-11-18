@@ -76,11 +76,11 @@ namespace Games3Project2
             
         }
 
-        public void draw(Camera camera)
+        public void draw()
         {
             foreach (Platform platform in platforms)
             {
-                platform.draw(camera);
+                platform.draw();
             }
         }
     }

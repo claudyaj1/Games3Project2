@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 
+using Camera3D;
 using InputHandler;
 
 namespace Games3Project2.Globals
@@ -22,6 +23,20 @@ namespace Games3Project2.Globals
         /// </summary>
         public static byte numTotalGamers = 0;
         public static byte numLocalGamers = 0;
+        public static bool debugMode = true;
+        public static Rectangle viewPort;
+        public static Rectangle titleSafe;
+        public static GraphicsDeviceManager graphics;
+        public static Camera CurrentCamera
+        {
+            get { return currentCamera; }
+            set
+            {
+                currentCamera = value;
+                graphics.GraphicsDevice.Viewport = currentCamera.viewport;
+            }
+        }
+        private static Camera currentCamera;
 
         public static class Constants
         {

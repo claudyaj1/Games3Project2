@@ -23,14 +23,8 @@ namespace Games3Project2
     public class JuggernautGame : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        Camera camera;
         Axis_Reference axisReference;
 
-        //Game Generic Geometry
-        Cursor cursor;
-        //TODO: Add other Geometry?
-        Sphere ball;
-        Cylinder column;
 
         #region Debug Mode
         readonly Color debugColor = Color.DimGray;
@@ -49,14 +43,14 @@ namespace Games3Project2
         SpriteFont consolas;
         SpriteFont tahoma;
 
-        Input input = Input.Instance;
-
         Music music;
 
         NetworkManagement networkManager;
 
         Texture2D cursorTex;
         LevelOne levelOne;
+
+        List<LocalPlayer> localPlayers;
 
         public JuggernautGame()
         {
@@ -74,25 +68,15 @@ namespace Games3Project2
         protected override void Initialize()
         {
             Global.game = this;
+            Global.graphics = graphics;
+            Global.viewPort = Global.graphics.GraphicsDevice.Viewport.Bounds;
+            Global.titleSafe = GetTitleSafeArea(.85f);
             axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
-            camera = new Camera(this, new Vector3(-5f, 2f, -10f),
-                Vector3.Zero, Vector3.Up);
-            cursor = new Cursor(this, camera);
-            cursor.Position = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-
-            //Geometry
-            ball = new Sphere(this, Color.Red, Vector3.One);
-            ball.SetCullMode(2);
-            ball.SetWireframe(0);
-            column = new Cylinder(this, Color.Blue, 
-                new Vector3(-3f, 0f, -3f));
-            column.SetCullMode(2);
-            column.SetWireframe(0);
 
             //Count the number of local players based upon controller count.
             for (int i = 1; i <= 4; i++)
             {
-                if (input.isConnected(i))
+                if (Global.input.isConnected(i))
                 {
                     Global.numLocalGamers++;
                     Global.numTotalGamers++;
@@ -105,6 +89,9 @@ namespace Games3Project2
                 Global.numTotalGamers = 1;
             }
             //End Counting the # of gamers
+
+            localPlayers = new List<LocalPlayer>();
+            localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.One, 0, 1));
 
             networkManager = new NetworkManagement(this);
 
@@ -135,27 +122,24 @@ namespace Games3Project2
         protected override void Update(GameTime gameTime)
         {
             Global.gameTime = gameTime;
-            input.Update();
+            Global.input.Update();
             // Allows the game to exit
-            if (input.DetectBackPressedByAnyPlayer())
+            if (Global.input.DetectBackPressedByAnyPlayer())
             {
                 // TODO: Depending on the game state...behavior of back button will differ.
                 this.Exit();
             }
-            if (input.isFirstPress(Keys.OemTilde))
+            if (Global.input.isFirstPress(Keys.OemTilde))
             {
-                debugMode = !debugMode; //Toggle mode
+                Global.debugMode = !Global.debugMode; //Toggle mode
             }
 
-            //If in the game session. e.g. if(networkManager.networkSession != null)
-            camera.Update(debugMode, PlayerIndex.One);
-            cursor.Update(); //currently nop.
+            foreach (LocalPlayer player in localPlayers)
+            {
+                player.update();
+            }
 
             networkManager.Update(gameTime);
-
-            //TODO: Remove or relocate these.
-            ball.Update(gameTime);
-            column.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -166,31 +150,50 @@ namespace Games3Project2
             GraphicsDevice.Clear(Color.CornflowerBlue);
             Global.spriteBatch.Begin();
 
-            //TODO: Put drawing code here that expects spritebatch to have begun already.
-            //sandball.Draw(camera);
-            //sandColumn.Draw(camera);
-            levelOne.draw(camera);
-            cursor.Draw();
-            //If in the game session and in debug mode.
-            if (debugMode)
+            foreach (LocalPlayer player in localPlayers)
             {
-                axisReference.Draw(Matrix.Identity, camera.view, camera.projection);
-                Global.spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
-                        new Vector2(5f, 35f), Color.PaleGreen);
-                Global.spriteBatch.DrawString(consolas, "Camera Position and View= " +
-                    "X:" + camera.cameraPos.X.ToString() +
-                    " Y:" + camera.cameraPos.Y.ToString() +
-                    " Z:" + camera.cameraPos.Z.ToString(),
-                    new Vector2(5f, 53f), debugColor);
-                Global.spriteBatch.DrawString(consolas,
-                    "Up:" + camera.view.Up.ToString() +
-                    " LookAt: " + camera.view.Forward.ToString() +
-                    " Right: " + camera.view.Right.ToString(),
-                    new Vector2(5f, 70f), debugColor);
+                Global.CurrentCamera = player.camera;
+                levelOne.draw();
+                foreach (LocalPlayer drawPlayer in localPlayers)
+                {
+                    drawPlayer.draw();
+                }
+                //If in the game session and in debug mode.
+                if (Global.debugMode)
+                {
+                    axisReference.Draw(Matrix.Identity, Global.CurrentCamera.view, Global.CurrentCamera.projection);
+                    Global.spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
+                            new Vector2(5f, 35f), Color.PaleGreen);
+                    Global.spriteBatch.DrawString(consolas, "Camera Position and View= " +
+                        "X:" + Global.CurrentCamera.cameraPos.X.ToString() +
+                        " Y:" + Global.CurrentCamera.cameraPos.Y.ToString() +
+                        " Z:" + Global.CurrentCamera.cameraPos.Z.ToString(),
+                        new Vector2(5f, 53f), debugColor);
+                    Global.spriteBatch.DrawString(consolas,
+                        "Up:" + Global.CurrentCamera.view.Up.ToString() +
+                        " LookAt: " + Global.CurrentCamera.view.Forward.ToString() +
+                        " Right: " + Global.CurrentCamera.view.Right.ToString(),
+                        new Vector2(5f, 70f), debugColor);
+                }
             }
-            Global.spriteBatch.End();
 
+            Global.spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        protected Rectangle GetTitleSafeArea(float percent)
+        {
+            Rectangle retval = new Rectangle(Global.graphics.GraphicsDevice.Viewport.X, Global.graphics.GraphicsDevice.Viewport.Y,
+                                             Global.graphics.GraphicsDevice.Viewport.Width, Global.graphics.GraphicsDevice.Viewport.Height);
+#if XBOX
+            float border = (1 - percent) / 2;
+            retval.X = (int)(border * retval.Width);
+            retval.Y = (int)(border * retval.Height);
+            retval.Width = (int)(percent * retval.Width);
+            retval.Height = (int)(percent * retval.Height);
+#endif
+
+            return retval;
         }
     }
 }

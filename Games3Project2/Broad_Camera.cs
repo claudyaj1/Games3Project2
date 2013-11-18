@@ -15,6 +15,7 @@ namespace Camera3D
         public Matrix projection;
         public Vector3 cameraPos;
         public Vector3 cameraPrevPos;
+        public Viewport viewport;
 
         public Vector3 lookAt;
         public Vector3 cameraTarget = Vector3.Zero;
@@ -30,11 +31,8 @@ namespace Camera3D
 
         public Vector3 lastPosition { get; protected set; }
 
-        public float jetPackThrust = 0;
-
-
-        public Camera(Game game, Vector3 pos, Vector3 target, Vector3 up)
-            : base(game)
+        public Camera(Vector3 pos, Vector3 target, Vector3 up, Viewport viewport_)
+            : base(Global.game)
         {
             //Initialize view matrix
             cameraPos = pos;
@@ -42,6 +40,7 @@ namespace Camera3D
             cameraPrevPos = cameraPos;
             lookAt = target;
             view = Matrix.CreateLookAt(pos, target, up);
+            viewport = viewport_;
 
             //Initialize projection matrix
             projection = Matrix.CreatePerspectiveFieldOfView(
@@ -63,100 +62,10 @@ namespace Camera3D
         /// <summary>
         /// Updates the BroadCamera.
         /// </summary>
-        /// <param name="gameTime"></param>
-        /// <param name="debugMode">Typically false. Consider adjusting the call
-        /// depending on Debug or Release</param>
-        /// <param name="p_">Typically PlayerIndex.One</param>
-        public void Update(bool debugMode, PlayerIndex p_)
+        public void Update(Vector3 dir, float yawChange, float pitchChange)
         {
-            float timeDelta = (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
-            Vector3 dir;
-            dir = timeDelta * Global.input.get3DMovement14Directions(true, PlayerIndex.One);
-            yaw -= Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(p_)].ThumbSticks.Right.X;
-            pitch -= Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(p_)].ThumbSticks.Right.Y;
-            
-            //Jetpack related calculations
-            jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
-
-            if (Global.input.isPressed(Buttons.RightShoulder) ||
-                Global.input.isPressed(Buttons.LeftShoulder) ||
-                Global.input.GamepadByID[Global.input.toInt(p_)].Triggers.Left > 0f)
-            {
-                jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
-                //TODO: Jet Fuel subtraction.
-            }
-            else if(Global.input.GamepadByID[Global.input.toInt(p_)].IsConnected)
-            {
-                //TODO: Jet Fuel addition only if the controller is plugged in.
-                jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
-                if (jetPackThrust < 0)
-                    jetPackThrust = 0;
-            }
-            //End Jetpack related calculations
-
-            #region If DEBUG && WINDOWS && (No Controller) Then Keyboard-and-Mouse does control
-#if DEBUG && WINDOWS
-            if (!Global.input.isConnected(PlayerIndex.One))
-            {
-                const float MOUSE_SENSITIVITY = 20f;
-                const float KEYBOARD_SENSITIVITY = 0.04f;
-                dir -= Global.input.get3DMovement14Directions(false);
-                dir *= KEYBOARD_SENSITIVITY;
-                Vector2 mouseDelta = Global.input.getMouseDelta();
-
-                if (mouseDelta.X < 0)
-                {
-                    yaw += (MOUSE_SENSITIVITY * timeDelta * -mouseDelta.X);
-                }
-                else if (mouseDelta.X > 0)
-                {
-                    yaw -= (MOUSE_SENSITIVITY * timeDelta * mouseDelta.X);
-                }
-                if (yaw > 360)
-                    yaw -= 360;
-                else if (yaw < 0)
-                    yaw += 360;
-
-                if (mouseDelta.Y < 0)
-                {
-                    pitch -= (MOUSE_SENSITIVITY * timeDelta);
-                }
-                else if (mouseDelta.Y > 0)
-                {
-                    pitch += (MOUSE_SENSITIVITY * timeDelta);
-                }
-                if (pitch > 360)
-                    pitch -= 360;
-                else if (pitch < 0)
-                    pitch += 360;
-
-                if (Global.input.isPressed(Keys.Space))
-                {
-                    jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
-                }
-                else
-                {
-                    jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
-                    if (jetPackThrust < 0)
-                        jetPackThrust = 0;
-                }
-            } //END
-#endif
-            #endregion
-
-            //These lines will need uncommented if ROLL is needed for the game.
-            //if (input.ScrollWheelDelta > 0)
-            //{
-            //    roll++;
-            //}
-            //else if (input.ScrollWheelDelta < 0)
-            //{
-            //    roll--;
-            //}
-            //if (roll > 360)
-            //    roll -= 360;
-            //else if (roll < 0)
-            //    roll += 360;
+            yaw -= yawChange;
+            pitch -= pitchChange;
 
             Matrix yawR = Matrix.CreateRotationY(MathHelper.ToRadians(yaw));
             Matrix pitchR = Matrix.CreateRotationX(MathHelper.ToRadians(pitch));
@@ -165,14 +74,6 @@ namespace Camera3D
             //Matrix dirRotation = Matrix.Identity;
             // I don't think you want to have pitch here because otherwise the player will fly.
             Matrix dirRotation = yawR; 
-            
-            //JetPack
-            if (jetPackThrust > Global.Constants.JET_PACK_Y_VELOCITY_CAP)
-            {
-                jetPackThrust = Global.Constants.JET_PACK_Y_VELOCITY_CAP;
-            }
-            dir.Y += jetPackThrust * Global.gameTime.ElapsedGameTime.Milliseconds;
-            dir.Y -= Global.Constants.GRAVITY * Global.gameTime.ElapsedGameTime.Milliseconds;
 
             //// cameraPos update ////
             if (dir != Vector3.Zero)

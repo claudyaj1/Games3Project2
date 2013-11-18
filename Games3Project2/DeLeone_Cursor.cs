@@ -21,7 +21,6 @@ namespace ReticuleCursor
     public class Cursor
     {
         Vector3 nearSource, farSource;
-        Camera camera;
 
         // This constant controls how fast the gamepad moves the cursor. this constant
         // is in pixels per second. Currently not used.
@@ -35,13 +34,12 @@ namespace ReticuleCursor
         // Position is the cursor Position, and is in screen space. 
         public Vector2 Position;
 
-        public Cursor(Game game, Camera c)
+        public Cursor(Vector2 screenPos)
         {
             cursorTexture = Global.game.Content.Load<Texture2D>(@"Textures\cursor");
             textureCenter = new Vector2(cursorTexture.Width / 2, cursorTexture.Height / 2);
 
-            camera = c;
-            Position = Vector2.Zero;
+            Position = screenPos;
         }
 
         public void Update()
