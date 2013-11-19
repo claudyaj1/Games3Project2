@@ -66,7 +66,11 @@ namespace Camera3D
         {
             yaw -= yawChange;
             pitch -= pitchChange;
-
+            if (pitch < -90 || pitch > 90)
+            {
+                pitch = Math.Sign(pitch) * 89.99f;
+            }
+            
             Matrix yawR = Matrix.CreateRotationY(MathHelper.ToRadians(yaw));
             Matrix pitchR = Matrix.CreateRotationX(MathHelper.ToRadians(pitch));
             Matrix rollr = Matrix.CreateRotationZ(MathHelper.ToRadians(roll));

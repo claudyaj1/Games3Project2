@@ -171,8 +171,8 @@ namespace Games3Project2
                         new Vector2(5f, 53f), debugColor);
                     Global.spriteBatch.DrawString(consolas,
                         "Up:" + Global.CurrentCamera.view.Up.ToString() +
-                        " LookAt: " + Global.CurrentCamera.view.Forward.ToString() +
-                        " Right: " + Global.CurrentCamera.view.Right.ToString(),
+                        "\nLookAt: " + Global.CurrentCamera.view.Forward.ToString() +
+                        "\nRight: " + Global.CurrentCamera.view.Right.ToString(),
                         new Vector2(5f, 70f), debugColor);
                 }
 
