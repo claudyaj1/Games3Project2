@@ -111,9 +111,6 @@ namespace Games3Project2
             float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(playerIndex)].ThumbSticks.Right.X;
             float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(playerIndex)].ThumbSticks.Right.Y;
 
-            //Jetpack related calculations
-            jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
-
             if (Global.input.isPressed(Buttons.RightShoulder) ||
                 Global.input.isPressed(Buttons.LeftShoulder) ||
                 Global.input.GamepadByID[Global.input.toInt(playerIndex)].Triggers.Left > 0f)
