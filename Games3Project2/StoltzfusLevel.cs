@@ -21,36 +21,36 @@ namespace Games3Project2
         Texture2D platformWallTexture;
         Texture2D platformTexture;
 
-        public LevelOne(Game game):
-            base(game)
+        public LevelOne():
+            base(Global.game)
         {
             platforms = new List<Platform>();
             walls = new List<Platform>();
-            platformWallTexture = game.Content.Load<Texture2D>(@"Textures\walltexture");
-            platformTexture = game.Content.Load<Texture2D>(@"Textures\platformtexture");
+            platformWallTexture = Global.game.Content.Load<Texture2D>(@"Textures\walltexture");
+            platformTexture = Global.game.Content.Load<Texture2D>(@"Textures\platformtexture");
             //exterior walls
-            walls.Add(new Platform(game, new Vector3(Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
+            walls.Add(new Platform(Global.game, new Vector3(Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
             walls[0].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
-            walls.Add(new Platform(game, new Vector3(-Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
+            walls.Add(new Platform(Global.game, new Vector3(-Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
             walls[1].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
-            walls.Add(new Platform(game, new Vector3(0, 0, Global.Constants.LEVEL_ONE_WIDTH * 2), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
+            walls.Add(new Platform(Global.game, new Vector3(0, 0, Global.Constants.LEVEL_ONE_WIDTH * 2), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
             walls[2].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
-            walls.Add(new Platform(game, new Vector3(0, 0, -Global.Constants.LEVEL_ONE_WIDTH * 2), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
+            walls.Add(new Platform(Global.game, new Vector3(0, 0, -Global.Constants.LEVEL_ONE_WIDTH * 2), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
             walls[3].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
             //ceiling and floor
-            walls.Add(new Platform(game, new Vector3(0, Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.Horizontal));
-            walls.Add(new Platform(game, new Vector3(0, -Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.Horizontal));
+            walls.Add(new Platform(Global.game, new Vector3(0, Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.Horizontal));
+            walls.Add(new Platform(Global.game, new Vector3(0, -Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.Horizontal));
 
             //platforms
-            //platforms.Add(new Platform(game, Vector3.Zero, 10, 10, platformTexture));
-            platforms.Add(new Platform(game, new Vector3(-20, 20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(game, new Vector3(-20, 20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(game, new Vector3(-20, -20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(game, new Vector3(-20, -20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(game, new Vector3(20, 20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(game, new Vector3(20, -20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(game, new Vector3(20, -20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(game, new Vector3(20, 20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            //platforms.Add(new Platform(Global.game, Vector3.Zero, 10, 10, platformTexture));
+            platforms.Add(new Platform(Global.game, new Vector3(-20, 20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(-20, 20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(-20, -20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(-20, -20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(20, 20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(20, -20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(20, -20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(20, 20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
         }
 
         public void checkCollision(Collidable collidable)

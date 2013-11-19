@@ -108,7 +108,7 @@ namespace Games3Project2
             tahoma = Content.Load<SpriteFont>(@"Fonts/Tahoma");
             cursorTex = Content.Load<Texture2D>(@"Textures\cursor");
 
-            levelOne = new LevelOne(this);
+            levelOne = new LevelOne();
         }
 
         protected override void UnloadContent()
