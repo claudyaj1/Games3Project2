@@ -10,6 +10,7 @@ using Games3Project2.Globals;
 using Camera3D;
 using ReticuleCursor;
 using InputHandler;
+using Geometry;
 
 namespace Games3Project2
 {
@@ -18,6 +19,7 @@ namespace Games3Project2
         public Camera camera;
         public Cursor cursor;
         public PlayerIndex playerIndex;
+        Sphere sphere;
         public int localPlayerIndex;
         public float jetPackThrust = 0;
 
@@ -40,6 +42,8 @@ namespace Games3Project2
             playerIndex = index;
             localPlayerIndex = localIndex;
             Viewport viewport = new Viewport();
+            sphere = new Sphere(Global.game, Color.Red, pos);
+            sphere.localScale = Matrix.CreateScale(5);
 
             //split up viewport
             switch (Global.numLocalGamers)
@@ -103,7 +107,7 @@ namespace Games3Project2
         public void update()
         {
             float timeDelta = (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
-            velocity = timeDelta * Global.input.get3DMovement14Directions(true, PlayerIndex.One);
+            velocity = timeDelta * Global.input.get3DMovement14Directions(true, playerIndex);
             float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(playerIndex)].ThumbSticks.Right.X;
             float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(playerIndex)].ThumbSticks.Right.Y;
 
@@ -186,7 +190,8 @@ namespace Games3Project2
             camera.Update(velocity, yawChange, pitchChange);
             prevPosition = position;
             position = camera.cameraPos;
-
+            sphere.Position = position;
+            sphere.Update(Global.gameTime);
 
             base.Update(Global.gameTime);
         }
@@ -196,6 +201,10 @@ namespace Games3Project2
             if (Global.CurrentCamera == camera)
             {
                 cursor.Draw();
+            }
+            else
+            {
+                sphere.Draw(Global.CurrentCamera);
             }
         }
     }
