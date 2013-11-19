@@ -11,7 +11,7 @@ using Camera3D;
 
 namespace Games3Project2
 {
-    class RemotePlayer : Collidable
+    public class RemotePlayer : Collidable
     {
         public RemotePlayer(Game game, Vector3 pos) :
             base(game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)

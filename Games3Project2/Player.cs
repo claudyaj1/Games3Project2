@@ -17,17 +17,28 @@ namespace Games3Project2
     {
         public Camera camera;
         public Cursor cursor;
-        public Vector3 lastPosition;
         public PlayerIndex playerIndex;
         public int localPlayerIndex;
         public float jetPackThrust = 0;
+
+        public override Vector3 Position
+        {
+            get
+            {
+                return base.Position;
+            }
+            set
+            {
+                base.Position = value;
+                camera.cameraPos = base.Position;
+            }
+        }
 
         public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex)
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             playerIndex = index;
             localPlayerIndex = localIndex;
-            lastPosition = pos;
             Viewport viewport = new Viewport();
 
             //split up viewport
@@ -83,10 +94,16 @@ namespace Games3Project2
             cursor = new Cursor(new Vector2(viewport.Width / 2, viewport.Height / 2));
         }
 
+        public override void platformCollision()
+        {
+            base.platformCollision();
+            camera.cameraPos = position;
+        }
+
         public void update()
         {
             float timeDelta = (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
-            Vector3 dir = timeDelta * Global.input.get3DMovement14Directions(true, PlayerIndex.One);
+            velocity = timeDelta * Global.input.get3DMovement14Directions(true, PlayerIndex.One);
             float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(playerIndex)].ThumbSticks.Right.X;
             float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(playerIndex)].ThumbSticks.Right.Y;
 
@@ -112,10 +129,11 @@ namespace Games3Project2
             {
                 jetPackThrust = Global.Constants.JET_PACK_Y_VELOCITY_CAP;
             }
-            dir.Y += jetPackThrust * Global.gameTime.ElapsedGameTime.Milliseconds;
-            dir.Y -= Global.Constants.GRAVITY * Global.gameTime.ElapsedGameTime.Milliseconds;
-            /*
+            velocity.Y += jetPackThrust * Global.gameTime.ElapsedGameTime.Milliseconds;
+            velocity.Y -= Global.Constants.GRAVITY * Global.gameTime.ElapsedGameTime.Milliseconds;
+            
             #region If DEBUG && WINDOWS && (No Controller) Then Keyboard-and-Mouse does control
+            /*
 #if DEBUG && WINDOWS
             if (!Global.input.isConnected(PlayerIndex.One))
             {
@@ -162,10 +180,13 @@ namespace Games3Project2
                         jetPackThrust = 0;
                 }
             } //END
-#endif
+#endif*/
             #endregion
-            */
-            camera.Update(dir, yawChange, pitchChange);
+            
+            camera.Update(velocity, yawChange, pitchChange);
+            prevPosition = position;
+            position = camera.cameraPos;
+
 
             base.Update(Global.gameTime);
         }

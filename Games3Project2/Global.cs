@@ -15,6 +15,7 @@ namespace Games3Project2.Globals
     {
         public static Input input = Input.Instance;
         public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();
+        public static List<RemotePlayer> remotePlayers = new List<RemotePlayer>();
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
         public static Game game;
@@ -24,6 +25,7 @@ namespace Games3Project2.Globals
         public static byte numTotalGamers = 0;
         public static byte numLocalGamers = 0;
         public static bool debugMode = true;
+
         public static Rectangle viewPort;
         public static Rectangle titleSafe;
         public static GraphicsDeviceManager graphics;
@@ -43,8 +45,9 @@ namespace Games3Project2.Globals
             public static readonly byte MAX_PLAYERS_TOTAL = 4;
             public static readonly byte MAX_PLAYERS_LOCAL = 4;
 
-            public static readonly float LevelOneWidth = 50;
-            public static readonly float LevelOneHeight = 100;
+            public static readonly float LEVEL_ONE_WIDTH = 50;
+            public static readonly float LEVEL_ONE_HEIGHT = 50;
+            public static readonly float LEVEL_ONE_LENGTH = 100;
 
             public static readonly float JET_PACK_INCREMENT = 0.00003f;
             public static readonly float JET_PACK_DECREMENT = JET_PACK_INCREMENT * 0.6f; //Yes, this must remain positive.
@@ -58,6 +61,8 @@ namespace Games3Project2.Globals
 
             public static readonly int START_HEALTH = 100;
             public static readonly int BULLET_HIT_HEALTH_IMPACT = 10;
+
+            public static readonly float WALL_BUFFER = 5;
 
             public static readonly string MSG_IS_JUG = " is the juggernaut";
             public static readonly string MSG_KILLED_JUG = " killed the juggernaut";

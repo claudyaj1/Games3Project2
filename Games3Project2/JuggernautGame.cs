@@ -50,8 +50,6 @@ namespace Games3Project2
         Texture2D cursorTex;
         LevelOne levelOne;
 
-        List<LocalPlayer> localPlayers;
-
         public JuggernautGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -90,9 +88,7 @@ namespace Games3Project2
             }
             //End Counting the # of gamers
 
-
-            localPlayers = new List<LocalPlayer>();
-            localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.One, 1));
+            Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.One, 1));
 
             networkManager = new NetworkManagement(this);
 
@@ -135,10 +131,12 @@ namespace Games3Project2
                 Global.debugMode = !Global.debugMode; //Toggle mode
             }
 
-            foreach (LocalPlayer player in localPlayers)
+            foreach (LocalPlayer player in Global.localPlayers)
             {
                 player.update();
             }
+
+            levelOne.update();
 
             networkManager.Update(gameTime);
 
@@ -150,13 +148,13 @@ namespace Games3Project2
             Global.gameTime = gameTime;
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            foreach (LocalPlayer player in localPlayers)
+            foreach (LocalPlayer player in Global.localPlayers)
             {
                 Global.CurrentCamera = player.camera;
                 Global.spriteBatch.Begin();
 
                 levelOne.draw();
-                foreach (LocalPlayer drawPlayer in localPlayers)
+                foreach (LocalPlayer drawPlayer in Global.localPlayers)
                 {
                     drawPlayer.draw();
                 }
