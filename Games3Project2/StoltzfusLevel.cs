@@ -13,54 +13,45 @@ using Camera3D;
 
 namespace Games3Project2
 {
-    class LevelOne : Microsoft.Xna.Framework.GameComponent
+    class Level : Microsoft.Xna.Framework.GameComponent
     {
         public List<Platform> platforms;
         List<Platform> walls;
 
         Texture2D platformWallTexture;
         Texture2D platformTexture;
+        public int currentLevel;
 
-        public LevelOne():
+        public Level():
             base(Global.game)
         {
             platforms = new List<Platform>();
             walls = new List<Platform>();
+
             platformWallTexture = Global.game.Content.Load<Texture2D>(@"Textures\walltexture");
             platformTexture = Global.game.Content.Load<Texture2D>(@"Textures\platformtexture");
-            //exterior walls
-            walls.Add(new Platform(Global.game, new Vector3(Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
-            walls[0].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
-            walls.Add(new Platform(Global.game, new Vector3(-Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
-            walls[1].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
-            walls.Add(new Platform(Global.game, new Vector3(0, 0, Global.Constants.LEVEL_ONE_WIDTH * 2), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
-            walls[2].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
-            walls.Add(new Platform(Global.game, new Vector3(0, 0, -Global.Constants.LEVEL_ONE_WIDTH * 2), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
-            walls[3].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
-            //ceiling and floor
-            walls.Add(new Platform(Global.game, new Vector3(0, Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.Horizontal));
-            walls.Add(new Platform(Global.game, new Vector3(0, -Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.Horizontal));
 
-            //platforms
-            //platforms.Add(new Platform(Global.game, Vector3.Zero, 10, 10, platformTexture));
-            platforms.Add(new Platform(Global.game, new Vector3(-40, 20, 40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(-40, 20, -40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(-40, -20, 40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(-40, -20, -40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
-            
-            platforms.Add(new Platform(Global.game, new Vector3(40, 20, 40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(40, -20, 40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(40, -20, -40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(40, 20, -40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
+            currentLevel = 1;
         }
 
         public void checkCollision(Collidable collidable)
         {
             //hard boundary checks
-            
-            float xCheck = Global.Constants.LEVEL_ONE_WIDTH - collidable.Radius;
-            float zCheck = Global.Constants.LEVEL_ONE_LENGTH - collidable.Radius;
-            float yCheck = Global.Constants.LEVEL_ONE_HEIGHT - collidable.Radius;
+            float xCheck = 0;
+            float zCheck = 0;
+            float yCheck = 0;
+            switch(currentLevel)
+            {
+                case 1:
+                    xCheck = Global.Constants.LEVEL_ONE_WIDTH - collidable.Radius;
+                    zCheck = Global.Constants.LEVEL_ONE_LENGTH - collidable.Radius;
+                    yCheck = Global.Constants.LEVEL_ONE_HEIGHT - collidable.Radius;
+                    break;
+                case 2:
+                    //level two bounds setting
+                    break;
+            }
+
             if (collidable.Position.X > xCheck)
             {
                 collidable.Position = new Vector3(xCheck, collidable.Position.Y, collidable.Position.Z);
@@ -123,6 +114,43 @@ namespace Games3Project2
             {
                 platform.draw();
             }
+        }
+
+        public void setupLevelOne()
+        {
+            currentLevel = 1;
+            walls.Clear();
+            platforms.Clear();
+            //exterior walls
+            walls.Add(new Platform(Global.game, new Vector3(Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
+            walls[0].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
+            walls.Add(new Platform(Global.game, new Vector3(-Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
+            walls[1].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
+            walls.Add(new Platform(Global.game, new Vector3(0, 0, Global.Constants.LEVEL_ONE_WIDTH * 2), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
+            walls[2].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
+            walls.Add(new Platform(Global.game, new Vector3(0, 0, -Global.Constants.LEVEL_ONE_WIDTH * 2), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
+            walls[3].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
+            //ceiling and floor
+            walls.Add(new Platform(Global.game, new Vector3(0, Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.Horizontal));
+            walls.Add(new Platform(Global.game, new Vector3(0, -Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.Horizontal));
+
+            //platforms
+            //platforms.Add(new Platform(Global.game, Vector3.Zero, 10, 10, platformTexture));
+            platforms.Add(new Platform(Global.game, new Vector3(-20, 20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(-20, 20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(-20, -20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(-20, -20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(20, 20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(20, -20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(20, -20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(20, 20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+        }
+
+        public void setupLevelTwo()
+        {
+            currentLevel = 2;
+            walls.Clear();
+            platforms.Clear();
         }
     }
 }

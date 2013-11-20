@@ -20,7 +20,7 @@ namespace Games3Project2.Globals
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
         public static Game game;
-        public enum GameState { Intro, Menu, SetupLocalPlayers, NetworkWaitingHost, NetworkJoining, Playing, Paused, NetworkQuit, GameOver };
+        public enum GameState { Intro, Menu, SetupLocalPlayers, LevelPicking, NetworkWaitingHost, NetworkJoining, Playing, Paused, NetworkQuit, GameOver };
         public static GameState gameState = GameState.Intro;
         /// <summary>
         /// Describes the total number of gamers in the network session.
@@ -56,9 +56,9 @@ namespace Games3Project2.Globals
             public static readonly byte MAX_PLAYERS_TOTAL = 4;
             public static readonly byte MAX_PLAYERS_LOCAL = 4;
 
-            public static readonly float LEVEL_ONE_WIDTH = 50;
-            public static readonly float LEVEL_ONE_HEIGHT = 50;
-            public static readonly float LEVEL_ONE_LENGTH = 100;
+            public static readonly float LEVEL_ONE_WIDTH = 150;
+            public static readonly float LEVEL_ONE_HEIGHT = 150;
+            public static readonly float LEVEL_ONE_LENGTH = 300;
 
             public static readonly float JET_PACK_INCREMENT = 0.00003f;
             public static readonly float JET_PACK_DECREMENT = JET_PACK_INCREMENT * 0.6f; //Yes, this must remain positive.
