@@ -64,6 +64,8 @@ namespace Games3Project2
             Global.titleSafe = GetTitleSafeArea(.85f);
             axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
 
+            
+
             this.IsMouseVisible = true;
             base.Initialize();
         }
@@ -83,7 +85,8 @@ namespace Games3Project2
             menuOptions.Add("Create New Game");
             menuOptions.Add("Join Game");
             menuOptions.Add("Exit");
-            mainMenu = new Menu(menuOptions, "Juggernaut", new Vector2(Global.titleSafe.Left + 30, Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
+            mainMenu = new Menu(menuOptions, "Juggernaut", new Vector2(Global.titleSafe.Left + 30,
+                Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
 
             levelManager = new Level();
         }
@@ -113,7 +116,12 @@ namespace Games3Project2
                 #region Intro
                 case Global.GameState.Intro:
                     splashTimer += Global.gameTime.ElapsedGameTime.Milliseconds;
-                    if (splashTimer > SPLASH_LENGTH)
+                    if (splashTimer > SPLASH_LENGTH || 
+                        Global.input.isFirstPress(Buttons.A) || 
+                        Global.input.isFirstPress(Buttons.Start) ||
+                        Global.input.isFirstPress(Keys.Space) || 
+                        Global.input.isFirstPress(Keys.Enter) ||
+                        Global.input.isFirstPress(Keys.A))
                     {
                         splashTimer = 0;
                         Global.gameState = Global.GameState.Menu;
@@ -153,6 +161,10 @@ namespace Games3Project2
                             //TEMP
                             levelManager.setupLevelOne();
                         }
+                    }
+                    if (Global.input.isFirstPress(Keys.Back))
+                    {
+                        Global.gameState = Global.GameState.Menu;
                     }
                     break;
                 #endregion
@@ -246,19 +258,22 @@ namespace Games3Project2
                 #endregion
                 #region Playing
                 case Global.GameState.Playing:
+                    
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
                         //necessary for multiplayer cursors to drawWalls properly.
                         Global.spriteBatch.End();
                         Global.CurrentCamera = player.camera;
                         Global.spriteBatch.Begin();
-
+                        
                         levelManager.drawWalls();
+                        levelManager.drawPlatforms();
                         foreach (LocalPlayer drawPlayer in Global.localPlayers)
                         {
                             drawPlayer.draw();
                         }
-                        levelManager.drawPlatforms();
+                        
+                        
                         //If in the game session and in debug mode.
                         if (Global.debugMode)
                         {
@@ -335,19 +350,20 @@ namespace Games3Project2
                 if(Global.input.isFirstPress(Buttons.A, connectedPlayers[i]))
                 {
                     joinedPlayers.Add(connectedPlayers[i]);
-                    Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, connectedPlayers[i], ++Global.numLocalGamers));
+                    Global.numLocalGamers++;
                     connectedPlayers.RemoveAt(i--);
                 }
             }
 
-            if (joinedPlayers.Count > 0)
+            foreach (PlayerIndex index in joinedPlayers)
             {
-                foreach (PlayerIndex index in joinedPlayers)
+                if (Global.input.isFirstPress(Buttons.Start, index))
                 {
-                    if (Global.input.isFirstPress(Buttons.Start, index))
+                    for (int i = 0; i < joinedPlayers.Count; ++i)
                     {
-                        return true;
+                        Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), joinedPlayers[i], i + 1));
                     }
+                    return true;
                 }
             }
 
@@ -390,12 +406,15 @@ namespace Games3Project2
         private bool updateLevelPicking()
         {
             bool didSelect = false;
-            if (Global.input.isFirstPress(Buttons.A, Global.localPlayers[0].playerIndex))
+            if (Global.input.isFirstPress(Buttons.A, Global.localPlayers[0].playerIndex) ||
+                Global.input.isFirstPress(Keys.A) ||
+                Global.input.isFirstPress(Keys.Enter))
             {
                 levelManager.setupLevelOne();
                 didSelect = true;
             }
-            else if (Global.input.isFirstPress(Buttons.B, Global.localPlayers[0].playerIndex))
+            else if (Global.input.isFirstPress(Buttons.B, Global.localPlayers[0].playerIndex) ||
+                Global.input.isFirstPress(Keys.B))
             {
                 levelManager.setupLevelTwo();
                 didSelect = true;
