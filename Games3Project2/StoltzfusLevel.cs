@@ -43,14 +43,15 @@ namespace Games3Project2
 
             //platforms
             //platforms.Add(new Platform(Global.game, Vector3.Zero, 10, 10, platformTexture));
-            platforms.Add(new Platform(Global.game, new Vector3(-20, 20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(-20, 20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(-20, -20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(-20, -20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(20, 20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(20, -20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(20, -20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(20, 20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(-40, 20, 40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(-40, 20, -40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(-40, -20, 40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(-40, -20, -40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
+            
+            platforms.Add(new Platform(Global.game, new Vector3(40, 20, 40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(40, -20, 40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(40, -20, -40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(Global.game, new Vector3(40, 20, -40), 10, 30, platformTexture, Platform.PlatformType.Horizontal));
         }
 
         public void checkCollision(Collidable collidable)
