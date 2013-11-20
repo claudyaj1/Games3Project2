@@ -11,6 +11,7 @@ using Camera3D;
 using ReticuleCursor;
 using InputHandler;
 using Geometry;
+using Primatives;
 
 namespace Games3Project2
 {
@@ -36,6 +37,11 @@ namespace Games3Project2
             }
         }
 
+        bool firingLaserBurstWeapon;
+        Vector3 justASmidgeToTheRight;
+        Vector3 beamEnd;
+        Line_Primitive laserBeamBurst;
+
         public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex)
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
@@ -44,7 +50,7 @@ namespace Games3Project2
             Viewport viewport = new Viewport();
             sphere = new Sphere(Global.game, Color.Red, pos);
             sphere.localScale = Matrix.CreateScale(5);
-
+            firingLaserBurstWeapon = false;
             //split up viewport
             switch (Global.numLocalGamers)
             {
@@ -132,7 +138,14 @@ namespace Games3Project2
             }
             velocity.Y += jetPackThrust * Global.gameTime.ElapsedGameTime.Milliseconds;
             velocity.Y -= Global.Constants.GRAVITY * Global.gameTime.ElapsedGameTime.Milliseconds;
-            
+
+            if (Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Right > 0f)
+            {
+                ShootLaserBurstWeapon();
+            }
+
+            //TODO: User controls go here.
+
             #region If DEBUG && WINDOWS && (No Controller) Then Keyboard-and-Mouse does control
             /*
 #if DEBUG && WINDOWS
@@ -197,11 +210,21 @@ namespace Games3Project2
         {
             if (Global.CurrentCamera == camera)
             {
+                //Things that only draw in the viewport go here.
                 cursor.Draw();
             }
             else
             {
+                //Things that don't draw in the player's viewport (but do draw in everyone else's) go here.
                 sphere.Draw(Global.CurrentCamera);
+            }
+
+            //Things that draw in everyone's viewport go here.
+            if (firingLaserBurstWeapon && laserBeamBurst != null)
+            {
+                laserBeamBurst.Draw(Matrix.Identity, camera.view, camera.projection,
+                    CullMode.CullCounterClockwiseFace, FillMode.WireFrame, true);
+                firingLaserBurstWeapon = false;
             }
         }
 
@@ -212,7 +235,15 @@ namespace Games3Project2
         {
             const float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
             //Step one, draw a line from just a smidge to the right of the avatar.
-            //TODO: Oh baby, Line_Primative...but when?
+            justASmidgeToTheRight = camera.cameraPos + (camera.view.Right * RIGHT_HANDED_WEAPON_OFFSET);
+            beamEnd = camera.cameraPos + camera.lookAt * 100f;
+            laserBeamBurst = new Line_Primitive(Game.GraphicsDevice,
+                justASmidgeToTheRight, Global.Constants.LASER_BEAM_COLOR,
+                beamEnd, Global.Constants.LASER_BEAM_COLOR);
+            
+            firingLaserBurstWeapon = true;
+
+            Ray r = new Ray(justASmidgeToTheRight, camera.lookAt);
             //Step two calculate collisions that might have occurred.
             //TODO: Ray intersection
             //Step three, Send message to the network to announce the event of the laser firing.

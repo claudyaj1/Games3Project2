@@ -82,6 +82,8 @@ namespace Games3Project2.Globals
             public static readonly string HUD_YOU_JUG = "YOU ARE THE JUGGERNAUT";
             public static readonly string MSG_JOINED = " joined";
             public static readonly string MSG_DISCONNECTED = " disconnected";
+
+            public static readonly Color LASER_BEAM_COLOR = Color.OrangeRed;
         }
     }
 }
