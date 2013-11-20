@@ -204,5 +204,21 @@ namespace Games3Project2
                 sphere.Draw(Global.CurrentCamera);
             }
         }
+
+        /// <summary>
+        /// Fires a solid, non-projectile laser beam blast.
+        /// </summary>
+        public void ShootLaserBurstWeapon()
+        {
+            const float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
+            //Step one, draw a line from just a smidge to the right of the avatar.
+            //TODO: Oh baby, Line_Primative...but when?
+            //Step two calculate collisions that might have occurred.
+            //TODO: Ray intersection
+            //Step three, Send message to the network to announce the event of the laser firing.
+            //TODO: step 3
+            //Step four, Play sound fx.
+            //TODO: Upht.wav
+        }
     }
 }
