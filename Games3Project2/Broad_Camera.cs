@@ -45,8 +45,8 @@ namespace Camera3D
             //Initialize projection matrix
             projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4,
-                (float)Game.Window.ClientBounds.Width /
-                (float)Game.Window.ClientBounds.Height,
+                (float)viewport.Width /
+                (float)viewport.Height,
                 1, 250);
 
             BoundingSphere = new BoundingSphere(pos, 1.5f);

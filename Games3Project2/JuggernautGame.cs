@@ -80,10 +80,12 @@ namespace Games3Project2
             }
             //End Counting the # of gamers
 
+            Global.numLocalGamers = 2;
+
             //TODO: Change the start position of gamers from Vector3.Zero to something else.
             Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.One, 1));
             if (Global.numLocalGamers >= 2)
-                Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.Two, 2));
+                Global.localPlayers.Add(new LocalPlayer(new Vector3(14, -13, -16), PlayerIndex.Two, 2));
             if (Global.numLocalGamers >= 3)
                 Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.Three, 3));
             if (Global.numLocalGamers >= 4)
