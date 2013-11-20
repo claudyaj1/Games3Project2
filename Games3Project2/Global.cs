@@ -17,6 +17,7 @@ namespace Games3Project2.Globals
         public static NetworkManagement networkManager;
         public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();
         public static List<RemotePlayer> remotePlayers = new List<RemotePlayer>();
+        public static List<Collidable> bullets = new List<Collidable>(); //TODO: Switch from Collidable class to bullet class?
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
         public static Game game;
@@ -76,6 +77,9 @@ namespace Games3Project2.Globals
 
             public static readonly int START_HEALTH = 100;
             public static readonly int BULLET_HIT_HEALTH_IMPACT = 10;
+            public static readonly float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
+            public static readonly float BULLET_SPEED = 2f;
+            public static readonly float BULLET_RADIUS = .5f;
 
             public static readonly float WALL_BUFFER = 5;
 
