@@ -83,7 +83,8 @@ namespace Games3Project2
             menuOptions.Add("Create New Game");
             menuOptions.Add("Join Game");
             menuOptions.Add("Exit");
-            mainMenu = new Menu(menuOptions, "Juggernaut", new Vector2(Global.titleSafe.Left + 30, Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
+            mainMenu = new Menu(menuOptions, "Juggernaut", new Vector2(Global.titleSafe.Left + 30,
+                Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
 
             levelManager = new Level();
         }
@@ -113,7 +114,12 @@ namespace Games3Project2
                 #region Intro
                 case Global.GameState.Intro:
                     splashTimer += Global.gameTime.ElapsedGameTime.Milliseconds;
-                    if (splashTimer > SPLASH_LENGTH || Global.input.isFirstPress(Buttons.A) || Global.input.isFirstPress(Buttons.Start))
+                    if (splashTimer > SPLASH_LENGTH || 
+                        Global.input.isFirstPress(Buttons.A) || 
+                        Global.input.isFirstPress(Buttons.Start) ||
+                        Global.input.isFirstPress(Keys.Space) || 
+                        Global.input.isFirstPress(Keys.Enter) ||
+                        Global.input.isFirstPress(Keys.A))
                     {
                         splashTimer = 0;
                         Global.gameState = Global.GameState.Menu;
@@ -153,6 +159,10 @@ namespace Games3Project2
                             //TEMP
                             levelManager.setupLevelOne();
                         }
+                    }
+                    if (Global.input.isFirstPress(Keys.Back))
+                    {
+                        Global.gameState = Global.GameState.Menu;
                     }
                     break;
                 #endregion
@@ -390,12 +400,15 @@ namespace Games3Project2
         private bool updateLevelPicking()
         {
             bool didSelect = false;
-            if (Global.input.isFirstPress(Buttons.A, Global.localPlayers[0].playerIndex))
+            if (Global.input.isFirstPress(Buttons.A, Global.localPlayers[0].playerIndex) ||
+                Global.input.isFirstPress(Keys.A) ||
+                Global.input.isFirstPress(Keys.Enter))
             {
                 levelManager.setupLevelOne();
                 didSelect = true;
             }
-            else if (Global.input.isFirstPress(Buttons.B, Global.localPlayers[0].playerIndex))
+            else if (Global.input.isFirstPress(Buttons.B, Global.localPlayers[0].playerIndex) ||
+                Global.input.isFirstPress(Keys.B))
             {
                 levelManager.setupLevelTwo();
                 didSelect = true;
