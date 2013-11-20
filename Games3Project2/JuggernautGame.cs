@@ -350,19 +350,19 @@ namespace Games3Project2
                 if(Global.input.isFirstPress(Buttons.A, connectedPlayers[i]))
                 {
                     joinedPlayers.Add(connectedPlayers[i]);
-                    Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), connectedPlayers[i], ++Global.numLocalGamers));
                     connectedPlayers.RemoveAt(i--);
                 }
             }
 
-            if (joinedPlayers.Count > 0)
+            foreach (PlayerIndex index in joinedPlayers)
             {
-                foreach (PlayerIndex index in joinedPlayers)
+                if (Global.input.isFirstPress(Buttons.Start, index))
                 {
-                    if (Global.input.isFirstPress(Buttons.Start, index))
+                    for (int i = 0; i < joinedPlayers.Count; ++i)
                     {
-                        return true;
+                        Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), joinedPlayers[i], i + 1));
                     }
+                    return true;
                 }
             }
 
