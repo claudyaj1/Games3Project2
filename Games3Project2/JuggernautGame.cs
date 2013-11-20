@@ -64,6 +64,8 @@ namespace Games3Project2
             Global.titleSafe = GetTitleSafeArea(.85f);
             axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
 
+            
+
             this.IsMouseVisible = true;
             base.Initialize();
         }
@@ -246,19 +248,22 @@ namespace Games3Project2
                 #endregion
                 #region Playing
                 case Global.GameState.Playing:
+                    
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
                         //necessary for multiplayer cursors to drawWalls properly.
                         Global.spriteBatch.End();
                         Global.CurrentCamera = player.camera;
                         Global.spriteBatch.Begin();
-
+                        
                         levelManager.drawWalls();
+                        levelManager.drawPlatforms();
                         foreach (LocalPlayer drawPlayer in Global.localPlayers)
                         {
                             drawPlayer.draw();
                         }
-                        levelManager.drawPlatforms();
+                        
+                        
                         //If in the game session and in debug mode.
                         if (Global.debugMode)
                         {

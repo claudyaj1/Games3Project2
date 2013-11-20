@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="BoundingSphereRenderer.cs" />
     <Compile Include="Broad_Camera.cs" />
+    <Compile Include="BugBot.cs" />
     <Compile Include="Claudy_AxisReference.cs" />
     <Compile Include="Claudy_Input.cs" />
     <Compile Include="Collidable.cs" />
