@@ -124,8 +124,8 @@ namespace Games3Project2
 
         private void collideHorizontal(Collidable collider)
         {
-            if (collider.Position.X > Position.X - Width && collider.Position.X < Position.X + Width
-                   && collider.Position.Z > Position.Z - Length && collider.Position.Z < Position.Z + Length)
+            if (collider.Position.X > Position.X - (Width + collider.Radius) && collider.Position.X < Position.X + (Width + collider.Radius)
+                   && collider.Position.Z > Position.Z - (Length + collider.Radius) && collider.Position.Z < Position.Z + (Length + collider.Radius))
             {
                 //collides, so calculate time and new position for collider
                 Vector2 platformStart = new Vector2(position.X - width, position.Y);

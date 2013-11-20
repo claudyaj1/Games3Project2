@@ -42,8 +42,24 @@ namespace Games3Project2
             playerIndex = index;
             localPlayerIndex = localIndex;
             Viewport viewport = new Viewport();
-            sphere = new Sphere(Global.game, Color.Red, pos);
+
+            Color sphereColor = Color.Red;
+            switch (localPlayerIndex)
+            {
+                //case 1 default is red
+                case 2:
+                    sphereColor = Color.Blue;
+                    break;
+                case 3:
+                    sphereColor = Color.Green;
+                    break;
+                case 4:
+                    sphereColor = Color.Yellow;
+                    break;
+            }
+            sphere = new Sphere(Global.game, sphereColor, pos);
             sphere.localScale = Matrix.CreateScale(5);
+            sphere.SetWireframe(1);
 
             //split up viewport
             switch (Global.numLocalGamers)
@@ -211,7 +227,7 @@ namespace Games3Project2
         public void ShootLaserBurstWeapon()
         {
             const float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
-            //Step one, draw a line from just a smidge to the right of the avatar.
+            //Step one, drawWalls a line from just a smidge to the right of the avatar.
             //TODO: Oh baby, Line_Primative...but when?
             //Step two calculate collisions that might have occurred.
             //TODO: Ray intersection

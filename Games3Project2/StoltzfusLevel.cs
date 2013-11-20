@@ -103,12 +103,22 @@ namespace Games3Project2
             }
         }
 
-        public void draw()
+        /// <summary>
+        /// Call before the player avatars are drawn.
+        /// </summary>
+        public void drawWalls()
         {
             foreach (Platform wall in walls)
             {
                 wall.draw();
             }
+        }
+
+        /// <summary>
+        /// Call after the players are drawn. Not true says claudy...a half truth at best.
+        /// </summary>
+        public void drawPlatforms()
+        {
             foreach (Platform platform in platforms)
             {
                 platform.draw();

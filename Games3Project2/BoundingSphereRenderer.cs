@@ -38,7 +38,7 @@ namespace BoundingVolumeRendering
             effect.LightingEnabled = false;
             effect.VertexColorEnabled = true;
 
-            // calculate the number of lines to draw for all circles
+            // calculate the number of lines to drawWalls for all circles
             lineCount = (sphereResolution + 1) * 3;
 
             // we need two vertices per line, so we can allocate our vertices
@@ -115,7 +115,7 @@ namespace BoundingVolumeRendering
             effect.View = view;
             effect.Projection = projection;
 
-            // draw the primitives with our effect
+            // drawWalls the primitives with our effect
             effect.CurrentTechnique.Passes[0].Apply();
             effect.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, lineCount);
         }
