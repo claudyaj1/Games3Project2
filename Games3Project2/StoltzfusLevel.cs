@@ -22,6 +22,12 @@ namespace Games3Project2
         Texture2D platformTexture;
         public int currentLevel;
 
+
+        const int smallPlatformSize = 10;
+        const int mediumPlatformSize = 20;
+        const int largePlatformSize = 40;
+        const float standardSpacing = 40;
+
         public Level():
             base(Global.game)
         {
@@ -48,10 +54,12 @@ namespace Games3Project2
                     yCheck = Global.Constants.LEVEL_ONE_HEIGHT - collidable.Radius;
                     break;
                 case 2:
-                    //level two bounds setting
+                    xCheck = Global.Constants.LEVEL_TWO_WIDTH - collidable.Radius;
+                    zCheck = Global.Constants.LEVEL_TWO_LENGTH - collidable.Radius;
+                    yCheck = Global.Constants.LEVEL_TWO_HEIGHT - collidable.Radius;
                     break;
             }
-
+            
             if (collidable.Position.X > xCheck)
             {
                 collidable.Position = new Vector3(xCheck, collidable.Position.Y, collidable.Position.Z);
@@ -122,28 +130,39 @@ namespace Games3Project2
             walls.Clear();
             platforms.Clear();
             //exterior walls
-            walls.Add(new Platform(Global.game, new Vector3(Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
+            walls.Add(new Platform(new Vector3(Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
             walls[0].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
-            walls.Add(new Platform(Global.game, new Vector3(-Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
+            walls.Add(new Platform(new Vector3(-Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
             walls[1].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
-            walls.Add(new Platform(Global.game, new Vector3(0, 0, Global.Constants.LEVEL_ONE_WIDTH * 2), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
+            walls.Add(new Platform(new Vector3(0, 0, Global.Constants.LEVEL_ONE_LENGTH), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
             walls[2].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
-            walls.Add(new Platform(Global.game, new Vector3(0, 0, -Global.Constants.LEVEL_ONE_WIDTH * 2), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
+            walls.Add(new Platform(new Vector3(0, 0, -Global.Constants.LEVEL_ONE_LENGTH), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
             walls[3].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
             //ceiling and floor
-            walls.Add(new Platform(Global.game, new Vector3(0, Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.Horizontal));
-            walls.Add(new Platform(Global.game, new Vector3(0, -Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.Horizontal));
+            walls.Add(new Platform(new Vector3(0, Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_LENGTH, platformWallTexture, Platform.PlatformType.Horizontal));
+            walls.Add(new Platform(new Vector3(0, -Global.Constants.LEVEL_ONE_HEIGHT, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_LENGTH, platformWallTexture, Platform.PlatformType.Horizontal));
 
             //platforms
             //platforms.Add(new Platform(Global.game, Vector3.Zero, 10, 10, platformTexture));
-            platforms.Add(new Platform(Global.game, new Vector3(-20, 20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(-20, 20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(-20, -20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(-20, -20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(20, 20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(20, -20, 20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(20, -20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
-            platforms.Add(new Platform(Global.game, new Vector3(20, 20, -20), 5, 5, platformTexture, Platform.PlatformType.Horizontal));
+            //central platform
+            platforms.Add(new Platform(Vector3.Zero, largePlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //top central platform
+            platforms.Add(new Platform(new Vector3(0, standardSpacing, 0), smallPlatformSize, smallPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //top four platforms
+            platforms.Add(new Platform(new Vector3(standardSpacing, 2 * standardSpacing, 2 * standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(standardSpacing, 2 * standardSpacing, -2 * standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(-standardSpacing, 2 * standardSpacing, 2 * standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(-standardSpacing, 2 * standardSpacing, -2 * standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //bottom four platforms
+            platforms.Add(new Platform(new Vector3(standardSpacing, -standardSpacing, 2 * standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(standardSpacing, -standardSpacing, -2 * standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(-standardSpacing, -standardSpacing, 2 * standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(-standardSpacing, -standardSpacing, -2 * standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //edge platforms
+            platforms.Add(new Platform(new Vector3(0, standardSpacing, Global.Constants.LEVEL_ONE_LENGTH - mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(0, -2 * standardSpacing, Global.Constants.LEVEL_ONE_LENGTH - mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(0, standardSpacing, -Global.Constants.LEVEL_ONE_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(0, -2 * standardSpacing, -Global.Constants.LEVEL_ONE_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
         }
 
         public void setupLevelTwo()
@@ -151,6 +170,38 @@ namespace Games3Project2
             currentLevel = 2;
             walls.Clear();
             platforms.Clear();
+
+            //exterior walls
+            walls.Add(new Platform(new Vector3(Global.Constants.LEVEL_TWO_WIDTH, 0, 0), Global.Constants.LEVEL_TWO_HEIGHT, Global.Constants.LEVEL_TWO_WIDTH, platformWallTexture, Platform.PlatformType.VerticalZ));
+            walls[0].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
+            walls.Add(new Platform(new Vector3(-Global.Constants.LEVEL_TWO_WIDTH, 0, 0), Global.Constants.LEVEL_TWO_HEIGHT, Global.Constants.LEVEL_TWO_WIDTH, platformWallTexture, Platform.PlatformType.VerticalZ));
+            walls[1].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
+            walls.Add(new Platform(new Vector3(0, 0, Global.Constants.LEVEL_TWO_LENGTH), Global.Constants.LEVEL_TWO_WIDTH, Global.Constants.LEVEL_TWO_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
+            walls[2].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
+            walls.Add(new Platform(new Vector3(0, 0, -Global.Constants.LEVEL_TWO_LENGTH), Global.Constants.LEVEL_TWO_WIDTH, Global.Constants.LEVEL_TWO_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
+            walls[3].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
+            //ceiling and floor
+            walls.Add(new Platform(new Vector3(0, Global.Constants.LEVEL_TWO_HEIGHT, 0), Global.Constants.LEVEL_TWO_WIDTH, Global.Constants.LEVEL_TWO_LENGTH, platformWallTexture, Platform.PlatformType.Horizontal));
+            walls.Add(new Platform(new Vector3(0, -Global.Constants.LEVEL_TWO_HEIGHT, 0), Global.Constants.LEVEL_TWO_WIDTH, Global.Constants.LEVEL_TWO_LENGTH, platformWallTexture, Platform.PlatformType.Horizontal));
+
+            //central platform
+            platforms.Add(new Platform(Vector3.Zero, largePlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //edge platforms one (x plane)
+            platforms.Add(new Platform(new Vector3(Global.Constants.LEVEL_TWO_WIDTH - mediumPlatformSize, standardSpacing, 0), mediumPlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(-Global.Constants.LEVEL_TWO_WIDTH + mediumPlatformSize, standardSpacing, 0), mediumPlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //edge platforms two (z plane)
+            platforms.Add(new Platform(new Vector3(0, 2 * standardSpacing, Global.Constants.LEVEL_TWO_LENGTH - mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(0, 2 * standardSpacing, -Global.Constants.LEVEL_TWO_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //top central platform
+            platforms.Add(new Platform(new Vector3(0, 3 * standardSpacing, 0), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //bottom edge platforms (z plane)
+            platforms.Add(new Platform(new Vector3(0, -standardSpacing, Global.Constants.LEVEL_TWO_LENGTH - mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(0, -standardSpacing, -Global.Constants.LEVEL_TWO_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //bottom second central platform
+            platforms.Add(new Platform(new Vector3(0, -2 * standardSpacing, 0), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //bottom edge platforms (x plane)
+            platforms.Add(new Platform(new Vector3(Global.Constants.LEVEL_TWO_WIDTH - mediumPlatformSize, -3 * standardSpacing, 0), mediumPlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(-Global.Constants.LEVEL_TWO_WIDTH + mediumPlatformSize, -3 * standardSpacing, 0), mediumPlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
         }
     }
 }

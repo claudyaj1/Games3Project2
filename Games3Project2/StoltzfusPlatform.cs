@@ -60,15 +60,15 @@ namespace Games3Project2
         //geometry
         Quad quad;
 
-        public Platform(Game game, Vector3 pos_, float width_, float length_, Texture2D tex, PlatformType platType) :
-            base(game)
+        public Platform(Vector3 pos_, float width_, float length_, Texture2D tex, PlatformType platType) :
+            base(Global.game)
         {
             Position = pos_;
             Width = width_;
             Length = length_;
             texture = tex;
 
-            quad = new Quad(game.GraphicsDevice, tex, Color.White);
+            quad = new Quad(Global.game.GraphicsDevice, tex, Color.White);
             quad.mirrorTexture = true;
             rotation = Matrix.Identity;
             platformType = platType;

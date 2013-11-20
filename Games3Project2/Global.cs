@@ -56,9 +56,13 @@ namespace Games3Project2.Globals
             public static readonly byte MAX_PLAYERS_TOTAL = 4;
             public static readonly byte MAX_PLAYERS_LOCAL = 4;
 
-            public static readonly float LEVEL_ONE_WIDTH = 150;
-            public static readonly float LEVEL_ONE_HEIGHT = 150;
-            public static readonly float LEVEL_ONE_LENGTH = 300;
+            public static readonly float LEVEL_ONE_WIDTH = 100;
+            public static readonly float LEVEL_ONE_LENGTH = 200;
+            public static readonly float LEVEL_ONE_HEIGHT = 100;
+
+            public static readonly float LEVEL_TWO_WIDTH = 100;
+            public static readonly float LEVEL_TWO_LENGTH = 100;
+            public static readonly float LEVEL_TWO_HEIGHT = 165;
 
             public static readonly float JET_PACK_INCREMENT = 0.00003f;
             public static readonly float JET_PACK_DECREMENT = JET_PACK_INCREMENT * 0.6f; //Yes, this must remain positive.

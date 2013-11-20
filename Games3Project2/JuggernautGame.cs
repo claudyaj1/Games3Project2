@@ -113,7 +113,7 @@ namespace Games3Project2
                 #region Intro
                 case Global.GameState.Intro:
                     splashTimer += Global.gameTime.ElapsedGameTime.Milliseconds;
-                    if (splashTimer > SPLASH_LENGTH)
+                    if (splashTimer > SPLASH_LENGTH || Global.input.isFirstPress(Buttons.A) || Global.input.isFirstPress(Buttons.Start))
                     {
                         splashTimer = 0;
                         Global.gameState = Global.GameState.Menu;
@@ -335,7 +335,7 @@ namespace Games3Project2
                 if(Global.input.isFirstPress(Buttons.A, connectedPlayers[i]))
                 {
                     joinedPlayers.Add(connectedPlayers[i]);
-                    Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, connectedPlayers[i], ++Global.numLocalGamers));
+                    Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), connectedPlayers[i], ++Global.numLocalGamers));
                     connectedPlayers.RemoveAt(i--);
                 }
             }
