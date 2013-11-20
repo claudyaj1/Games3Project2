@@ -36,7 +36,7 @@ namespace Games3Project2
         const int SPLASH_LENGTH = 3000;
 
         Menu mainMenu;
-        LevelOne levelOne;
+        Level levelManager;
 
         //local player joining
         List<PlayerIndex> connectedPlayers = new List<PlayerIndex>();
@@ -85,7 +85,7 @@ namespace Games3Project2
             menuOptions.Add("Exit");
             mainMenu = new Menu(menuOptions, "Juggernaut", new Vector2(Global.titleSafe.Left + 30, Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
 
-            levelOne = new LevelOne();
+            levelManager = new Level();
         }
 
         protected override void UnloadContent()
@@ -144,14 +144,24 @@ namespace Games3Project2
                     {
                         if (Global.networkManager.isHost)
                         {
-                            //Global.gameState = Global.GameState.NetworkWaitingHost;
-                            Global.gameState = Global.GameState.Playing;
+                            Global.gameState = Global.GameState.LevelPicking;
                         }
                         else
                         {
                             //Global.gameState = Global.GameState.NetworkJoining;
                             Global.gameState = Global.GameState.Playing;
+                            //TEMP
+                            levelManager.setupLevelOne();
                         }
+                    }
+                    break;
+                #endregion
+                #region LevelPicking:
+                case Global.GameState.LevelPicking:
+                    if (updateLevelPicking())
+                    {
+                        //Global.gameState = Global.GameState.NetworkWaitingHost;
+                        Global.gameState = Global.GameState.Playing;
                     }
                     break;
                 #endregion
@@ -172,7 +182,7 @@ namespace Games3Project2
                         player.update();
                     }
 
-                    levelOne.update();
+                    levelManager.update();
                     break;
                 #endregion
                 #region Paused
@@ -219,6 +229,11 @@ namespace Games3Project2
                     drawLocalPlayerSetup();
                     break;
                 #endregion
+                #region LevelPicking:
+                case Global.GameState.LevelPicking:
+                    drawLevelPicking();
+                    break;
+                #endregion
                 #region NetworkJoining
                 case Global.GameState.NetworkJoining:
 
@@ -238,12 +253,12 @@ namespace Games3Project2
                         Global.CurrentCamera = player.camera;
                         Global.spriteBatch.Begin();
 
-                        levelOne.drawWalls();
+                        levelManager.drawWalls();
                         foreach (LocalPlayer drawPlayer in Global.localPlayers)
                         {
                             drawPlayer.draw();
                         }
-                        levelOne.drawPlatforms();
+                        levelManager.drawPlatforms();
                         //If in the game session and in debug mode.
                         if (Global.debugMode)
                         {
@@ -368,8 +383,35 @@ namespace Games3Project2
 
             if (joinedPlayers.Count > 0)
             {
-                Global.spriteBatch.DrawString(consolas, "Press Start to Begin", new Vector2(startingPosition.X, startingPosition.Y + 6 * yOffset), Color.Black);
+                Global.spriteBatch.DrawString(consolas, "Press Start to Continue", new Vector2(startingPosition.X, startingPosition.Y + 6 * yOffset), Color.Black);
             }
+        }
+
+        private bool updateLevelPicking()
+        {
+            bool didSelect = false;
+            if (Global.input.isFirstPress(Buttons.A, Global.localPlayers[0].playerIndex))
+            {
+                levelManager.setupLevelOne();
+                didSelect = true;
+            }
+            else if (Global.input.isFirstPress(Buttons.B, Global.localPlayers[0].playerIndex))
+            {
+                levelManager.setupLevelTwo();
+                didSelect = true;
+            }
+
+            return didSelect;
+        }
+
+        private void drawLevelPicking()
+        {
+            Global.spriteBatch.Draw(mainMenu.background, Global.viewPort, Color.White);
+            float yOffset = consolas.MeasureString("A").Y;
+            Vector2 startingPosition = new Vector2(Global.titleSafe.Left + 30, Global.titleSafe.Top + 100);
+
+            Global.spriteBatch.DrawString(consolas, "Press A For Level One", startingPosition, Color.Black);
+            Global.spriteBatch.DrawString(consolas, "Press B For Level Two", new Vector2(startingPosition.X, startingPosition.Y + yOffset), Color.Black);
         }
     }
 }

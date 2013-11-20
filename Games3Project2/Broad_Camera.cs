@@ -47,7 +47,7 @@ namespace Camera3D
                 MathHelper.PiOver4,
                 (float)viewport.Width /
                 (float)viewport.Height,
-                1, 250);
+                1, 1000);
 
             BoundingSphere = new BoundingSphere(pos, 1.5f);
             this.Initialize();
