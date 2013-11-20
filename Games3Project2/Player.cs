@@ -222,7 +222,7 @@ namespace Games3Project2
             //Things that draw in everyone's viewport go here.
             if (firingLaserBurstWeapon && laserBeamBurst != null)
             {
-                laserBeamBurst.Draw(Matrix.Identity, camera.view, camera.projection,
+                laserBeamBurst.Draw(Matrix.Identity, Global.CurrentCamera.view, Global.CurrentCamera.projection,
                     CullMode.CullCounterClockwiseFace, FillMode.WireFrame, true);
                 firingLaserBurstWeapon = false;
             }
@@ -235,10 +235,10 @@ namespace Games3Project2
         {
             const float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
             //Step one, draw a line from just a smidge to the right of the avatar.
-            justASmidgeToTheRight = camera.cameraPos + (camera.view.Right * RIGHT_HANDED_WEAPON_OFFSET);
-            beamEnd = camera.cameraPos + camera.lookAt * 100f;
+            justASmidgeToTheRight = position + (camera.getLookAt() * RIGHT_HANDED_WEAPON_OFFSET);
+            beamEnd = position + camera.getLookAt() * 1f;
             laserBeamBurst = new Line_Primitive(Game.GraphicsDevice,
-                justASmidgeToTheRight, Global.Constants.LASER_BEAM_COLOR,
+                camera.getLookAt(), Global.Constants.LASER_BEAM_COLOR,
                 beamEnd, Global.Constants.LASER_BEAM_COLOR);
             
             firingLaserBurstWeapon = true;

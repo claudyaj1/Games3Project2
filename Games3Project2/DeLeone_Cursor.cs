@@ -20,8 +20,8 @@ namespace ReticuleCursor
     /// </summary>
     public class Cursor
     {
-        //This next line is temporarily commented to suppress a compiler warning.
-        //Vector3 nearSource, farSource;
+        
+        Vector3 nearSource, farSource;
 
         // This constant controls how fast the gamepad moves the cursor. this constant
         // is in pixels per second. Currently not used.
@@ -57,7 +57,7 @@ namespace ReticuleCursor
         // "eye" and pointing in the direction of the cursor. Viewport.Unproject is used
         // to accomplish this. see the accompanying documentation for more explanation
         // of the math behind this function.
-        /*
+        
         public Ray CalculateCursorRay(Matrix projectionMatrix, Matrix viewMatrix)
         {
             // Create 2 positions in screenspace using the cursor Position. 0 is as
@@ -69,10 +69,10 @@ namespace ReticuleCursor
             // would be in world space. we'll need the projection matrix and view
             // matrix, which we have saved as member variables. We also need a world
             // matrix, which can just be identity.
-            Vector3 nearPoint = GraphicsDevice.Viewport.Unproject(nearSource,
+            Vector3 nearPoint = Global.graphics.GraphicsDevice.Viewport.Unproject(nearSource,
                 projectionMatrix, viewMatrix, Matrix.Identity);
 
-            Vector3 farPoint = GraphicsDevice.Viewport.Unproject(farSource,
+            Vector3 farPoint = Global.graphics.GraphicsDevice.Viewport.Unproject(farSource,
                 projectionMatrix, viewMatrix, Matrix.Identity);
 
             // Find the direction vector that goes from the nearPoint to the farPoint
@@ -83,6 +83,6 @@ namespace ReticuleCursor
             // And then create a new ray using nearPoint as the source.
             return new Ray(nearPoint, direction);
         }
-        */
+        
     }
 }
