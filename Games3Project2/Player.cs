@@ -244,10 +244,8 @@ namespace Games3Project2
         public void ShootBullet()
         {
             //TODO: Create a bullet Class
-            Collidable bullet = new Collidable(Game,
-                position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-                camera.view.Forward * Global.Constants.BULLET_SPEED,
-                Global.Constants.BULLET_RADIUS);
+            Bullet bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+                camera.view.Forward * Global.Constants.BULLET_SPEED);
             Global.bullets.Add(bullet);
             //TODO: Play bullet fired sound fx at full volume.
         }

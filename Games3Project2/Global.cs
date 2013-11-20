@@ -17,7 +17,7 @@ namespace Games3Project2.Globals
         public static NetworkManagement networkManager;
         public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();
         public static List<RemotePlayer> remotePlayers = new List<RemotePlayer>();
-        public static List<Collidable> bullets = new List<Collidable>(); //TODO: Switch from Collidable class to bullet class?
+        public static List<Bullet> bullets = new List<Bullet>(); //TODO: Switch from Collidable class to bullet class?
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
         public static Game game;

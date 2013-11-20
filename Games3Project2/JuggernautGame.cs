@@ -63,6 +63,7 @@ namespace Games3Project2
             Global.viewPort = Global.graphics.GraphicsDevice.Viewport.Bounds;
             Global.titleSafe = GetTitleSafeArea(.85f);
             axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
+            BoundingSphereRenderer.Initialize(GraphicsDevice, 45);
 
             this.IsMouseVisible = true;
             base.Initialize();
@@ -181,6 +182,12 @@ namespace Games3Project2
                     {
                         player.update();
                     }
+                    for (int i = 0; i < Global.bullets.Count; i++)
+                    {
+                        Global.bullets[i].update(gameTime);
+                        if (Global.bullets[i].timeLived >= Bullet.TTL)
+                            Global.bullets.RemoveAt(i);
+                    }
 
                     levelManager.update();
                     break;
@@ -259,6 +266,13 @@ namespace Games3Project2
                             drawPlayer.draw();
                         }
                         levelManager.drawPlatforms();
+                        if (Global.bullets.Count > 0)
+                        {
+                            foreach (Bullet bullet in Global.bullets)
+                            {
+                                bullet.draw();
+                            }
+                        }
                         //If in the game session and in debug mode.
                         if (Global.debugMode)
                         {
@@ -275,6 +289,10 @@ namespace Games3Project2
                                 "\nLookAt: " + Global.CurrentCamera.view.Forward.ToString() +
                                 "\nRight: " + Global.CurrentCamera.view.Right.ToString(),
                                 new Vector2(5f, 95f), Global.debugColor);
+                            Global.spriteBatch.DrawString(consolas,
+                                "Bullet Count: " + Global.bullets.Count.ToString(),
+                                new Vector2(400f, 0f), Global.debugColor);
+
                         }
                     }
                     break;
