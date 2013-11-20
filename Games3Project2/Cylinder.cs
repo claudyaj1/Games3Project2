@@ -238,7 +238,7 @@ namespace Geometry
             effect.Projection = camera.projection;
             effect.VertexColorEnabled = true;
 
-            // Begin effect and draw for each pass
+            // Begin effect and drawWalls for each pass
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();

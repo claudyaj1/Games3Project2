@@ -227,7 +227,7 @@ namespace Games3Project2
         public void ShootLaserBurstWeapon()
         {
             const float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
-            //Step one, draw a line from just a smidge to the right of the avatar.
+            //Step one, drawWalls a line from just a smidge to the right of the avatar.
             //TODO: Oh baby, Line_Primative...but when?
             //Step two calculate collisions that might have occurred.
             //TODO: Ray intersection

@@ -70,7 +70,7 @@ namespace Games3Project2
 
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+            // Create a new SpriteBatch, which can be used to drawWalls textures.
             Global.spriteBatch = new SpriteBatch(GraphicsDevice);
 
             music = new Music(this);
@@ -233,16 +233,17 @@ namespace Games3Project2
                 case Global.GameState.Playing:
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
-                        //necessary for multiplayer cursors to draw properly.
+                        //necessary for multiplayer cursors to drawWalls properly.
                         Global.spriteBatch.End();
                         Global.CurrentCamera = player.camera;
                         Global.spriteBatch.Begin();
 
-                        levelOne.draw();
+                        levelOne.drawWalls();
                         foreach (LocalPlayer drawPlayer in Global.localPlayers)
                         {
                             drawPlayer.draw();
                         }
+                        levelOne.drawPlatforms();
                         //If in the game session and in debug mode.
                         if (Global.debugMode)
                         {
