@@ -35,16 +35,16 @@ namespace Geometry
             Vector3 position = new Vector3(-1f, 0f, -1f);
             verts = new VertexPositionColorTexture[4];
 
-            verts[0] = new VertexPositionColorTexture(position, color, new Vector2(0, 200));
+            verts[0] = new VertexPositionColorTexture(position, color, new Vector2(0, 1));
 
             position = new Vector3(-1f, 0f, 1f);
             verts[1] = new VertexPositionColorTexture(position, color, Vector2.Zero);
 
             position = new Vector3(1f, 0f, 1f);
-            verts[2] = new VertexPositionColorTexture(position, color, new Vector2(5, 0));
+            verts[2] = new VertexPositionColorTexture(position, color, new Vector2(1, 0));
 
             position = new Vector3(1f, 0f, -1f);
-            verts[3] = new VertexPositionColorTexture(position, color, new Vector2(5, 200));
+            verts[3] = new VertexPositionColorTexture(position, color, new Vector2(1, 1));
 
             indices = new short[6];
 

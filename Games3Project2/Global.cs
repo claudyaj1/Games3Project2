@@ -35,7 +35,7 @@ namespace Games3Project2.Globals
         #else
          = false;
         #endif
-        public static readonly Color debugColor = Color.DimGray;
+        public static readonly Color debugColor = Color.White;
         #endregion
 
         public static Rectangle viewPort;

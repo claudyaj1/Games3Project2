@@ -715,7 +715,7 @@ namespace InputHandler
             }
             movement.Z = gamepadByID[index].ThumbSticks.Left.Y;
 
-            if (movement != Vector3.Zero) movement.Normalize();
+            //if (movement != Vector3.Zero) movement.Normalize();
 
             return movement;
         }
