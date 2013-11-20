@@ -105,14 +105,19 @@ namespace MenuUtility
  
         public int update()
         {
-			if(Global.input.isConnected(PlayerIndex.One)) {
+            //if(Global.input.isConnected(PlayerIndex.One)) 
+            {
 				if(timeSinceLastInput > TIME_BETWEEN_INPUTS) {
-					Vector2 leftStick = Global.input.GetAs8DirectionLeftThumbStick();
-					if(leftStick.Y > 0) {
+					Vector2 leftStickP1 = Global.input.GetAs8DirectionLeftThumbStick(1);
+                    Vector2 leftStickP2 = Global.input.GetAs8DirectionLeftThumbStick(2);
+					if (leftStickP1.Y > 0 || leftStickP2.Y > 0 || Global.input.isFirstPress(Keys.Up))
+                    {
                         menuMove.Play();
 						--linePointer;
 						timeSinceLastInput = 0;
-					} else if(leftStick.Y < 0) {
+                    }
+                    else if (leftStickP1.Y < 0 || leftStickP2.Y > 0 || Global.input.isFirstPress(Keys.Down))
+                    {
                         menuMove.Play();
 						++linePointer;
 						timeSinceLastInput = 0;
@@ -125,16 +130,20 @@ namespace MenuUtility
 					timeSinceLastInput += Global.gameTime.ElapsedGameTime.Milliseconds;
 				}
 
-                if (Global.input.isFirstPress(Buttons.A) || Global.input.isFirstPress(Buttons.Start))
+                if (Global.input.isFirstPress(Buttons.A, PlayerIndex.One) ||
+                    Global.input.isFirstPress(Buttons.Start, PlayerIndex.One) ||
+                    Global.input.isFirstPress(Buttons.A, PlayerIndex.Two) ||
+                    Global.input.isFirstPress(Buttons.Start, PlayerIndex.Two) ||
+                    Global.input.isFirstPress(Keys.A) ||
+                    Global.input.isFirstPress(Keys.Enter))
                 {
                     menuMove.Play();
 					return linePointer;
 				} else {
 					return -1;
 				}
-			} else {
-				return -1;
 			}
+            //else return -1;
         }
     }
 }
