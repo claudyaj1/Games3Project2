@@ -350,6 +350,7 @@ namespace Games3Project2
                 if(Global.input.isFirstPress(Buttons.A, connectedPlayers[i]))
                 {
                     joinedPlayers.Add(connectedPlayers[i]);
+                    Global.numLocalGamers++;
                     connectedPlayers.RemoveAt(i--);
                 }
             }
