@@ -38,6 +38,10 @@ namespace Games3Project2
         Menu mainMenu;
         LevelOne levelOne;
 
+        //local player joining
+        List<PlayerIndex> connectedPlayers = new List<PlayerIndex>();
+        List<PlayerIndex> joinedPlayers = new List<PlayerIndex>();
+
         public JuggernautGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -59,34 +63,6 @@ namespace Games3Project2
             Global.viewPort = Global.graphics.GraphicsDevice.Viewport.Bounds;
             Global.titleSafe = GetTitleSafeArea(.85f);
             axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
-
-            //Count the number of local players based upon controller count.
-            for (int i = 1; i <= 4; i++)
-            {
-                if (Global.input.isConnected(i))
-                {
-                    Global.numLocalGamers++;
-                    Global.numTotalGamers++;
-                }
-            }
-            if (Global.numLocalGamers == 0)
-            {
-                //Hint: Keyboard adds one.
-                Global.numLocalGamers = 1;
-                Global.numTotalGamers = 1;
-            }
-            //End Counting the # of gamers
-
-            Global.numLocalGamers = 2;
-
-            //TODO: Change the start position of gamers from Vector3.Zero to something else.
-            Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.One, 1));
-            if (Global.numLocalGamers >= 2)
-                Global.localPlayers.Add(new LocalPlayer(new Vector3(14, -13, -16), PlayerIndex.Two, 2));
-            if (Global.numLocalGamers >= 3)
-                Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.Three, 3));
-            if (Global.numLocalGamers >= 4)
-                Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.Four, 4));
 
             this.IsMouseVisible = true;
             base.Initialize();
@@ -240,7 +216,7 @@ namespace Games3Project2
                 #endregion
                 #region SetupLocalPlayers
                 case Global.GameState.SetupLocalPlayers:
-                    
+                    drawLocalPlayerSetup();
                     break;
                 #endregion
                 #region NetworkJoining
@@ -325,7 +301,74 @@ namespace Games3Project2
 
         private bool setupLocalPlayers()
         {
-            return true;
+            //Dynamically update the connected controllers
+            for (PlayerIndex index = PlayerIndex.One; index <= PlayerIndex.Four; index++)
+            {
+                if (Global.input.isConnected(index) && !connectedPlayers.Contains(index) && !joinedPlayers.Contains(index))
+                {
+                    connectedPlayers.Add(index);
+                }
+                if (!Global.input.isConnected(index) && connectedPlayers.Contains(index))
+                {
+                    connectedPlayers.Remove(index);
+                }
+            }
+
+            for (int i = 0; i < connectedPlayers.Count; ++i)
+            {
+                if(Global.input.isFirstPress(Buttons.A, connectedPlayers[i]))
+                {
+                    joinedPlayers.Add(connectedPlayers[i]);
+                    Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, connectedPlayers[i], ++Global.numLocalGamers));
+                    connectedPlayers.RemoveAt(i--);
+                }
+            }
+
+            if (joinedPlayers.Count > 0)
+            {
+                foreach (PlayerIndex index in joinedPlayers)
+                {
+                    if (Global.input.isFirstPress(Buttons.Start, index))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if (joinedPlayers.Count == 4)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void drawLocalPlayerSetup()
+        {
+            Global.spriteBatch.Draw(mainMenu.background, Global.viewPort, Color.White);
+            float yOffset = consolas.MeasureString("A").Y;
+            Vector2 startingPosition = new Vector2(Global.titleSafe.Left + 30, Global.titleSafe.Top + 100);
+
+            for (PlayerIndex index = PlayerIndex.One; index <= PlayerIndex.Four; index++)
+            {
+                if (!Global.input.isConnected(index))
+                {
+                    Global.spriteBatch.DrawString(consolas, "Controller " + index.ToString() + " Disconnected", new Vector2(startingPosition.X, startingPosition.Y + (int)index * yOffset), Color.Red);
+                }
+                else if(connectedPlayers.Contains(index))
+                {
+                    Global.spriteBatch.DrawString(consolas, "Press A to Join", new Vector2(startingPosition.X, startingPosition.Y + (int)index * yOffset), Color.Black);
+                }
+                else if (joinedPlayers.Contains(index))
+                {
+                    Global.spriteBatch.DrawString(consolas, "Joined", new Vector2(startingPosition.X, startingPosition.Y + (int)index * yOffset), Color.Green);
+                }
+            }
+
+            if (joinedPlayers.Count > 0)
+            {
+                Global.spriteBatch.DrawString(consolas, "Press Start to Begin", new Vector2(startingPosition.X, startingPosition.Y + 6 * yOffset), Color.Black);
+            }
         }
     }
 }

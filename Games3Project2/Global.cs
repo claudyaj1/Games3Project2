@@ -21,7 +21,7 @@ namespace Games3Project2.Globals
         public static GameTime gameTime;
         public static Game game;
         public enum GameState { Intro, Menu, SetupLocalPlayers, NetworkWaitingHost, NetworkJoining, Playing, Paused, NetworkQuit, GameOver };
-        public static GameState gameState = GameState.Playing; //GameState.Intro;
+        public static GameState gameState = GameState.Intro;
         /// <summary>
         /// Describes the total number of gamers in the network session.
         /// </summary>

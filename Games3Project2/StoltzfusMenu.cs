@@ -26,7 +26,7 @@ namespace MenuUtility
         const int TIME_BETWEEN_INPUTS = 250;
         
         Color titleColor, optionsColor, highlightColor;
-        Texture2D background;
+        public Texture2D background;
 
         List<String> options;
         public String title;
