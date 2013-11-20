@@ -24,7 +24,15 @@ namespace Games3Project2.Globals
         /// </summary>
         public static byte numTotalGamers = 0;
         public static byte numLocalGamers = 0;
-        public static bool debugMode = true;
+        public static bool debugMode 
+        #region Debug Mode
+        #if DEBUG
+         = true;
+        #else
+         = false;
+        #endif
+        public static readonly Color debugColor = Color.DimGray;
+        #endregion
 
         public static Rectangle viewPort;
         public static Rectangle titleSafe;

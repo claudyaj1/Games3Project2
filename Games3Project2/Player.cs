@@ -19,8 +19,8 @@ namespace Games3Project2
         public Camera camera;
         public Cursor cursor;
         public PlayerIndex playerIndex;
+        public int localPlayerIndex; // 1, 2, 3, or 4
         Sphere sphere;
-        public int localPlayerIndex;
         public float jetPackThrust = 0;
 
         public override Vector3 Position
@@ -108,17 +108,17 @@ namespace Games3Project2
         {
             float timeDelta = (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
             velocity = timeDelta * Global.input.get3DMovement14Directions(true, playerIndex);
-            float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(playerIndex)].ThumbSticks.Right.X;
-            float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Global.input.toInt(playerIndex)].ThumbSticks.Right.Y;
+            float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[localPlayerIndex].ThumbSticks.Right.X;
+            float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[localPlayerIndex].ThumbSticks.Right.Y;
 
-            if (Global.input.isPressed(Buttons.RightShoulder) ||
-                Global.input.isPressed(Buttons.LeftShoulder) ||
-                Global.input.GamepadByID[Global.input.toInt(playerIndex)].Triggers.Left > 0f)
+            if (Global.input.isPressed(Buttons.RightShoulder, playerIndex) ||
+                Global.input.isPressed(Buttons.LeftShoulder, playerIndex) ||
+                Global.input.GamepadByID[localPlayerIndex].Triggers.Left > 0f)
             {
                 jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
                 //TODO: Jet Fuel subtraction.
             }
-            else if (Global.input.GamepadByID[Global.input.toInt(playerIndex)].IsConnected)
+            else if (Global.input.GamepadByID[Input.indexAsInt(playerIndex)].IsConnected)
             {
                 //TODO: Jet Fuel addition only if the controller is plugged in.
                 jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;

@@ -20,7 +20,8 @@ namespace ReticuleCursor
     /// </summary>
     public class Cursor
     {
-        Vector3 nearSource, farSource;
+        //This next line is temporarily commented to suppress a compiler warning.
+        //Vector3 nearSource, farSource;
 
         // This constant controls how fast the gamepad moves the cursor. this constant
         // is in pixels per second. Currently not used.

@@ -26,15 +26,7 @@ namespace Games3Project2
         Axis_Reference axisReference;
 
 
-        #region Debug Mode
-        readonly Color debugColor = Color.DimGray;
-        bool debugMode
-        #if DEBUG
-         = true;
-        #else
-         = false;
-        #endif
-        #endregion
+
         //TODO: Add Game States.
         public enum GameMode { MenuScreen, LobbyScreen, ScoreScreen};
         public GameMode currentGameMode = GameMode.MenuScreen;
@@ -82,13 +74,20 @@ namespace Games3Project2
             }
             if (Global.numLocalGamers == 0)
             {
-                //Hint: Keyboard.
+                //Hint: Keyboard adds one.
                 Global.numLocalGamers = 1;
                 Global.numTotalGamers = 1;
             }
             //End Counting the # of gamers
 
+            //TODO: Change the start position of gamers from Vector3.Zero to something else.
             Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.One, 1));
+            if (Global.numLocalGamers >= 2)
+                Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.Two, 2));
+            if (Global.numLocalGamers >= 3)
+                Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.Three, 3));
+            if (Global.numLocalGamers >= 4)
+                Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.Four, 4));
 
             networkManager = new NetworkManagement(this);
 
@@ -164,16 +163,16 @@ namespace Games3Project2
                     axisReference.Draw(Matrix.Identity, Global.CurrentCamera.view, Global.CurrentCamera.projection);
                     Global.spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
                             new Vector2(5f, 35f), Color.PaleGreen);
-                    Global.spriteBatch.DrawString(consolas, "Camera Position and View= " +
+                    Global.spriteBatch.DrawString(consolas, "Camera Position and View=\n" +
                         "X:" + Global.CurrentCamera.cameraPos.X.ToString() +
                         " Y:" + Global.CurrentCamera.cameraPos.Y.ToString() +
                         " Z:" + Global.CurrentCamera.cameraPos.Z.ToString(),
-                        new Vector2(5f, 53f), debugColor);
+                        new Vector2(5f, 53f), Global.debugColor);
                     Global.spriteBatch.DrawString(consolas,
                         "Up:" + Global.CurrentCamera.view.Up.ToString() +
                         "\nLookAt: " + Global.CurrentCamera.view.Forward.ToString() +
                         "\nRight: " + Global.CurrentCamera.view.Right.ToString(),
-                        new Vector2(5f, 70f), debugColor);
+                        new Vector2(5f, 70f), Global.debugColor);
                 }
 
                 Global.spriteBatch.End();
