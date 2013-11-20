@@ -282,7 +282,7 @@ namespace Games3Project2
                                 "Up:" + Global.CurrentCamera.view.Up.ToString() +
                                 "\nLookAt: " + Global.CurrentCamera.view.Forward.ToString() +
                                 "\nRight: " + Global.CurrentCamera.view.Right.ToString(),
-                                new Vector2(5f, 70f), Global.debugColor);
+                                new Vector2(5f, 95f), Global.debugColor);
                         }
                     }
                     break;
