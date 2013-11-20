@@ -83,6 +83,7 @@
     <Compile Include="RemotePlayer.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="StoltzfusLevel.cs" />
+    <Compile Include="StoltzfusMenu.cs" />
     <Compile Include="StoltzfusPlatform.cs" />
   </ItemGroup>
   <ItemGroup>

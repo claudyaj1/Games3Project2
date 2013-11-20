@@ -32,8 +32,8 @@ namespace Games3Project2
         MessageTypes messageType;
 
         //CTOR
-        public NetworkManagement(Game game)
-            : base(game)
+        public NetworkManagement()
+            : base(Global.game)
         {
             Initialize();
         }

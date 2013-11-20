@@ -42,8 +42,24 @@ namespace Games3Project2
             playerIndex = index;
             localPlayerIndex = localIndex;
             Viewport viewport = new Viewport();
-            sphere = new Sphere(Global.game, Color.Red, pos);
+
+            Color sphereColor = Color.Red;
+            switch (localPlayerIndex)
+            {
+                //case 1 default is red
+                case 2:
+                    sphereColor = Color.Blue;
+                    break;
+                case 3:
+                    sphereColor = Color.Green;
+                    break;
+                case 4:
+                    sphereColor = Color.Yellow;
+                    break;
+            }
+            sphere = new Sphere(Global.game, sphereColor, pos);
             sphere.localScale = Matrix.CreateScale(5);
+            sphere.SetWireframe(1);
 
             //split up viewport
             switch (Global.numLocalGamers)

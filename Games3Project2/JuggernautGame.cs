@@ -13,6 +13,7 @@ using BoundingVolumeRendering;
 using Camera3D;
 using AxisReference;
 using InputHandler;
+using MenuUtility;
 using MusicClasses;
 using ReticuleCursor;
 using Geometry;
@@ -25,21 +26,16 @@ namespace Games3Project2
         GraphicsDeviceManager graphics;
         Axis_Reference axisReference;
 
-
-
-        //TODO: Add Game States.
-        public enum GameMode { MenuScreen, LobbyScreen, ScoreScreen};
-        public GameMode currentGameMode = GameMode.MenuScreen;
-        //TODO: Add Cole's Menu class code.
-
         SpriteFont consolas;
         SpriteFont tahoma;
 
         Music music;
+        Texture2D splashTexture;
 
-        NetworkManagement networkManager;
+        int splashTimer = 0;
+        const int SPLASH_LENGTH = 3000;
 
-        Texture2D cursorTex;
+        Menu mainMenu;
         LevelOne levelOne;
 
         public JuggernautGame()
@@ -58,6 +54,7 @@ namespace Games3Project2
         protected override void Initialize()
         {
             Global.game = this;
+            Global.networkManager = new NetworkManagement();
             Global.graphics = graphics;
             Global.viewPort = Global.graphics.GraphicsDevice.Viewport.Bounds;
             Global.titleSafe = GetTitleSafeArea(.85f);
@@ -91,8 +88,6 @@ namespace Games3Project2
             if (Global.numLocalGamers >= 4)
                 Global.localPlayers.Add(new LocalPlayer(Vector3.Zero, PlayerIndex.Four, 4));
 
-            networkManager = new NetworkManagement(this);
-
             this.IsMouseVisible = true;
             base.Initialize();
         }
@@ -104,10 +99,15 @@ namespace Games3Project2
 
             music = new Music(this);
             //music.playBackgroundMusic();
-
+            splashTexture = Content.Load<Texture2D>(@"Textures\splash");
             consolas = Content.Load<SpriteFont>(@"Fonts/Consolas");
             tahoma = Content.Load<SpriteFont>(@"Fonts/Tahoma");
-            cursorTex = Content.Load<Texture2D>(@"Textures\cursor");
+
+            List<String> menuOptions = new List<String>();
+            menuOptions.Add("Create New Game");
+            menuOptions.Add("Join Game");
+            menuOptions.Add("Exit");
+            mainMenu = new Menu(menuOptions, "Juggernaut", new Vector2(Global.titleSafe.Left + 30, Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
 
             levelOne = new LevelOne();
         }
@@ -132,14 +132,90 @@ namespace Games3Project2
                 Global.debugMode = !Global.debugMode; //Toggle mode
             }
 
-            foreach (LocalPlayer player in Global.localPlayers)
+            switch (Global.gameState)
             {
-                player.update();
+                #region Intro
+                case Global.GameState.Intro:
+                    splashTimer += Global.gameTime.ElapsedGameTime.Milliseconds;
+                    if (splashTimer > SPLASH_LENGTH)
+                    {
+                        splashTimer = 0;
+                        Global.gameState = Global.GameState.Menu;
+                    }
+                    break;
+                #endregion
+                #region Menu
+                case Global.GameState.Menu:
+                    switch (mainMenu.update())
+                    {
+                        case 0:
+                            Global.networkManager.isHost = true;
+                            Global.gameState = Global.GameState.SetupLocalPlayers;
+                            break;
+                        case 1:
+                            Global.networkManager.isHost = false;
+                            Global.gameState = Global.GameState.SetupLocalPlayers;
+                            break;
+                        case 2:
+                            this.Exit();
+                            break;
+                    }
+                    break;
+                #endregion
+                #region SetupLocalPlayers
+                case Global.GameState.SetupLocalPlayers:
+                    if (setupLocalPlayers())
+                    {
+                        if (Global.networkManager.isHost)
+                        {
+                            //Global.gameState = Global.GameState.NetworkWaitingHost;
+                            Global.gameState = Global.GameState.Playing;
+                        }
+                        else
+                        {
+                            //Global.gameState = Global.GameState.NetworkJoining;
+                            Global.gameState = Global.GameState.Playing;
+                        }
+                    }
+                    break;
+                #endregion
+                #region NetworkJoining
+                case Global.GameState.NetworkJoining:
+
+                    break;
+                #endregion
+                #region NetworkWaitingHost
+                case Global.GameState.NetworkWaitingHost:
+
+                    break;
+                #endregion
+                #region Playing
+                case Global.GameState.Playing:
+                    foreach (LocalPlayer player in Global.localPlayers)
+                    {
+                        player.update();
+                    }
+
+                    levelOne.update();
+                    break;
+                #endregion
+                #region Paused
+                case Global.GameState.Paused:
+
+                    break;
+                #endregion
+                #region GameOver
+                case Global.GameState.GameOver:
+
+                    break;
+                #endregion
+                #region NetworkQuit
+                case Global.GameState.NetworkQuit:
+
+                    break;
+                #endregion
             }
 
-            levelOne.update();
-
-            networkManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -148,38 +224,87 @@ namespace Games3Project2
         {
             Global.gameTime = gameTime;
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            Global.spriteBatch.Begin();
 
-            foreach (LocalPlayer player in Global.localPlayers)
+            switch (Global.gameState)
             {
-                Global.CurrentCamera = player.camera;
-                Global.spriteBatch.Begin();
+                #region Intro
+                case Global.GameState.Intro:
+                    Global.spriteBatch.Draw(splashTexture, Global.viewPort, Color.White);
+                    break;
+                #endregion
+                #region Menu
+                case Global.GameState.Menu:
+                    mainMenu.draw();
+                    break;
+                #endregion
+                #region SetupLocalPlayers
+                case Global.GameState.SetupLocalPlayers:
+                    
+                    break;
+                #endregion
+                #region NetworkJoining
+                case Global.GameState.NetworkJoining:
 
-                levelOne.draw();
-                foreach (LocalPlayer drawPlayer in Global.localPlayers)
-                {
-                    drawPlayer.draw();
-                }
-                //If in the game session and in debug mode.
-                if (Global.debugMode)
-                {
-                    axisReference.Draw(Matrix.Identity, Global.CurrentCamera.view, Global.CurrentCamera.projection);
-                    Global.spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
-                            new Vector2(5f, 35f), Color.PaleGreen);
-                    Global.spriteBatch.DrawString(consolas, "Camera Position and View=\n" +
-                        "X:" + Global.CurrentCamera.cameraPos.X.ToString() +
-                        " Y:" + Global.CurrentCamera.cameraPos.Y.ToString() +
-                        " Z:" + Global.CurrentCamera.cameraPos.Z.ToString(),
-                        new Vector2(5f, 53f), Global.debugColor);
-                    Global.spriteBatch.DrawString(consolas,
-                        "Up:" + Global.CurrentCamera.view.Up.ToString() +
-                        "\nLookAt: " + Global.CurrentCamera.view.Forward.ToString() +
-                        "\nRight: " + Global.CurrentCamera.view.Right.ToString(),
-                        new Vector2(5f, 70f), Global.debugColor);
-                }
+                    break;
+                #endregion
+                #region NetworkWaitingHost
+                case Global.GameState.NetworkWaitingHost:
 
-                Global.spriteBatch.End();
+                    break;
+                #endregion
+                #region Playing
+                case Global.GameState.Playing:
+                    foreach (LocalPlayer player in Global.localPlayers)
+                    {
+                        //necessary for multiplayer cursors to draw properly.
+                        Global.spriteBatch.End();
+                        Global.CurrentCamera = player.camera;
+                        Global.spriteBatch.Begin();
+
+                        levelOne.draw();
+                        foreach (LocalPlayer drawPlayer in Global.localPlayers)
+                        {
+                            drawPlayer.draw();
+                        }
+                        //If in the game session and in debug mode.
+                        if (Global.debugMode)
+                        {
+                            axisReference.Draw(Matrix.Identity, Global.CurrentCamera.view, Global.CurrentCamera.projection);
+                            Global.spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
+                                    new Vector2(5f, 35f), Color.PaleGreen);
+                            Global.spriteBatch.DrawString(consolas, "Camera Position and View=\n" +
+                                "X:" + Global.CurrentCamera.cameraPos.X.ToString() +
+                                " Y:" + Global.CurrentCamera.cameraPos.Y.ToString() +
+                                " Z:" + Global.CurrentCamera.cameraPos.Z.ToString(),
+                                new Vector2(5f, 53f), Global.debugColor);
+                            Global.spriteBatch.DrawString(consolas,
+                                "Up:" + Global.CurrentCamera.view.Up.ToString() +
+                                "\nLookAt: " + Global.CurrentCamera.view.Forward.ToString() +
+                                "\nRight: " + Global.CurrentCamera.view.Right.ToString(),
+                                new Vector2(5f, 70f), Global.debugColor);
+                        }
+                    }
+                    break;
+                #endregion
+                #region Paused
+                case Global.GameState.Paused:
+
+                    break;
+                #endregion
+                #region GameOver
+                case Global.GameState.GameOver:
+
+                    break;
+                #endregion
+                #region NetworkQuit
+                case Global.GameState.NetworkQuit:
+
+                    break;
+                #endregion
             }
 
+            Global.spriteBatch.End();
             base.Draw(gameTime);
         }
 
@@ -196,6 +321,11 @@ namespace Games3Project2
 #endif
 
             return retval;
+        }
+
+        private bool setupLocalPlayers()
+        {
+            return true;
         }
     }
 }

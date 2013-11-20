@@ -14,11 +14,14 @@ namespace Games3Project2.Globals
     public static class Global
     {
         public static Input input = Input.Instance;
+        public static NetworkManagement networkManager;
         public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();
         public static List<RemotePlayer> remotePlayers = new List<RemotePlayer>();
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
         public static Game game;
+        public enum GameState { Intro, Menu, SetupLocalPlayers, NetworkWaitingHost, NetworkJoining, Playing, Paused, NetworkQuit, GameOver };
+        public static GameState gameState = GameState.Playing; //GameState.Intro;
         /// <summary>
         /// Describes the total number of gamers in the network session.
         /// </summary>
