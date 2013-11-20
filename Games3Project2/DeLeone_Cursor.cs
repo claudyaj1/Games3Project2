@@ -21,7 +21,7 @@ namespace ReticuleCursor
     public class Cursor
     {
         
-        Vector3 nearSource, farSource;
+        public Vector3 nearSource, farSource;
 
         // This constant controls how fast the gamepad moves the cursor. this constant
         // is in pixels per second. Currently not used.
@@ -81,7 +81,7 @@ namespace ReticuleCursor
             direction.Normalize();
 
             // And then create a new ray using nearPoint as the source.
-            return new Ray(nearPoint, direction);
+            return new Ray(nearPoint, new Vector3(1,0,0));
         }
         
     }

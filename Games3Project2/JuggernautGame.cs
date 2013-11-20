@@ -158,7 +158,9 @@ namespace Games3Project2
                 foreach (LocalPlayer drawPlayer in Global.localPlayers)
                 {
                     drawPlayer.draw();
+                    
                 }
+                player.drawLine();
                 //If in the game session and in debug mode.
                 if (Global.debugMode)
                 {

@@ -113,7 +113,8 @@ namespace Games3Project2
         public void update()
         {
             float timeDelta = (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
-            velocity = timeDelta * Global.input.get3DMovement14Directions(true, playerIndex);
+            Vector3 direction = Global.input.get3DMovement14Directions(true, playerIndex);
+            velocity = timeDelta * direction;
             float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[localPlayerIndex].ThumbSticks.Right.X;
             float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[localPlayerIndex].ThumbSticks.Right.Y;
 
@@ -212,14 +213,23 @@ namespace Games3Project2
             {
                 //Things that only draw in the viewport go here.
                 cursor.Draw();
+                
             }
             else
             {
                 //Things that don't draw in the player's viewport (but do draw in everyone else's) go here.
                 sphere.Draw(Global.CurrentCamera);
+                
+                
             }
 
+            
             //Things that draw in everyone's viewport go here.
+            
+        }
+
+        public void drawLine()
+        {
             if (firingLaserBurstWeapon && laserBeamBurst != null)
             {
                 laserBeamBurst.Draw(Matrix.Identity, Global.CurrentCamera.view, Global.CurrentCamera.projection,
@@ -235,15 +245,19 @@ namespace Games3Project2
         {
             const float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
             //Step one, draw a line from just a smidge to the right of the avatar.
-            justASmidgeToTheRight = position + (camera.getLookAt() * RIGHT_HANDED_WEAPON_OFFSET);
-            beamEnd = position + camera.getLookAt() * 1f;
-            laserBeamBurst = new Line_Primitive(Game.GraphicsDevice,
-                camera.getLookAt(), Global.Constants.LASER_BEAM_COLOR,
-                beamEnd, Global.Constants.LASER_BEAM_COLOR);
+            //justASmidgeToTheRight = position + (camera.getLookAt() * RIGHT_HANDED_WEAPON_OFFSET);
+            //beamEnd = position + camera.getLookAt() * 1f;
+            //laserBeamBurst = new Line_Primitive(Game.GraphicsDevice,
+             //   camera.getLookAt(), Global.Constants.LASER_BEAM_COLOR,
+             //   beamEnd, Global.Constants.LASER_BEAM_COLOR);
+            Ray r = cursor.CalculateCursorRay(camera.projection, camera.view); 
+            laserBeamBurst = new Line_Primitive(Game.GraphicsDevice, new Vector3(0,0,0),
+                Global.Constants.LASER_BEAM_COLOR, camera.getLookAt(), Global.Constants.LASER_BEAM_COLOR);
             
+
             firingLaserBurstWeapon = true;
 
-            Ray r = new Ray(justASmidgeToTheRight, camera.lookAt);
+            //Ray r = new Ray(justASmidgeToTheRight, camera.lookAt);
             //Step two calculate collisions that might have occurred.
             //TODO: Ray intersection
             //Step three, Send message to the network to announce the event of the laser firing.
