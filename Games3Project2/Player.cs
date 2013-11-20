@@ -122,6 +122,7 @@ namespace Games3Project2
 
         public void update()
         {
+            #region Input
             float timeDelta = (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
             velocity = timeDelta * Global.input.get3DMovement14Directions(true, playerIndex);
             float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[localPlayerIndex].ThumbSticks.Right.X;
@@ -148,7 +149,7 @@ namespace Games3Project2
             }
             velocity.Y += jetPackThrust * Global.gameTime.ElapsedGameTime.Milliseconds;
             velocity.Y -= Global.Constants.GRAVITY * Global.gameTime.ElapsedGameTime.Milliseconds;
-            
+            #endregion
             #region If DEBUG && WINDOWS && (No Controller) Then Keyboard-and-Mouse does control
             /*
 #if DEBUG && WINDOWS
@@ -199,12 +200,26 @@ namespace Games3Project2
             } //END
 #endif*/
             #endregion
-            
+            #region Camera/Geometry
             camera.Update(velocity, yawChange, pitchChange);
             prevPosition = position;
             position = camera.cameraPos;
             sphere.Position = position;
             sphere.Update(Global.gameTime);
+            #endregion
+            #region Collision
+            foreach (LocalPlayer collidePlayer in Global.localPlayers)
+            {
+                if (collidePlayer == this)
+                    continue;
+
+            }
+            foreach (RemotePlayer collidePlayer in Global.remotePlayers)
+            {
+
+            }
+
+            #endregion
 
             base.Update(Global.gameTime);
         }
