@@ -143,7 +143,10 @@ namespace Games3Project2
             }
 
             //Always finish this function with this line:
-            gamer.SendData(packetWriter, SendDataOptions.Reliable);
+            if (packetWriter.Length > 0)
+            {
+                gamer.SendData(packetWriter, SendDataOptions.Reliable);
+            }
         }//WriteOutgoingPackets
         public void ReadIncomingPackets(LocalNetworkGamer gamer)
         {
