@@ -86,6 +86,7 @@ namespace Games3Project2.Globals
             public static readonly float MOVEMENT_VELOCITY = 3.1f;
             public static readonly float SPIN_RATE = 100f;
             public static readonly float PLAYER_RADIUS = 5f;
+            public static readonly int MAX_SCORE = 10;
 
             public static readonly int MAX_HEALTH = 100;
             public static readonly int BULLET_DAMAGE = 10;
