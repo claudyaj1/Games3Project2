@@ -21,7 +21,8 @@ namespace Games3Project2
         public PlayerIndex playerIndex;
         HUD hud;
         public int localPlayerIndex; // 1, 2, 3, or 4
-        public int networkPlayerID; 
+        public int networkPlayerID;
+        int lastFiringTime;
         Sphere sphere;
         Cube cube;
         Matrix cubeTransformation;
@@ -55,6 +56,7 @@ namespace Games3Project2
             health = Global.Constants.MAX_HEALTH;
             isJuggernaut = false;
             jetpackDisabled = false;
+            lastFiringTime = 0;
             jetFuel = Global.Constants.MAX_JET_FUEL;
             Viewport viewport = new Viewport();
 
@@ -146,6 +148,7 @@ namespace Games3Project2
             velocity = timeDelta * Global.input.get3DMovement14Directions(true, playerIndex);
             float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Input.indexAsInt(playerIndex)].ThumbSticks.Right.X;
             float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Input.indexAsInt(playerIndex)].ThumbSticks.Right.Y;
+            lastFiringTime += Global.gameTime.ElapsedGameTime.Milliseconds;
 
             if (jetFuel <= 0)
             {
@@ -187,8 +190,10 @@ namespace Games3Project2
             }
             velocity.Y += jetPackThrust * Global.gameTime.ElapsedGameTime.Milliseconds;
             velocity.Y -= Global.Constants.GRAVITY * Global.gameTime.ElapsedGameTime.Milliseconds;
-            if (Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Right > 0f)
+            if (Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Right > 0f && 
+                lastFiringTime > Global.Constants.FIRING_COOLDOWN)
             {
+                lastFiringTime = 0;
                 ShootBullet();
             }
             #endregion
