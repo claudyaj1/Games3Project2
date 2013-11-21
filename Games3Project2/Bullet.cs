@@ -14,11 +14,13 @@ namespace Games3Project2
         //TODO: CreateTranslation matrix
         public const int TTL = 2000; //Milliseconds
         public int timeLived;
+        public int damage;
 
-        public Bullet(Vector3 startPosition, Vector3 velocity) :
+        public Bullet(Vector3 startPosition, Vector3 velocity, int damage) :
             base(Global.game, startPosition, velocity, Global.Constants.BULLET_RADIUS)
         {
             bs = new BoundingSphere(startPosition, Global.Constants.BULLET_RADIUS);
+            this.damage = damage;
             timeLived = 0;
         }
 

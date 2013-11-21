@@ -80,7 +80,7 @@ namespace Games3Project2
         {
             //TODO: Create a bullet Class
             Bullet bullet = new Bullet(position,
-                dir * Global.Constants.BULLET_SPEED);
+                dir * Global.Constants.BULLET_SPEED, Global.Constants.BULLET_DAMAGE);
             Global.bullets.Add(bullet);
             //TODO: Play bullet fired sound fx at full volume.
         }

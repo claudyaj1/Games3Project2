@@ -424,7 +424,7 @@ namespace Games3Project2
                     for (int i = 0; i < joinedPlayers.Count; ++i)
                     {
                         //Global.numLocalGamers = 3;
-                        Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), joinedPlayers[i], i + 1));
+                        Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20 + i * 20, 0), joinedPlayers[i], i + 1));
                         //Global.localPlayers.Add(new LocalPlayer(new Vector3(-10, 20, 0), PlayerIndex.Two, 2));
                         //Global.localPlayers.Add(new LocalPlayer(new Vector3(10, 20, 0), PlayerIndex.Three, 3));
                     }
@@ -437,7 +437,7 @@ namespace Games3Project2
                 for (int i = 0; i < joinedPlayers.Count; ++i)
                 {
                     //Global.numLocalGamers = 3;
-                    Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), joinedPlayers[i], i + 1));
+                    Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20 + i * 20, 0), joinedPlayers[i], i + 1));
                     //Global.localPlayers.Add(new LocalPlayer(new Vector3(-10, 20, 0), PlayerIndex.Two, 2));
                     //Global.localPlayers.Add(new LocalPlayer(new Vector3(10, 20, 0), PlayerIndex.Three, 3));
                 }

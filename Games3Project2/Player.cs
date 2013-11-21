@@ -253,11 +253,24 @@ namespace Games3Project2
             {
                 if (collidePlayer == this)
                     continue;
-
+                Global.Collision.bounceCollidables(this, collidePlayer);
             }
             foreach (RemotePlayer collidePlayer in Global.remotePlayers)
             {
+                Global.Collision.bounceCollidables(this, collidePlayer);
+            }
 
+            for (int i = 0; i < Global.bullets.Count; ++i)
+            {
+                if (Global.Collision.didCollide(Global.bullets[i], this))
+                {
+                    health -= Global.bullets[i].damage;
+                    if (health < 0)
+                    {
+                        killed(0); //change that ish
+                    }
+                    Global.bullets.RemoveAt(i--);
+                }
             }
 
             #endregion
@@ -276,13 +289,14 @@ namespace Games3Project2
             }
         }
 
+
         public void setAsJuggernaut()
         {
             isJuggernaut = true;
             //TODO: Play "New Juggernaut"
         }
 
-        public void killed()
+        public void killed(int remotePlayerKiller)
         {
             //TODO: Play "Die" noise
             //TODO: maybe trigger some message?
@@ -318,8 +332,17 @@ namespace Games3Project2
         public void ShootBullet()
         {
             //TODO: Create a bullet Class
-            Bullet bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-                -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED);
+            Bullet bullet = null;
+            if (isJuggernaut)
+            {
+                bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, Global.Constants.JUG_BULLET_DAMAGE);
+            }
+            else
+            {
+                bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, Global.Constants.BULLET_DAMAGE);
+            }
             Global.bullets.Add(bullet);
             //TODO: Play bullet fired sound fx at full volume.
         }

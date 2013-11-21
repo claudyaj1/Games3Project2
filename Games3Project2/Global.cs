@@ -83,7 +83,7 @@ namespace Games3Project2.Globals
             public static readonly float PLAYER_RADIUS = 5f;
 
             public static readonly int MAX_HEALTH = 100;
-            public static readonly int BULLET_HIT_HEALTH_IMPACT = 10;
+            public static readonly int BULLET_DAMAGE = 10;
             public static readonly int MAX_JUG_HEALTH = 300;
             public static readonly int JUG_BULLET_DAMAGE = 30;
             public static readonly float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
@@ -102,6 +102,32 @@ namespace Games3Project2.Globals
             public static readonly string HUD_YOU_JUG = "YOU ARE THE JUGGERNAUT";
             public static readonly string MSG_JOINED = " joined";
             public static readonly string MSG_DISCONNECTED = " disconnected";
+        }
+
+        public static class Collision
+        {
+            public static void bounceCollidables(Collidable a, Collidable b)
+            {
+                Vector3 difference = a.Position - b.Position;
+                if (difference.LengthSquared() < (a.Radius * a.Radius) + (b.Radius * b.Radius))
+                {
+                    a.Position += new Vector3(difference.X, difference.Y, difference.Z);
+                    b.Position -= new Vector3(difference.X, difference.Y, difference.Z);
+                }
+            }
+
+            public static bool didCollide(Collidable a, Collidable b)
+            {
+                Vector3 difference = a.Position - b.Position;
+                if (difference.LengthSquared() < (a.Radius * a.Radius) + (b.Radius * b.Radius))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
     }
 }
