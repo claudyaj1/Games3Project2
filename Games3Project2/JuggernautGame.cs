@@ -153,13 +153,9 @@ namespace Games3Project2
                         case 0: //Create New Game (Host)
                             Global.networkManager.isHost = true;
                             Global.networkManager.isNetworked = true;
-                            //Global.networkManager.CreateSession();
-                            //if (Global.networkManager.networkSession != null)
-                            {
-                                Global.gameState = Global.GameState.LevelPicking;
-                                Global.numLocalGamers = 1;
-                                Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), PlayerIndex.One, 1, 1));
-                            }
+                            Global.gameState = Global.GameState.LevelPicking;
+                            Global.numLocalGamers = 1;
+                            Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), PlayerIndex.One, 1, 1));
                             break;
                         case 1: //Create New Local Game
                             Global.gameState = Global.GameState.SetupLocalPlayers;
@@ -171,13 +167,9 @@ namespace Games3Project2
                         case 2: //Join Game
                             Global.networkManager.isHost = false;
                             Global.networkManager.isNetworked = true;
-                            //Global.networkManager.JoinSession();
-                            //if (Global.networkManager.networkSession != null)
-                            {
-                                Global.gameState = Global.GameState.NetworkJoining;
-                                //Global.numLocalGamers = 1;
-                                //Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), PlayerIndex.One, 1));
-                            }
+                            Global.gameState = Global.GameState.NetworkJoining;
+                            //Global.numLocalGamers = 1;
+                            //Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), PlayerIndex.One, 1));
                             break;
                         case 3: //Heat maps
                             Global.networkManager.isHost = true;
