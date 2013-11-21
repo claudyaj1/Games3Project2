@@ -18,7 +18,6 @@ namespace Games3Project2
         public List<Platform> platforms;
         List<Platform> walls;
 
-        public List<BugBot> bugBots;
 
         Texture2D platformWallTexture;
         Texture2D platformTexture;
@@ -36,7 +35,6 @@ namespace Games3Project2
             platforms = new List<Platform>();
             walls = new List<Platform>();
 
-            bugBots = new List<BugBot>();
 
             platformWallTexture = Global.game.Content.Load<Texture2D>(@"Textures\walltexture");
             platformTexture = Global.game.Content.Load<Texture2D>(@"Textures\platformtexture");
@@ -104,7 +102,7 @@ namespace Games3Project2
             {
                 checkCollision(player);
             }
-            foreach (BugBot bot in bugBots)
+            foreach (BugBot bot in Global.bugBots)
             {
                 bot.update();
             }
@@ -126,7 +124,7 @@ namespace Games3Project2
         /// </summary>
         public void drawPlatforms()
         {
-            foreach (BugBot bot in bugBots)
+            foreach (BugBot bot in Global.bugBots)
             {
                 bot.draw();
             }
@@ -178,10 +176,10 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(0, standardSpacing, -Global.Constants.LEVEL_ONE_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
             platforms.Add(new Platform(new Vector3(0, -2 * standardSpacing, -Global.Constants.LEVEL_ONE_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
 
-            bugBots.Add(new BugBot(new Vector3(75, 0, -180), .09f, new Vector3(-75, -50, -175), new Vector3(-50, 50, 190), new Vector3(92, 120, 95), new Vector3(75, 0, -180)));
-            bugBots.Add(new BugBot(new Vector3(-75, 0, -180), .09f, new Vector3(75, -50, -175), new Vector3(50, 50, 190), new Vector3(-92, -120, 95), new Vector3(-75, 0, -180)));
-            bugBots.Add(new BugBot(new Vector3(-75, 0, 180), .09f, new Vector3(75, 50, 175), new Vector3(50, -50, -190), new Vector3(-92, 120, -95), new Vector3(75, 0, 180)));
-            bugBots.Add(new BugBot(new Vector3(75, 0, 180), .09f, new Vector3(75, 50, -175), new Vector3(50, 50, 190), new Vector3(92, 120, -95), new Vector3(75, 0, -180)));
+            Global.bugBots.Add(new BugBot(new Vector3(75, 0, -180), 0f, new Vector3(-75, -50, -175), new Vector3(-50, 50, 190), new Vector3(92, 120, 95), new Vector3(75, 0, -180)));
+            Global.bugBots.Add(new BugBot(new Vector3(-75, 0, -180), .09f, new Vector3(75, -50, -175), new Vector3(50, 50, 190), new Vector3(-92, -120, 95), new Vector3(-75, 0, -180)));
+            Global.bugBots.Add(new BugBot(new Vector3(-75, 0, 180), .09f, new Vector3(75, 50, 175), new Vector3(50, -50, -190), new Vector3(-92, 120, -95), new Vector3(75, 0, 180)));
+            Global.bugBots.Add(new BugBot(new Vector3(75, 0, 180), .09f, new Vector3(75, 50, -175), new Vector3(50, 50, 190), new Vector3(92, 120, -95), new Vector3(75, 0, -180)));
         }
 
         public void setupLevelTwo()

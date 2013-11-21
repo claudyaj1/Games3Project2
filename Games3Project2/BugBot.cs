@@ -25,6 +25,7 @@ namespace Games3Project2
         public Vector3[] points;
         public Boolean Alive;
         public int pointCount = 0;
+        public int attackRadius = 100;
 
         Sphere body;
 
@@ -32,7 +33,7 @@ namespace Games3Project2
         {
             this.position = position;
             body = new Sphere(Global.game, Color.Gold, this.position);
-            body.localScale = Matrix.CreateScale(5);
+            body.localScale = Matrix.CreateScale(2);
             body.SetWireframe(1);
             this.speed = speed;
             points = new Vector3[4];
@@ -73,6 +74,15 @@ namespace Games3Project2
         public void draw()
         {
             body.Draw(Global.CurrentCamera);
+        }
+
+        public void ShootBullet(Vector3 dir)
+        {
+            //TODO: Create a bullet Class
+            Bullet bullet = new Bullet(position,
+                dir * Global.Constants.BULLET_SPEED);
+            Global.bullets.Add(bullet);
+            //TODO: Play bullet fired sound fx at full volume.
         }
 
     }

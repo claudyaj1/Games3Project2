@@ -245,7 +245,7 @@ namespace Games3Project2
         {
             //TODO: Create a bullet Class
             Bullet bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-                camera.view.Forward * Global.Constants.BULLET_SPEED);
+                -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED);
             Global.bullets.Add(bullet);
             //TODO: Play bullet fired sound fx at full volume.
         }
