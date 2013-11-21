@@ -22,8 +22,8 @@ namespace Games3Project2
         public bool isJuggernaut;
         public float yaw;
         public float pitch;
-        public RemotePlayer(Game game, Vector3 pos, int networkPlayerID) :
-            base(game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
+        public RemotePlayer(Vector3 pos, int networkPlayerID) :
+            base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             this.networkPlayerID = networkPlayerID;
             score = 0;

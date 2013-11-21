@@ -234,6 +234,14 @@ namespace Games3Project2
                     // Join the first session we found.
                     networkSession = NetworkSession.Join(availableSessions[0]);
                     HookSessionEvents();
+
+                    foreach (NetworkGamer nGamer in networkSession.RemoteGamers)
+                    {
+                        if (!nGamer.IsLocal)
+                        {
+                            Global.remotePlayers.Add(new RemotePlayer(new Vector3(0, 20, 0), (int)nGamer.Id));
+                        }
+                    }
                 }
             }
             catch (Exception ex)
