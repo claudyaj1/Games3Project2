@@ -173,7 +173,12 @@ namespace Games3Project2
             }
             velocity.Y += jetPackThrust * Global.gameTime.ElapsedGameTime.Milliseconds;
             velocity.Y -= Global.Constants.GRAVITY * Global.gameTime.ElapsedGameTime.Milliseconds;
+            if (Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Right > 0f)
+            {
+                ShootBullet();
+            }
             #endregion
+
             #region If DEBUG && WINDOWS && (No Controller) Then Keyboard-and-Mouse does control
             /*
 #if DEBUG && WINDOWS
@@ -257,6 +262,24 @@ namespace Games3Project2
             }
         }
 
+        public void setAsJuggernaut()
+        {
+            isJuggernaut = true;
+            //TODO: Play "New Juggernaut"
+        }
+
+        public void killed()
+        {
+            //TODO: Play "Die" noise
+            //TODO: maybe trigger some message?
+            if (isJuggernaut)
+            {
+                //TODO: somehow, choosing a new juggernaut needs to occur
+                //Perhaps Global.needToSelectNewJuggernaut = true;
+                //TODO: Award points to the killer.
+            }
+        }
+
         public void drawHUD()
         {
             hud.Draw();
@@ -267,7 +290,7 @@ namespace Games3Project2
         /// </summary>
         public void ShootLaserBurstWeapon()
         {
-            const float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
+            
             //Step one, drawWalls a line from just a smidge to the right of the avatar.
             //TODO: Oh baby, Line_Primative...but when?
             //Step two calculate collisions that might have occurred.
@@ -276,6 +299,15 @@ namespace Games3Project2
             //TODO: step 3
             //Step four, Play sound fx.
             //TODO: Upht.wav
+        }
+
+        public void ShootBullet()
+        {
+            //TODO: Create a bullet Class
+            Bullet bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+                -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED);
+            Global.bullets.Add(bullet);
+            //TODO: Play bullet fired sound fx at full volume.
         }
     }
 }
