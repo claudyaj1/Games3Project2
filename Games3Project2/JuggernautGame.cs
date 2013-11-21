@@ -81,7 +81,9 @@ namespace Games3Project2
             //music.playBackgroundMusic();
             splashTexture = Content.Load<Texture2D>(@"Textures\splash");
             consolas = Content.Load<SpriteFont>(@"Fonts/Consolas");
+            Global.consolas = consolas;
             tahoma = Content.Load<SpriteFont>(@"Fonts/Tahoma");
+            Global.tahoma = tahoma;
 
             List<String> menuOptions = new List<String>();
             menuOptions.Add("Create New Game");
@@ -423,8 +425,8 @@ namespace Games3Project2
                     {
                         //Global.numLocalGamers = 3;
                         Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), joinedPlayers[i], i + 1));
-                        //Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), PlayerIndex.Two, 2));
-                        //Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), PlayerIndex.Three, 3));
+                        //Global.localPlayers.Add(new LocalPlayer(new Vector3(-10, 20, 0), PlayerIndex.Two, 2));
+                        //Global.localPlayers.Add(new LocalPlayer(new Vector3(10, 20, 0), PlayerIndex.Three, 3));
                     }
                     return true;
                 }
@@ -432,6 +434,13 @@ namespace Games3Project2
 
             if (joinedPlayers.Count == 4)
             {
+                for (int i = 0; i < joinedPlayers.Count; ++i)
+                {
+                    //Global.numLocalGamers = 3;
+                    Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), joinedPlayers[i], i + 1));
+                    //Global.localPlayers.Add(new LocalPlayer(new Vector3(-10, 20, 0), PlayerIndex.Two, 2));
+                    //Global.localPlayers.Add(new LocalPlayer(new Vector3(10, 20, 0), PlayerIndex.Three, 3));
+                }
                 return true;
             }
 

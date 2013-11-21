@@ -135,8 +135,18 @@ namespace Games3Project2
             #region Input
             float timeDelta = (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
             velocity = timeDelta * Global.input.get3DMovement14Directions(true, playerIndex);
-            float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[localPlayerIndex].ThumbSticks.Right.X;
-            float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[localPlayerIndex].ThumbSticks.Right.Y;
+            float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Input.indexAsInt(playerIndex)].ThumbSticks.Right.X;
+            float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Input.indexAsInt(playerIndex)].ThumbSticks.Right.Y;
+
+            if (jetFuel <= 0)
+            {
+                jetFuel = 0;
+                jetpackDisabled = true;
+            }
+            if (jetFuel > Global.Constants.MAX_JET_FUEL)
+            {
+                jetFuel = Global.Constants.MAX_JET_FUEL;
+            }
 
             if (jetpackDisabled && jetFuel > Global.Constants.MAX_JET_FUEL / 4)
             {
@@ -145,31 +155,25 @@ namespace Games3Project2
 
             if (Global.input.isPressed(Buttons.RightShoulder, playerIndex) ||
                 Global.input.isPressed(Buttons.LeftShoulder, playerIndex) ||
-                Global.input.GamepadByID[localPlayerIndex].Triggers.Left > 0f && !jetpackDisabled)
+                Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Left > 0f && !jetpackDisabled)
             {
                 jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
                 jetFuel -= Global.Constants.JET_FUEL_DECREMENT;
-                if (jetFuel <= 0)
-                {
-                    jetpackDisabled = true;
-                }
             }
             else
             {
                 //TODO: Jet Fuel addition only if the controller is plugged in.
                 jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
-                if (jetPackThrust < 0)
-                    jetPackThrust = 0;
                 jetFuel += Global.Constants.JET_FUEL_INCREMENT;
-                if (jetFuel > Global.Constants.MAX_JET_FUEL)
-                {
-                    jetFuel = Global.Constants.MAX_JET_FUEL;
-                }
             }
 
             if (jetPackThrust > Global.Constants.JET_PACK_Y_VELOCITY_CAP)
             {
                 jetPackThrust = Global.Constants.JET_PACK_Y_VELOCITY_CAP;
+            }
+            if (jetPackThrust < 0)
+            {
+                jetPackThrust = 0;
             }
             velocity.Y += jetPackThrust * Global.gameTime.ElapsedGameTime.Milliseconds;
             velocity.Y -= Global.Constants.GRAVITY * Global.gameTime.ElapsedGameTime.Milliseconds;

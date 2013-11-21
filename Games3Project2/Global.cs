@@ -17,7 +17,7 @@ namespace Games3Project2.Globals
         public static NetworkManagement networkManager;
         public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();
         public static List<RemotePlayer> remotePlayers = new List<RemotePlayer>();
-        public static List<Bullet> bullets = new List<Bullet>(); //TODO: Switch from Collidable class to bullet class?
+        public static List<Bullet> bullets = new List<Bullet>();
         public static List<BugBot> bugBots = new List<BugBot>();
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
@@ -38,6 +38,9 @@ namespace Games3Project2.Globals
         #endif
         public static readonly Color debugColor = Color.Black;
         #endregion
+        public static readonly Color HUD_COLOR = Color.WhiteSmoke;
+        public static SpriteFont consolas;  //To be assigned in LoadContent()
+        public static SpriteFont tahoma;    //To be assigned in LoadContent()
 
         public static Rectangle viewPort;
         public static Rectangle titleSafe;
@@ -52,6 +55,7 @@ namespace Games3Project2.Globals
             }
         }
         private static Camera currentCamera;
+        
 
         public static class Constants
         {
