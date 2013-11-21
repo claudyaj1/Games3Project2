@@ -202,7 +202,7 @@ namespace Games3Project2
                         //TODO:if(player.isJuggernaught == true) then do the bugbot check else do nothing
                         foreach (BugBot bot in Global.bugBots)
                         {
-                            if ((bot.position - player.Position).Length() < bot.attackRadius)
+                            if ((bot.position - player.Position).Length() < BugBot.ATTACK_RADIUS)
                             {
                                 //shoot a bullet at the player if he is the juggernaught
                                 Vector3 dir = player.Position - bot.position;

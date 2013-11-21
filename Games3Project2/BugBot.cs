@@ -25,7 +25,7 @@ namespace Games3Project2
         public Vector3[] points;
         public Boolean Alive;
         public int pointCount = 0;
-        public int attackRadius = 100;
+        public const int ATTACK_RADIUS = 100;
 
         Sphere body;
 
