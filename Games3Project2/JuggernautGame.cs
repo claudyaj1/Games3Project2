@@ -38,6 +38,8 @@ namespace Games3Project2
         Menu mainMenu;
         Level levelManager;
 
+        Boolean debug = true;
+
         //local player joining
         List<PlayerIndex> connectedPlayers = new List<PlayerIndex>();
         List<PlayerIndex> joinedPlayers = new List<PlayerIndex>();
@@ -64,6 +66,7 @@ namespace Games3Project2
             Global.viewPort = Global.graphics.GraphicsDevice.Viewport.Bounds;
             Global.titleSafe = GetTitleSafeArea(.85f);
             axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
+            BoundingSphereRenderer.Initialize(GraphicsDevice, 45);
 
             this.IsMouseVisible = true;
             base.Initialize();
@@ -192,9 +195,29 @@ namespace Games3Project2
                 #endregion
                 #region Playing
                 case Global.GameState.Playing:
+                    debug = true;
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
                         player.update();
+                        //TODO:if(player.isJuggernaught == true) then do the bugbot check else do nothing
+                        foreach (BugBot bot in Global.bugBots)
+                        {
+                            if ((bot.position - player.Position).Length() < bot.attackRadius)
+                            {
+                                //shoot a bullet at the player if he is the juggernaught
+                                Vector3 dir = player.Position - bot.position;
+                                dir.Normalize();
+                                bot.ShootBullet(dir);
+                                debug = false;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < Global.bullets.Count; i++)
+                    {
+                        Global.bullets[i].update(gameTime);
+                        if (Global.bullets[i].timeLived >= Bullet.TTL)
+                            Global.bullets.RemoveAt(i);
                     }
 
                     levelManager.update();
@@ -282,7 +305,13 @@ namespace Games3Project2
                         {
                             drawPlayer.draw();
                         }
-                        
+                        if (Global.bullets.Count > 0)
+                        {
+                            foreach (Bullet bullet in Global.bullets)
+                            {
+                                bullet.draw();
+                            }
+                        }
                     }
 
                     //SpriteBatch Drawing Section
@@ -300,9 +329,13 @@ namespace Games3Project2
                             new Vector2(5f, 53f), Global.debugColor);
                         Global.spriteBatch.DrawString(consolas,
                             "Up:" + Global.CurrentCamera.view.Up.ToString() +
-                            "\nLookAt: " + Global.CurrentCamera.view.Forward.ToString() +
+                            "\nLookAt: " + debug.ToString() +
                             "\nRight: " + Global.CurrentCamera.view.Right.ToString(),
                             new Vector2(5f, 95f), Global.debugColor);
+                        Global.spriteBatch.DrawString(consolas,
+                            "Bullet Count: " + Global.bullets.Count.ToString(),
+                            new Vector2(400f, 0f), Global.debugColor);
+
                     }
 
                     foreach (LocalPlayer drawPlayer in Global.localPlayers)
