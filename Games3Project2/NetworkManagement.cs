@@ -257,6 +257,12 @@ namespace Games3Project2
         {
             string foo = e.ToString();
             Console.WriteLine(foo);
+            if(!isHost)
+            {
+                Global.numLocalGamers = 1;
+                Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), PlayerIndex.One, 1, 2));
+                Global.levelManager.setupLevelOne();
+            }
             Global.gameState = Global.GameState.Playing;
         }
         void GamerJoinedEventHandler(object sender, GamerJoinedEventArgs e)
