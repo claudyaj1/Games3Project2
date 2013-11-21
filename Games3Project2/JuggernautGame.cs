@@ -241,10 +241,13 @@ namespace Games3Project2
                     {
                         Global.networkManager.CreateSession();
                     }
-                    else if (Global.input.isFirstPress(Buttons.A, PlayerIndex.One))
+                    else 
                     {
-                        Global.networkManager.networkSession.StartGame();
-                        Global.gameState = Global.GameState.Playing;
+                        if (Global.input.isFirstPress(Buttons.A, PlayerIndex.One))
+                        {
+                            Global.networkManager.networkSession.StartGame();
+                            Global.gameState = Global.GameState.Playing;
+                        }
                     }
                     break;
                 #endregion //NetworkWaitingHost
@@ -370,6 +373,10 @@ namespace Games3Project2
                 #endregion //NetworkQuit
             }
 
+            if (Global.networkManager.networkSession != null)
+            {
+                Global.networkManager.networkSession.Update();
+            }
 
             base.Update(gameTime);
         }
