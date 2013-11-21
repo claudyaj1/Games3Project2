@@ -46,6 +46,7 @@ namespace Games3Project2
 
         public JuggernautGame()
         {
+            Components.Add(new GamerServicesComponent(this));
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 #if WINDOWS
@@ -129,29 +130,39 @@ namespace Games3Project2
                         Global.gameState = Global.GameState.Menu;
                     }
                     break;
-                #endregion
+                #endregion //Intro
+
                 #region Menu
                 case Global.GameState.Menu:
                     switch (mainMenu.update())
                     {
-                        case 0:
+                        case 0: //Create New Game (Host)
                             Global.networkManager.isHost = true;
-                            Global.gameState = Global.GameState.SetupLocalPlayers;
-                            Global.numLocalGamers = 1;
-                            joinedPlayers.Add(PlayerIndex.One);
+                            Global.networkManager.CreateSession();
+                            if (Global.networkManager.networkSession != null)
+                            {
+                                Global.gameState = Global.GameState.SetupLocalPlayers;
+                                Global.numLocalGamers = 1;
+                                joinedPlayers.Add(PlayerIndex.One);
+                            }
                             break;
-                        case 1:
+                        case 1: //Join Game
                             Global.networkManager.isHost = false;
-                            Global.gameState = Global.GameState.SetupLocalPlayers;
-                            Global.numLocalGamers = 1;
-                            joinedPlayers.Add(PlayerIndex.One);
+                            Global.networkManager.JoinSession();
+                            if (Global.networkManager.networkSession != null)
+                            {
+                                Global.gameState = Global.GameState.SetupLocalPlayers;
+                                Global.numLocalGamers = 1;
+                                joinedPlayers.Add(PlayerIndex.One);
+                            }
                             break;
-                        case 2:
+                        case 2: //Exit
                             this.Exit();
                             break;
                     }
                     break;
-                #endregion
+                #endregion //Menu
+
                 #region SetupLocalPlayers
                 case Global.GameState.SetupLocalPlayers:
                     if (setupLocalPlayers())
@@ -168,12 +179,13 @@ namespace Games3Project2
                             levelManager.setupLevelOne();
                         }
                     }
-                    if (Global.input.isFirstPress(Keys.Back))
-                    {
-                        Global.gameState = Global.GameState.Menu;
-                    }
+                    //if (Global.input.isFirstPress(Keys.Back)) //CRS:The back button should exit the game.
+                    //{
+                    //    Global.gameState = Global.GameState.Menu;
+                    //}
                     break;
-                #endregion
+                #endregion //SetupLocalPlayers
+
                 #region LevelPicking:
                 case Global.GameState.LevelPicking:
                     if (updateLevelPicking())
@@ -182,17 +194,20 @@ namespace Games3Project2
                         Global.gameState = Global.GameState.Playing;
                     }
                     break;
-                #endregion
+                #endregion //LevelPicking
+
                 #region NetworkJoining
                 case Global.GameState.NetworkJoining:
 
                     break;
-                #endregion
+                #endregion //NetworkJoining
+
                 #region NetworkWaitingHost
                 case Global.GameState.NetworkWaitingHost:
 
                     break;
-                #endregion
+                #endregion //NetworkWaitingHost
+
                 #region Playing
                 case Global.GameState.Playing:
                     debug = true;
@@ -222,22 +237,25 @@ namespace Games3Project2
 
                     levelManager.update();
                     break;
-                #endregion
+                #endregion //Playing
+
                 #region Paused
                 case Global.GameState.Paused:
 
                     break;
-                #endregion
+                #endregion //Paused
+
                 #region GameOver
                 case Global.GameState.GameOver:
 
                     break;
-                #endregion
+                #endregion //GameOver
+
                 #region NetworkQuit
                 case Global.GameState.NetworkQuit:
 
                     break;
-                #endregion
+                #endregion //NetworkQuit
             }
 
 
