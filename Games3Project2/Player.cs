@@ -21,6 +21,7 @@ namespace Games3Project2
         public PlayerIndex playerIndex;
         HUD hud;
         public int localPlayerIndex; // 1, 2, 3, or 4
+        public int networkPlayerID; 
         Sphere sphere;
         Cube cube;
         Matrix cubeTransformation;
@@ -49,6 +50,7 @@ namespace Games3Project2
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             playerIndex = index;
+            this.networkPlayerID = new Random().Next(1000000);
             localPlayerIndex = localIndex;
             health = Global.Constants.MAX_HEALTH;
             isJuggernaut = false;
@@ -160,16 +162,17 @@ namespace Games3Project2
                 jetpackDisabled = false;
             }
 
-            if (Global.input.isPressed(Buttons.RightShoulder, playerIndex) ||
+            //Cheating attacks will target the jetpacking logic in this if statement.
+            if ((Global.input.isPressed(Buttons.RightShoulder, playerIndex) ||
                 Global.input.isPressed(Buttons.LeftShoulder, playerIndex) ||
-                Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Left > 0f && !jetpackDisabled)
+                Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Left > 0f) && !jetpackDisabled)
             {
                 jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
                 jetFuel -= Global.Constants.JET_FUEL_DECREMENT;
             }
             else
             {
-                //TODO: Jet Fuel addition only if the controller is plugged in.
+                //Cole: "We could do jet fuel addition only if the controller is plugged in"
                 jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
                 jetFuel += Global.Constants.JET_FUEL_INCREMENT;
             }
@@ -262,7 +265,7 @@ namespace Games3Project2
 
             for (int i = 0; i < Global.bullets.Count; ++i)
             {
-                if (Global.Collision.didCollide(Global.bullets[i], this))
+                if (Global.bullets[i].shooterID != networkPlayerID && Global.Collision.didCollide(Global.bullets[i], this))
                 {
                     health -= Global.bullets[i].damage;
                     if (health < 0)
@@ -294,6 +297,7 @@ namespace Games3Project2
         {
             isJuggernaut = true;
             //TODO: Play "New Juggernaut"
+            //TODO: Announce "Who is Juggernaut" , networkID
         }
 
         public void killed(int remotePlayerKiller)
@@ -331,17 +335,19 @@ namespace Games3Project2
 
         public void ShootBullet()
         {
-            //TODO: Create a bullet Class
+            //Bullet bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+              //  -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED,
+                //networkPlayerID);
             Bullet bullet = null;
             if (isJuggernaut)
             {
                 bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, Global.Constants.JUG_BULLET_DAMAGE);
+                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, networkPlayerID, Global.Constants.JUG_BULLET_DAMAGE);
             }
             else
             {
                 bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, Global.Constants.BULLET_DAMAGE);
+                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, networkPlayerID, Global.Constants.BULLET_DAMAGE);
             }
             Global.bullets.Add(bullet);
             //TODO: Play bullet fired sound fx at full volume.

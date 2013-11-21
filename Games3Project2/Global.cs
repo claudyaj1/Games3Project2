@@ -70,15 +70,15 @@ namespace Games3Project2.Globals
             public static readonly float LEVEL_TWO_LENGTH = 100;
             public static readonly float LEVEL_TWO_HEIGHT = 165;
 
-            public static readonly float JET_PACK_INCREMENT = 0.00003f;
-            public static readonly float JET_PACK_DECREMENT = JET_PACK_INCREMENT * 0.6f; //Yes, this must remain positive.
-            public static readonly float JET_FUEL_INCREMENT = .2f;
+            public static readonly float JET_PACK_INCREMENT = 0.00006f;
+            public static readonly float JET_PACK_DECREMENT = JET_PACK_INCREMENT * 0.4f; //Yes, this must remain positive.
+            public static readonly float JET_FUEL_INCREMENT = .3f;
             public static readonly float JET_FUEL_DECREMENT = .6f;
-            public static readonly float JET_PACK_Y_VELOCITY_CAP = 0.0007f;
-            public static readonly float GRAVITY = 0.0003f;
+            public static readonly float JET_PACK_Y_VELOCITY_CAP = 0.0010f;
+            public static readonly float GRAVITY = 0.0006f;
             public static readonly float MAX_JET_FUEL = 100f;
 
-            public static readonly float MOVEMENT_VELOCITY = 3f;
+            public static readonly float MOVEMENT_VELOCITY = 3.1f;
             public static readonly float SPIN_RATE = 100f;
             public static readonly float PLAYER_RADIUS = 5f;
 
@@ -87,7 +87,7 @@ namespace Games3Project2.Globals
             public static readonly int MAX_JUG_HEALTH = 300;
             public static readonly int JUG_BULLET_DAMAGE = 30;
             public static readonly float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
-            public static readonly float BULLET_SPEED = 2f;
+            public static readonly float BULLET_SPEED = .25f;
             public static readonly float BULLET_RADIUS = .5f;
 
             public static readonly float WALL_BUFFER = 5;
