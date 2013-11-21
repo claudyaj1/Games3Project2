@@ -84,7 +84,7 @@ namespace Games3Project2
             //can easily be distinguished yet seem the same.
             Bullet bullet = new Bullet(position,
                 dir * Global.Constants.BULLET_SPEED,
-                npcID);
+                npcID, Global.Constants.BULLET_DAMAGE);
             Global.bullets.Add(bullet);
             //TODO: Play bullet fired sound fx at full volume.
         }

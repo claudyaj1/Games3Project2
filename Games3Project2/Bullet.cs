@@ -11,6 +11,7 @@ namespace Games3Project2
     public class Bullet : Collidable
     {
         BoundingSphere bs;
+        //TODO: CreateTranslation matrix
         public const int TTL = 2000; //Milliseconds
         public int timeLived;
         /// <summary>
@@ -18,13 +19,16 @@ namespace Games3Project2
         /// </summary>
         public int shooterID; 
         public Vector3 startPosition;
+        public int damage;
 
         /// <param name="shooterID">networkPlayerID</param>
-        public Bullet(Vector3 startPosition, Vector3 velocity, int shooterID) :
+        public Bullet(Vector3 startPosition, Vector3 velocity, int shooterID, int damage) :
             base(Global.game, startPosition, velocity, Global.Constants.BULLET_RADIUS)
         {
             this.startPosition = startPosition;
+            this.shooterID = shooterID;
             bs = new BoundingSphere(startPosition, Global.Constants.BULLET_RADIUS);
+            this.damage = damage;
             timeLived = 0;
         }
 

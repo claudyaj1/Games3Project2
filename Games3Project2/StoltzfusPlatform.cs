@@ -112,6 +112,20 @@ namespace Games3Project2
             }
         }
 
+        public bool didCollide(Collidable collider)
+        {
+            Vector3 diffVector = collider.Position - position;
+            float distance = Math.Abs(Vector3.Dot(diffVector, normal));
+            if (distance <= collider.Radius)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public void update()
         {
 

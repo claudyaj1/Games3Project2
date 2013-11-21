@@ -94,6 +94,65 @@ namespace Games3Project2
             }
         }
 
+        public bool checkForCollision(Collidable collidable)
+        {
+            //hard boundary checks
+            float xCheck = 0;
+            float zCheck = 0;
+            float yCheck = 0;
+            switch (currentLevel)
+            {
+                case 1:
+                    xCheck = Global.Constants.LEVEL_ONE_WIDTH - collidable.Radius;
+                    zCheck = Global.Constants.LEVEL_ONE_LENGTH - collidable.Radius;
+                    yCheck = Global.Constants.LEVEL_ONE_HEIGHT - collidable.Radius;
+                    break;
+                case 2:
+                    xCheck = Global.Constants.LEVEL_TWO_WIDTH - collidable.Radius;
+                    zCheck = Global.Constants.LEVEL_TWO_LENGTH - collidable.Radius;
+                    yCheck = Global.Constants.LEVEL_TWO_HEIGHT - collidable.Radius;
+                    break;
+            }
+
+            if (collidable.Position.X > xCheck)
+            {
+                return true;
+            }
+            else if (collidable.Position.X < -xCheck)
+            {
+                return true;
+            }
+
+            if (collidable.Position.Y > yCheck)
+            {
+                return true;
+            }
+            else if (collidable.Position.Y < -yCheck)
+            {
+                return true;
+            }
+
+            if (collidable.Position.Z > zCheck)
+            {
+                return true;
+            }
+            else if (collidable.Position.Z < -zCheck)
+            {
+                return true;
+            }
+
+            //platforms
+            foreach (Platform platform in platforms)
+            {
+                if (platform.didCollide(collidable))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public void update()
         {
             foreach (LocalPlayer player in Global.localPlayers)
@@ -103,6 +162,13 @@ namespace Games3Project2
             foreach (BugBot bot in Global.bugBots)
             {
                 bot.update();
+            }
+            for (int i = 0; i < Global.bullets.Count; ++i)
+            {
+                if(checkForCollision(Global.bullets[i]))
+                {
+                    Global.bullets.RemoveAt(i--);
+                }
             }
         }
 
