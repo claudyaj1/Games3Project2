@@ -48,6 +48,7 @@ namespace Camera3D
                 (float)viewport.Width /
                 (float)viewport.Height,
                 1, 1000);
+            
 
             BoundingSphere = new BoundingSphere(pos, 1.5f);
             this.Initialize();

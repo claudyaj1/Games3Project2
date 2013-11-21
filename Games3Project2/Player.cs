@@ -226,14 +226,15 @@ namespace Games3Project2
 
         public void draw()
         {
-            if (Global.CurrentCamera == camera)
-            {
-                cursor.Draw();
-            }
-            else
+            if (Global.CurrentCamera != camera)
             {
                 sphere.Draw(Global.CurrentCamera);
             }
+        }
+
+        public void drawHUD()
+        {
+            cursor.Draw();
         }
 
         /// <summary>

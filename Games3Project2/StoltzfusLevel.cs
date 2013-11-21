@@ -126,15 +126,15 @@ namespace Games3Project2
         /// </summary>
         public void drawPlatforms()
         {
-            foreach (BugBot bot in bugBots)
-            {
-                bot.draw();
-            }
             foreach (Platform platform in platforms)
             {
                 platform.draw();
             }
-            
+
+            foreach (BugBot bot in bugBots)
+            {
+                bot.draw();
+            }
             
         }
 

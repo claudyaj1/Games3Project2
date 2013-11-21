@@ -13,6 +13,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using Games3Project2.Globals;
+
 namespace Geometry
 {
     class Quad
@@ -24,13 +26,12 @@ namespace Geometry
         // Effect
         BasicEffect effect;
         private short[] indices;
-        GraphicsDevice gd;
 
         //properties
         public bool mirrorTexture;
         public bool wireFrame;
 
-        public Quad(GraphicsDevice g, Texture2D texture, Color color)
+        public Quad(Texture2D texture, Color color)
         {
             Vector3 position = new Vector3(-1f, 0f, -1f);
             verts = new VertexPositionColorTexture[4];
@@ -55,10 +56,9 @@ namespace Geometry
             indices[4] = 2;
             indices[5] = 3;
 
-            vertexBuffer = new VertexBuffer(g, typeof(VertexPositionColorTexture), verts.Length, BufferUsage.None);
+            vertexBuffer = new VertexBuffer(Global.graphics.GraphicsDevice, typeof(VertexPositionColorTexture), verts.Length, BufferUsage.None);
             vertexBuffer.SetData(verts);
-            effect = new BasicEffect(g);
-            gd = g;
+            effect = new BasicEffect(Global.graphics.GraphicsDevice);
             effect.TextureEnabled = true;
             effect.VertexColorEnabled = false;
             effect.Texture = texture;
@@ -88,13 +88,13 @@ namespace Geometry
                     ss.AddressU = TextureAddressMode.Clamp;
                     ss.AddressV = TextureAddressMode.Clamp;
                     ss.Filter = TextureFilter.Anisotropic;
-                    gd.SamplerStates[0] = ss;
+                    Global.graphics.GraphicsDevice.SamplerStates[0] = ss;
                 }
             }
 
-            gd.RasterizerState = rs;
+            Global.graphics.GraphicsDevice.RasterizerState = rs;
 
-            gd.SetVertexBuffer(vertexBuffer);
+            Global.graphics.GraphicsDevice.SetVertexBuffer(vertexBuffer);
 
             effect.World = world;
             effect.View = cameraView;
@@ -105,7 +105,7 @@ namespace Geometry
             {
                 pass.Apply();
 
-                gd.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, verts, 0, 4, indices, 0, 2);
+                Global.graphics.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, verts, 0, 4, indices, 0, 2);
 
             }
         }

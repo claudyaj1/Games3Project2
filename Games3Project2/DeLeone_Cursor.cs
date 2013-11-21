@@ -26,6 +26,7 @@ namespace ReticuleCursor
         // This constant controls how fast the gamepad moves the cursor. this constant
         // is in pixels per second. Currently not used.
         const float CursorSpeed = 400.0f;
+        Rectangle rect;
 
         // This is the sprite that is drawn at the current cursor Position.
         // textureCenter is used to center the sprite when drawing.
@@ -41,6 +42,7 @@ namespace ReticuleCursor
             textureCenter = new Vector2(cursorTexture.Width / 2, cursorTexture.Height / 2);
 
             Position = screenPos;
+            rect = new Rectangle((int)(screenPos.X - textureCenter.X), (int)(screenPos.Y - textureCenter.Y), cursorTexture.Width, cursorTexture.Height);
         }
 
         public void Update()
@@ -50,7 +52,8 @@ namespace ReticuleCursor
         
         public void Draw()
         {
-            Global.spriteBatch.Draw(cursorTexture, Position, null, Color.White, 0.0f, textureCenter, 1.0f, SpriteEffects.None, 0.0f);
+            //Global.spriteBatch.Draw(cursorTexture, Position, null, Color.White, 0.0f, textureCenter, 1.0f, SpriteEffects.None, 0.0f);
+            Global.spriteBatch.Draw(cursorTexture, rect, Color.White);
         }
         
         // CalculateCursorRay Calculates a world space ray starting at the camera's

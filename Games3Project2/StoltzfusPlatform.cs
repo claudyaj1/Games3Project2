@@ -68,7 +68,7 @@ namespace Games3Project2
             Length = length_;
             texture = tex;
 
-            quad = new Quad(Global.game.GraphicsDevice, tex, Color.White);
+            quad = new Quad(tex, Color.White);
             quad.mirrorTexture = true;
             rotation = Matrix.Identity;
             platformType = platType;

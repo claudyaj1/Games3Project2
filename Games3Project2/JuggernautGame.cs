@@ -60,6 +60,7 @@ namespace Games3Project2
             Global.game = this;
             Global.networkManager = new NetworkManagement();
             Global.graphics = graphics;
+            Global.graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             Global.viewPort = Global.graphics.GraphicsDevice.Viewport.Bounds;
             Global.titleSafe = GetTitleSafeArea(.85f);
             axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
@@ -222,49 +223,56 @@ namespace Games3Project2
         {
             Global.gameTime = gameTime;
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            Global.spriteBatch.Begin();
 
             switch (Global.gameState)
             {
                 #region Intro
                 case Global.GameState.Intro:
+                    Global.spriteBatch.Begin();
                     Global.spriteBatch.Draw(splashTexture, Global.viewPort, Color.White);
+                    Global.spriteBatch.End();
                     break;
                 #endregion
                 #region Menu
                 case Global.GameState.Menu:
+                    Global.spriteBatch.Begin();
                     mainMenu.draw();
+                    Global.spriteBatch.End();
                     break;
                 #endregion
                 #region SetupLocalPlayers
                 case Global.GameState.SetupLocalPlayers:
+                    Global.spriteBatch.Begin();
                     drawLocalPlayerSetup();
+                    Global.spriteBatch.End();
                     break;
                 #endregion
                 #region LevelPicking:
                 case Global.GameState.LevelPicking:
+                    Global.spriteBatch.Begin();
                     drawLevelPicking();
+                    Global.spriteBatch.End();
                     break;
                 #endregion
                 #region NetworkJoining
                 case Global.GameState.NetworkJoining:
-
+                    Global.spriteBatch.Begin();
+                    Global.spriteBatch.End();
                     break;
                 #endregion
                 #region NetworkWaitingHost
                 case Global.GameState.NetworkWaitingHost:
-
+                    Global.spriteBatch.Begin();
+                    Global.spriteBatch.End();
                     break;
                 #endregion
                 #region Playing
                 case Global.GameState.Playing:
-                    
+                    //3D Drawing Section
+                    resetGraphicsDevice();
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
-                        //necessary for multiplayer cursors to drawWalls properly.
-                        Global.spriteBatch.End();
                         Global.CurrentCamera = player.camera;
-                        Global.spriteBatch.Begin();
                         
                         levelManager.drawWalls();
                         levelManager.drawPlatforms();
@@ -273,45 +281,62 @@ namespace Games3Project2
                             drawPlayer.draw();
                         }
                         
-                        
-                        //If in the game session and in debug mode.
-                        if (Global.debugMode)
-                        {
-                            axisReference.Draw(Matrix.Identity, Global.CurrentCamera.view, Global.CurrentCamera.projection);
-                            Global.spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
-                                    new Vector2(5f, 35f), Color.PaleGreen);
-                            Global.spriteBatch.DrawString(consolas, "Camera Position and View=\n" +
-                                "X:" + Global.CurrentCamera.cameraPos.X.ToString() +
-                                " Y:" + Global.CurrentCamera.cameraPos.Y.ToString() +
-                                " Z:" + Global.CurrentCamera.cameraPos.Z.ToString(),
-                                new Vector2(5f, 53f), Global.debugColor);
-                            Global.spriteBatch.DrawString(consolas,
-                                "Up:" + Global.CurrentCamera.view.Up.ToString() +
-                                "\nLookAt: " + Global.CurrentCamera.view.Forward.ToString() +
-                                "\nRight: " + Global.CurrentCamera.view.Right.ToString(),
-                                new Vector2(5f, 95f), Global.debugColor);
-                        }
                     }
+
+                    //SpriteBatch Drawing Section
+                    Global.spriteBatch.Begin();
+                    
+                    if (Global.debugMode)
+                    {
+                        axisReference.Draw(Matrix.Identity, Global.CurrentCamera.view, Global.CurrentCamera.projection);
+                        Global.spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
+                                new Vector2(5f, 35f), Color.PaleGreen);
+                        Global.spriteBatch.DrawString(consolas, "Camera Position and View=\n" +
+                            "X:" + Global.CurrentCamera.cameraPos.X.ToString() +
+                            " Y:" + Global.CurrentCamera.cameraPos.Y.ToString() +
+                            " Z:" + Global.CurrentCamera.cameraPos.Z.ToString(),
+                            new Vector2(5f, 53f), Global.debugColor);
+                        Global.spriteBatch.DrawString(consolas,
+                            "Up:" + Global.CurrentCamera.view.Up.ToString() +
+                            "\nLookAt: " + Global.CurrentCamera.view.Forward.ToString() +
+                            "\nRight: " + Global.CurrentCamera.view.Right.ToString(),
+                            new Vector2(5f, 95f), Global.debugColor);
+                    }
+
+                    foreach (LocalPlayer drawPlayer in Global.localPlayers)
+                    {
+                        Global.spriteBatch.End();
+                        Global.CurrentCamera = drawPlayer.camera;
+                        Global.spriteBatch.Begin();
+                        drawPlayer.drawHUD();
+                    }
+
+                    Global.spriteBatch.End();
                     break;
                 #endregion
                 #region Paused
                 case Global.GameState.Paused:
+                    Global.spriteBatch.Begin();
 
+                    Global.spriteBatch.End();
                     break;
                 #endregion
                 #region GameOver
                 case Global.GameState.GameOver:
+                    Global.spriteBatch.Begin();
 
+                    Global.spriteBatch.End();
                     break;
                 #endregion
                 #region NetworkQuit
                 case Global.GameState.NetworkQuit:
+                    Global.spriteBatch.Begin();
 
+                    Global.spriteBatch.End();
                     break;
                 #endregion
             }
 
-            Global.spriteBatch.End();
             base.Draw(gameTime);
         }
 
@@ -361,7 +386,11 @@ namespace Games3Project2
                 {
                     for (int i = 0; i < joinedPlayers.Count; ++i)
                     {
+                        Global.numLocalGamers = 4;
                         Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), joinedPlayers[i], i + 1));
+                        Global.localPlayers.Add(new LocalPlayer(new Vector3(10, 20, 0), PlayerIndex.Two, 2));
+                        Global.localPlayers.Add(new LocalPlayer(new Vector3(-10, 20, 0), PlayerIndex.Three, 3));
+                        Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), PlayerIndex.Four, 4));
                     }
                     return true;
                 }
@@ -431,6 +460,13 @@ namespace Games3Project2
 
             Global.spriteBatch.DrawString(consolas, "Press A For Level One", startingPosition, Color.Black);
             Global.spriteBatch.DrawString(consolas, "Press B For Level Two", new Vector2(startingPosition.X, startingPosition.Y + yOffset), Color.Black);
+        }
+
+        private void resetGraphicsDevice()
+        {
+            Global.graphics.GraphicsDevice.BlendState = BlendState.Opaque;
+            Global.graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            Global.graphics.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
         }
     }
 }
