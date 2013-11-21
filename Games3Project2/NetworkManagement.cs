@@ -187,7 +187,21 @@ namespace Games3Project2
                         break;
                     case MessageTypes.PositionAndVelocity:
                         {
-                            //TODO: Read position packets.
+                            byte ID = packetReader.ReadByte();
+                            RemotePlayer thePlayer = null;
+                            foreach (RemotePlayer rPlayer in Global.remotePlayers)
+                            {
+                                if (rPlayer.networkPlayerID == ID)
+                                {
+                                    thePlayer = rPlayer;
+                                    break;
+                                }
+                            }
+
+                            thePlayer.Position = packetReader.ReadVector3();
+                            thePlayer.Velocity = packetReader.ReadVector3();
+                            packetReader.ReadBoolean();
+                            packetReader.ReadSingle();
                         }
                         break;
                     case MessageTypes.ScoreUpdate:
@@ -325,8 +339,8 @@ namespace Games3Project2
         {
             messageType = MessageTypes.NewJuggernaut;
             packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
-            packetWriter.Write((short)deadJuggernaut.networkPlayerID);
-            packetWriter.Write((short)newJuggernaut.networkPlayerID);
+            packetWriter.Write((byte)deadJuggernaut.networkPlayerID);
+            packetWriter.Write((byte)newJuggernaut.networkPlayerID);
             packetWriter.Write(newJuggernaut.Position); //?
             packetWriter.Write(newJuggernaut.Velocity); //?
         }
@@ -334,8 +348,8 @@ namespace Games3Project2
         {
             messageType = MessageTypes.NewJuggernaut;
             packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
-            packetWriter.Write((short)deadJuggernaut.networkPlayerID);
-            packetWriter.Write((short)newJuggernaut.networkPlayerID);
+            packetWriter.Write((byte)deadJuggernaut.networkPlayerID);
+            packetWriter.Write((byte)newJuggernaut.networkPlayerID);
             packetWriter.Write(newJuggernaut.Position); //?
             packetWriter.Write(newJuggernaut.Velocity); //?
             packetWriter.Write(deadJuggernaut.Position); //Maybe for explosions of dead bodies.
@@ -345,7 +359,7 @@ namespace Games3Project2
         {
             messageType = MessageTypes.PlayerKilledByJuggernaut;
             packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
-            packetWriter.Write((short)deadPlayer.networkPlayerID);
+            packetWriter.Write((byte)deadPlayer.networkPlayerID);
             packetWriter.Write(deadPlayer.Position);
         }
         ////
@@ -353,7 +367,7 @@ namespace Games3Project2
         {
             messageType = MessageTypes.PositionAndVelocity;
             packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
-            packetWriter.Write((short)localPlayer.networkPlayerID);
+            packetWriter.Write((byte)localPlayer.networkPlayerID);
             packetWriter.Write(localPlayer.Position);
             packetWriter.Write(localPlayer.Velocity);
             packetWriter.Write((bool)localPlayer.jetpackDisabled);  //Is this useful?
@@ -363,7 +377,7 @@ namespace Games3Project2
         {
             messageType = MessageTypes.PositionAndVelocity;
             packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
-            packetWriter.Write((short)bot.npcID);
+            packetWriter.Write((byte)bot.npcID);
             packetWriter.Write(bot.position);
             packetWriter.Write(bot.direction);
             packetWriter.Write(bot.speed);

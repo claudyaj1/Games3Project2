@@ -271,6 +271,7 @@ namespace Games3Project2
             camera.Update(velocity, yawChange, pitchChange);
             prevPosition = position;
             position = camera.cameraPos;
+            Global.networkManager.MovementNetworkMessage(this);
             sphere.Position = position;
             sphere.Update(Global.gameTime);
             hud.Update();
