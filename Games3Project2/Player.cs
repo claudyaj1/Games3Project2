@@ -135,7 +135,7 @@ namespace Games3Project2
                 jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
                 //TODO: Jet Fuel subtraction.
             }
-            else if (Global.input.GamepadByID[Input.indexAsInt(playerIndex)].IsConnected)
+            else if (Global.input.isConnected(playerIndex))
             {
                 //TODO: Jet Fuel addition only if the controller is plugged in.
                 jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;

@@ -65,8 +65,6 @@ namespace Games3Project2
             Global.titleSafe = GetTitleSafeArea(.85f);
             axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
 
-            
-
             this.IsMouseVisible = true;
             base.Initialize();
         }
@@ -136,10 +134,14 @@ namespace Games3Project2
                         case 0:
                             Global.networkManager.isHost = true;
                             Global.gameState = Global.GameState.SetupLocalPlayers;
+                            Global.numLocalGamers = 1;
+                            joinedPlayers.Add(PlayerIndex.One);
                             break;
                         case 1:
                             Global.networkManager.isHost = false;
                             Global.gameState = Global.GameState.SetupLocalPlayers;
+                            Global.numLocalGamers = 1;
+                            joinedPlayers.Add(PlayerIndex.One);
                             break;
                         case 2:
                             this.Exit();
@@ -358,7 +360,7 @@ namespace Games3Project2
         private bool setupLocalPlayers()
         {
             //Dynamically update the connected controllers
-            for (PlayerIndex index = PlayerIndex.One; index <= PlayerIndex.Four; index++)
+            for (PlayerIndex index = PlayerIndex.Two; index <= PlayerIndex.Four; index++)
             {
                 if (Global.input.isConnected(index) && !connectedPlayers.Contains(index) && !joinedPlayers.Contains(index))
                 {
@@ -386,11 +388,7 @@ namespace Games3Project2
                 {
                     for (int i = 0; i < joinedPlayers.Count; ++i)
                     {
-                        Global.numLocalGamers = 4;
                         Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), joinedPlayers[i], i + 1));
-                        Global.localPlayers.Add(new LocalPlayer(new Vector3(10, 20, 0), PlayerIndex.Two, 2));
-                        Global.localPlayers.Add(new LocalPlayer(new Vector3(-10, 20, 0), PlayerIndex.Three, 3));
-                        Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), PlayerIndex.Four, 4));
                     }
                     return true;
                 }
@@ -412,7 +410,11 @@ namespace Games3Project2
 
             for (PlayerIndex index = PlayerIndex.One; index <= PlayerIndex.Four; index++)
             {
-                if (!Global.input.isConnected(index))
+                if (index == PlayerIndex.One)
+                {
+                    Global.spriteBatch.DrawString(consolas, "Joined", new Vector2(startingPosition.X, startingPosition.Y + (int)index * yOffset), Color.Green);
+                }
+                else if (!Global.input.isConnected(index))
                 {
                     Global.spriteBatch.DrawString(consolas, "Controller " + index.ToString() + " Disconnected", new Vector2(startingPosition.X, startingPosition.Y + (int)index * yOffset), Color.Red);
                 }

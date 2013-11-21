@@ -720,6 +720,28 @@ namespace InputHandler
             return movement;
         }
 
+        public float getRightTrigger(PlayerIndex p_)
+        {
+            float retValue = 0;
+            switch (p_)
+            {
+                case PlayerIndex.One:
+
+                    break;
+                case PlayerIndex.Two:
+
+                    break;
+                case PlayerIndex.Three:
+
+                    break;
+                case PlayerIndex.Four:
+
+                    break;
+            }
+
+            return retValue;
+        }
+
         #endregion
     }
 }
