@@ -207,7 +207,30 @@ namespace Games3Project2
                         }
                         break;
                     case MessageTypes.PositionAndVelocityBot:
-                        //TODO: Read Bot packets
+                        {
+                            short npcID = packetReader.ReadUInt16();
+                            BugBot bot = null;
+                            foreach (BugBot bugBot in Global.bugBots)
+                            {
+                                if (bugBot.npcID == npcID)
+                                {
+                                    bot = bugBot;
+                                    break;
+                                }
+                            }
+                            if (bot != null)
+                            {
+                                bot.position = packetReader.ReadVector3();
+                                bot.direction = packetReader.ReadVector3();
+                                bot.speed = packetReader.ReadSingle();
+                            }
+                            else
+                            {
+                                packetReader.ReadVector3();
+                                packetReader.ReadVector3();//TODO: DELETE THIS WE DON'T USE IT
+                                packetReader.ReadSingle();
+                            }
+                        }
                         break;
                     case MessageTypes.ScoreUpdate:
                         {
