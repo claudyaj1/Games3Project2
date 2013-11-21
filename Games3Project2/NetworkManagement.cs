@@ -13,7 +13,7 @@ namespace Games3Project2
     public class NetworkManagement : Microsoft.Xna.Framework.GameComponent
     {
         public bool isHost;
-
+        public bool isNetworked;
         //Objects
         public NetworkSession networkSession;
         private PacketReader packetReader;
@@ -42,6 +42,7 @@ namespace Games3Project2
         public override void Initialize()
         {
             isHost = false;
+            isNetworked = false;
             gamertags = new string[Global.Constants.MAX_PLAYERS_TOTAL];
             packetReader = new PacketReader();
             packetWriter = new PacketWriter();
