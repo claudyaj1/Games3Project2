@@ -141,6 +141,17 @@ namespace Games3Project2
             camera.cameraPos = position;
         }
 
+        public void respawn(Vector3 newPosition)
+        {
+            Position = newPosition;
+            lastFiringTime = 0;
+            jetPackThrust = 0;
+            jetpackDisabled = false;
+            health = Global.Constants.MAX_HEALTH;
+            isJuggernaut = false;
+            jetFuel = Global.Constants.MAX_JET_FUEL;
+        }
+
         public void update()
         {
             #region Input
@@ -320,6 +331,8 @@ namespace Games3Project2
                 //Perhaps Global.needToSelectNewJuggernaut = true;
                 //TODO: Award points to the killer.
             }
+
+            Global.levelManager.respawnPlayer(this);
         }
 
         public void drawHUD()

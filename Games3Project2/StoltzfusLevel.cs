@@ -13,10 +13,11 @@ using Camera3D;
 
 namespace Games3Project2
 {
-    class Level : Microsoft.Xna.Framework.GameComponent
+    public class Level : Microsoft.Xna.Framework.GameComponent
     {
         public List<Platform> platforms;
         List<Platform> walls;
+        List<Vector3> spawnPoints;
 
         Texture2D platformWallTexture;
         Texture2D platformTexture;
@@ -33,6 +34,7 @@ namespace Games3Project2
         {
             platforms = new List<Platform>();
             walls = new List<Platform>();
+            spawnPoints = new List<Vector3>();
 
             platformWallTexture = Global.game.Content.Load<Texture2D>(@"Textures\walltexture");
             platformTexture = Global.game.Content.Load<Texture2D>(@"Textures\platformtexture");
@@ -200,11 +202,18 @@ namespace Games3Project2
             
         }
 
+        public void respawnPlayer(LocalPlayer player)
+        {
+            int spawnIndex = Global.rand.Next(0, spawnPoints.Count);
+            player.respawn(spawnPoints[spawnIndex]);
+        }
+
         public void setupLevelOne()
         {
             currentLevel = 1;
             walls.Clear();
             platforms.Clear();
+            spawnPoints.Clear();
             //exterior walls
             walls.Add(new Platform(new Vector3(Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
             walls[0].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
@@ -244,6 +253,15 @@ namespace Games3Project2
             Global.bugBots.Add(new BugBot(new Vector3(-75, 0, -180), .09f, new Vector3(75, -50, -175), new Vector3(50, 50, 190), new Vector3(-92, -120, 95), new Vector3(-75, 0, -180)));
             Global.bugBots.Add(new BugBot(new Vector3(-75, 0, 180), .09f, new Vector3(75, 50, 175), new Vector3(50, -50, -190), new Vector3(-92, 90, -95), new Vector3(75, 0, 180)));
             Global.bugBots.Add(new BugBot(new Vector3(75, 0, 180), .09f, new Vector3(75, 50, -175), new Vector3(50, 50, 190), new Vector3(92, 90, -95), new Vector3(75, 0, -180)));
+
+            //spawn points
+            spawnPoints.Add(new Vector3(4, 50, 175));
+            spawnPoints.Add(new Vector3(5, 50, -175));
+            spawnPoints.Add(new Vector3(5, -70, 180));
+            spawnPoints.Add(new Vector3(5, -170, -180));
+            spawnPoints.Add(new Vector3(0, 10, 0));
+
+            spawnAllPlayers();
         }
 
         public void setupLevelTwo()
@@ -251,7 +269,7 @@ namespace Games3Project2
             currentLevel = 2;
             walls.Clear();
             platforms.Clear();
-
+            spawnPoints.Clear();
             //exterior walls
             walls.Add(new Platform(new Vector3(Global.Constants.LEVEL_TWO_WIDTH, 0, 0), Global.Constants.LEVEL_TWO_HEIGHT, Global.Constants.LEVEL_TWO_WIDTH, platformWallTexture, Platform.PlatformType.VerticalZ));
             walls[0].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
@@ -283,6 +301,26 @@ namespace Games3Project2
             //bottom edge platforms (x plane)
             platforms.Add(new Platform(new Vector3(Global.Constants.LEVEL_TWO_WIDTH - mediumPlatformSize, -3 * standardSpacing, 0), mediumPlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
             platforms.Add(new Platform(new Vector3(-Global.Constants.LEVEL_TWO_WIDTH + mediumPlatformSize, -3 * standardSpacing, 0), mediumPlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+
+            spawnPoints.Add(new Vector3(0, -30, -90));
+            spawnPoints.Add(new Vector3(0, -30, 90));
+            spawnPoints.Add(new Vector3(0, 10, 0));
+            spawnPoints.Add(new Vector3(0, -70, 0));
+
+            spawnAllPlayers();
+        }
+
+        public void spawnAllPlayers()
+        {
+            List<Vector3> takenSpawns = new List<Vector3>();
+            for (int i = 0; i < Global.localPlayers.Count; ++i)
+            {
+                int index = Global.rand.Next(0, Global.localPlayers.Count);
+                while(takenSpawns.Contains(spawnPoints[index]))
+                    index = Global.rand.Next(0, Global.localPlayers.Count);
+                Global.localPlayers[i].respawn(spawnPoints[index]);
+                takenSpawns.Add(spawnPoints[index]);
+            }
         }
     }
 }

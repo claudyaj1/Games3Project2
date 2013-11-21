@@ -98,6 +98,7 @@ namespace Games3Project2
                 Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
 
             levelManager = new Level();
+            Global.levelManager = levelManager;
         }
 
         protected override void UnloadContent()

@@ -14,7 +14,7 @@ using Games3Project2.Globals;
 
 namespace Games3Project2
 {
-    class Platform : Microsoft.Xna.Framework.GameComponent
+    public class Platform : Microsoft.Xna.Framework.GameComponent
     {
         public enum PlatformType { Horizontal, VerticalX, VerticalZ };
         public PlatformType platformType;

@@ -16,6 +16,8 @@ namespace Games3Project2.Globals
         public static Heatmap heatmapKills, heatmapDeaths, heatmapUsedJetpack;
         public static Input input = Input.Instance;
         public static NetworkManagement networkManager;
+        public static Level levelManager;
+        public static Random rand = new Random();
         public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();
         public static List<RemotePlayer> remotePlayers = new List<RemotePlayer>();
         public static List<Bullet> bullets = new List<Bullet>();
