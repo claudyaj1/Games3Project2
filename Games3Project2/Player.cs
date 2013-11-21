@@ -28,7 +28,7 @@ namespace Games3Project2
         Matrix cubeTransformation;
         const int gunLength = 3;
         public float jetPackThrust = 0;
-
+        public int score;
         public int health;
         public bool isJuggernaut;
         public float jetFuel;
@@ -47,12 +47,13 @@ namespace Games3Project2
             }
         }
 
-        public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex)
+        public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex, int remoteIndex)
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             playerIndex = index;
-            this.networkPlayerID = new Random().Next(1000000);
+            this.networkPlayerID = remoteIndex;
             localPlayerIndex = localIndex;
+            score = 0;
             health = Global.Constants.MAX_HEALTH;
             isJuggernaut = false;
             jetpackDisabled = false;
@@ -61,7 +62,7 @@ namespace Games3Project2
             Viewport viewport = new Viewport();
 
             Color sphereColor = Color.Red;
-            switch (localPlayerIndex)
+            switch (networkPlayerID)
             {
                 //case 1 default is red
                 case 2:
@@ -139,6 +140,17 @@ namespace Games3Project2
         {
             base.platformCollision();
             camera.cameraPos = position;
+        }
+
+        public void respawn(Vector3 newPosition)
+        {
+            Position = newPosition;
+            lastFiringTime = 0;
+            jetPackThrust = 0;
+            jetpackDisabled = false;
+            health = Global.Constants.MAX_HEALTH;
+            isJuggernaut = false;
+            jetFuel = Global.Constants.MAX_JET_FUEL;
         }
 
         public void update()
@@ -278,7 +290,7 @@ namespace Games3Project2
                     health -= Global.bullets[i].damage;
                     if (health < 0)
                     {
-                        killed(0); //change that ish
+                        killed(Global.bullets[i].shooterID);
                     }
                     Global.bullets.RemoveAt(i--);
                 }
@@ -316,10 +328,38 @@ namespace Games3Project2
                 Global.heatmapDeaths.addPoint(position);
             if (isJuggernaut)
             {
-                //TODO: somehow, choosing a new juggernaut needs to occur
-                //Perhaps Global.needToSelectNewJuggernaut = true;
-                //TODO: Award points to the killer.
+                if (Global.networkManager.isNetworked)
+                {
+                    RemotePlayer killer = null;
+                    foreach(RemotePlayer rPlayer in Global.remotePlayers)
+                    {
+                        if(rPlayer.networkPlayerID == remotePlayerKiller)
+                        {
+                            killer = rPlayer;
+                            break;
+                        }
+                    }
+                    Global.networkManager.AnnounceJuggernautKilled(this, killer);
+                    killer.score++;
+                }
+                else
+                {
+                    LocalPlayer killer = null;
+                    foreach (LocalPlayer lPlayer in Global.localPlayers)
+                    {
+                        if (lPlayer.networkPlayerID == remotePlayerKiller)
+                        {
+                            killer = lPlayer;
+                            break;
+                        }
+                    }
+
+                    //Global.networkManager.AnnounceJuggernautKilled(this, killer);
+                    killer.score++;
+                }
             }
+
+            Global.levelManager.respawnPlayer(this);
         }
 
         public void drawHUD()
@@ -327,21 +367,21 @@ namespace Games3Project2
             hud.Draw();
         }
 
-        /// <summary>
-        /// Fires a solid, non-projectile laser beam blast.
-        /// </summary>
-        public void ShootLaserBurstWeapon()
-        {
+        ///// <summary>
+        ///// Fires a solid, non-projectile laser beam blast.
+        ///// </summary>
+        //public void ShootLaserBurstWeapon()
+        //{
             
-            //Step one, drawWalls a line from just a smidge to the right of the avatar.
-            //TODO: Oh baby, Line_Primative...but when?
-            //Step two calculate collisions that might have occurred.
-            //TODO: Ray intersection
-            //Step three, Send message to the network to announce the event of the laser firing.
-            //TODO: step 3
-            //Step four, Play sound fx.
-            //TODO: Upht.wav
-        }
+        //    //Step one, drawWalls a line from just a smidge to the right of the avatar.
+        //    //TODO: Oh baby, Line_Primative...but when?
+        //    //Step two calculate collisions that might have occurred.
+        //    //TODO: Ray intersection
+        //    //Step three, Send message to the network to announce the event of the laser firing.
+        //    //TODO: step 3
+        //    //Step four, Play sound fx.
+        //    //TODO: Upht.wav
+        //}
 
         public void ShootBullet()
         {
@@ -360,6 +400,7 @@ namespace Games3Project2
                     -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, networkPlayerID, Global.Constants.BULLET_DAMAGE);
             }
             Global.bullets.Add(bullet);
+            Global.networkManager.AnnounceBulletShootEventOnNetwork(bullet);
             //TODO: Play bullet fired sound fx at full volume.
 
         }

@@ -16,6 +16,8 @@ namespace Games3Project2.Globals
         public static Heatmap heatmapKills, heatmapDeaths, heatmapUsedJetpack;
         public static Input input = Input.Instance;
         public static NetworkManagement networkManager;
+        public static Level levelManager;
+        public static Random rand = new Random();
         public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();
         public static List<RemotePlayer> remotePlayers = new List<RemotePlayer>();
         public static List<Bullet> bullets = new List<Bullet>();
@@ -84,6 +86,7 @@ namespace Games3Project2.Globals
             public static readonly float MOVEMENT_VELOCITY = 3.1f;
             public static readonly float SPIN_RATE = 100f;
             public static readonly float PLAYER_RADIUS = 5f;
+            public static readonly int MAX_SCORE = 10;
 
             public static readonly int MAX_HEALTH = 100;
             public static readonly int BULLET_DAMAGE = 10;
@@ -92,6 +95,7 @@ namespace Games3Project2.Globals
             public static readonly float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
             public static readonly float BULLET_SPEED = .25f;
             public static readonly float BULLET_RADIUS = .5f;
+            public static readonly Color BULLET_COLOR = Color.DarkOrange;
             public static readonly int FIRING_COOLDOWN = 300;
             public static readonly int BOT_FIRING_COOLDOWN = 1000;
 

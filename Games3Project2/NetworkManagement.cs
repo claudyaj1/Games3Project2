@@ -13,7 +13,7 @@ namespace Games3Project2
     public class NetworkManagement : Microsoft.Xna.Framework.GameComponent
     {
         public bool isHost;
-
+        public bool isNetworked;
         //Objects
         public NetworkSession networkSession;
         private PacketReader packetReader;
@@ -28,7 +28,7 @@ namespace Games3Project2
         private int numBytesReceived = 0;
 
         //Message types
-        enum MessageTypes { Shoot, Position, Score };
+        enum MessageTypes { Shoot, PositionAndVelocity, ScoreUpdate, NewJuggernaut, PlayerKilledByJuggernaut };
         MessageTypes messageType;
 
         //CTOR
@@ -42,11 +42,12 @@ namespace Games3Project2
         public override void Initialize()
         {
             isHost = false;
+            isNetworked = false;
             gamertags = new string[Global.Constants.MAX_PLAYERS_TOTAL];
             packetReader = new PacketReader();
             packetWriter = new PacketWriter();
             networkSessionProperties = new NetworkSessionProperties();
-            messageType = MessageTypes.Score;
+            messageType = MessageTypes.ScoreUpdate;
             base.Initialize();
         }
 
@@ -105,6 +106,7 @@ namespace Games3Project2
 	        {
                 case MessageTypes.Shoot:
                     {
+
                         //TODO: Bullet shot announcement packet.
                         // Initial bullet position
                         // Bullet velocity (which will include direction)
@@ -112,7 +114,7 @@ namespace Games3Project2
                         // Who fired the bullet
                     }
                     break;
-                case MessageTypes.Position:
+                case MessageTypes.PositionAndVelocity:
                     {
                         //TODO: Announce player position packet.
                         //Who
@@ -127,7 +129,7 @@ namespace Games3Project2
                         //}
                     }
                     break;
-                case MessageTypes.Score:
+                case MessageTypes.ScoreUpdate:
                     {
                         //TODO: Announce score packet.
                         //Who?
@@ -164,12 +166,12 @@ namespace Games3Project2
                             //someFloatVariable = (float)packetReader.ReadInt32();
                         }
                         break;
-                    case MessageTypes.Position:
+                    case MessageTypes.PositionAndVelocity:
                         {
                             //TODO: Read position packets.
                         }
                         break;
-                    case MessageTypes.Score:
+                    case MessageTypes.ScoreUpdate:
                         {
                             //TODO: Read score packets
                         }
@@ -279,5 +281,80 @@ namespace Games3Project2
             networkSession = null;
         }
         #endregion //Hook Session Events
+
+        #region Pre-defined functions for creating packets for game events like bullets being fired
+        public void AnnounceBulletShootEventOnNetwork(Bullet bullet)
+        {
+            messageType = MessageTypes.Shoot;
+            packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
+            packetWriter.Write((short)bullet.shooterID);    //Who fired the bullet.
+            packetWriter.Write(bullet.startPosition);       //Where the bullet started.
+            packetWriter.Write(bullet.Velocity);            //Direction/Speed of bullet.
+            packetWriter.Write((Int32)bullet.timeLived);           //Milliseconds of time bullet has lived.
+            //TODO: uh...gamer.SendData doesn't work in here.
+            //TODO: use SendDataOptions.Reliable
+            //TODO: This issue applies to all of the pre-defined functions for creating packets.
+        }
+        ////
+        public void AnnounceJuggernautKilled(LocalPlayer deadJuggernaut, LocalPlayer newJuggernaut)
+        {
+            messageType = MessageTypes.NewJuggernaut;
+            packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
+            packetWriter.Write((short)deadJuggernaut.networkPlayerID);
+            packetWriter.Write((short)newJuggernaut.networkPlayerID);
+            packetWriter.Write(newJuggernaut.Position); //?
+            packetWriter.Write(newJuggernaut.Velocity); //?
+        }
+        public void AnnounceJuggernautKilled(LocalPlayer deadJuggernaut, RemotePlayer newJuggernaut)
+        {
+            messageType = MessageTypes.NewJuggernaut;
+            packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
+            packetWriter.Write((short)deadJuggernaut.networkPlayerID);
+            packetWriter.Write((short)newJuggernaut.networkPlayerID);
+            packetWriter.Write(newJuggernaut.Position); //?
+            packetWriter.Write(newJuggernaut.Velocity); //?
+            packetWriter.Write(deadJuggernaut.Position); //Maybe for explosions of dead bodies.
+        }
+        ////
+        public void AnnouncePlayerKilledByJuggernaut(LocalPlayer deadPlayer)
+        {
+            messageType = MessageTypes.PlayerKilledByJuggernaut;
+            packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
+            packetWriter.Write((short)deadPlayer.networkPlayerID);
+            packetWriter.Write(deadPlayer.Position);
+        }
+        ////
+        public void MovementNetworkMessage(LocalPlayer localPlayer)
+        {
+            messageType = MessageTypes.PositionAndVelocity;
+            packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
+            packetWriter.Write((short)localPlayer.networkPlayerID);
+            packetWriter.Write(localPlayer.Position);
+            packetWriter.Write(localPlayer.Velocity);
+            packetWriter.Write((bool)localPlayer.jetpackDisabled);  //Is this useful?
+            packetWriter.Write(localPlayer.jetPackThrust);          //Is this useful?
+        }
+        public void MovementNetworkMessage(BugBot bot)
+        {
+            messageType = MessageTypes.PositionAndVelocity;
+            packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
+            packetWriter.Write((short)bot.npcID);
+            packetWriter.Write(bot.position);
+            packetWriter.Write(bot.direction);
+            packetWriter.Write(bot.speed);
+        }
+        ////
+        public void ScoreUpdate()
+        {
+            messageType = MessageTypes.ScoreUpdate;
+            packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
+            foreach(LocalPlayer localPlayer in Global.localPlayers)
+            {
+                packetWriter.Write((byte)localPlayer.score);
+                packetWriter.Write((byte)localPlayer.health);
+            }
+        }
+
+        #endregion
     }
 }

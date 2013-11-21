@@ -34,7 +34,7 @@ namespace Games3Project2
         public BugBot(Vector3 position, float speed, Vector3 point1, Vector3 point2, Vector3 point3, Vector3 point4)
         {
             this.position = position;
-            body = new Sphere(Global.game, Color.Gold, this.position);
+            body = new Sphere(Global.game, Color.GhostWhite, this.position);
             body.localScale = Matrix.CreateScale(2);
             body.SetWireframe(1);
             this.speed = speed;
