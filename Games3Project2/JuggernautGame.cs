@@ -43,6 +43,7 @@ namespace Games3Project2
         //local player joining
         List<PlayerIndex> connectedPlayers = new List<PlayerIndex>();
         List<PlayerIndex> joinedPlayers = new List<PlayerIndex>();
+        int winningPlayer = 1;
 
         public JuggernautGame()
         {
@@ -99,6 +100,7 @@ namespace Games3Project2
                 Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
 
             levelManager = new Level();
+            Global.levelManager = levelManager;
         }
 
         protected override void UnloadContent()
@@ -293,6 +295,12 @@ namespace Games3Project2
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
                         player.update();
+                        if (player.score > Global.Constants.MAX_SCORE)
+                        {
+                            Global.gameState = Global.GameState.GameOver;
+                            winningPlayer = player.networkPlayerID;
+                            Global.graphics.GraphicsDevice.Viewport = new Viewport(0, 0, Global.viewPort.Width, Global.viewPort.Height);
+                        }
                     }
 
                     for (int i = 0; i < Global.bullets.Count; i++)
@@ -314,13 +322,25 @@ namespace Games3Project2
 
                 #region GameOver
                 case Global.GameState.GameOver:
-
+                    foreach (LocalPlayer player in Global.localPlayers)
+                    {
+                        if (Global.input.isFirstPress(Buttons.A, player.playerIndex))
+                        {
+                            Global.gameState = Global.GameState.Menu;
+                        }
+                    }
                     break;
                 #endregion //GameOver
 
                 #region NetworkQuit
                 case Global.GameState.NetworkQuit:
-
+                    foreach (LocalPlayer player in Global.localPlayers)
+                    {
+                        if (Global.input.isFirstPress(Buttons.A, player.playerIndex))
+                        {
+                            Global.gameState = Global.GameState.Menu;
+                        }
+                    }
                     break;
                 #endregion //NetworkQuit
             }
@@ -532,12 +552,20 @@ namespace Games3Project2
                 case Global.GameState.GameOver:
                     Global.spriteBatch.Begin();
 
+                    Global.spriteBatch.Draw(mainMenu.background, Global.viewPort, Color.White);
+                    Global.spriteBatch.DrawString(consolas, "Player " + winningPlayer.ToString() + " Won!", new Vector2(20, Global.viewPort.Height / 2), Color.Black);
+                    Global.spriteBatch.DrawString(consolas, "Press A To Continue", new Vector2(20, Global.viewPort.Height / 2 + 50), Color.Black);
+
                     Global.spriteBatch.End();
                     break;
                 #endregion
                 #region NetworkQuit
                 case Global.GameState.NetworkQuit:
                     Global.spriteBatch.Begin();
+                    
+                    Global.spriteBatch.Draw(mainMenu.background, Global.viewPort, Color.White);
+                    Global.spriteBatch.DrawString(consolas, "Network Session Ended", new Vector2(20, Global.viewPort.Height / 2), Color.Black);
+                    Global.spriteBatch.DrawString(consolas, "Press A To Continue", new Vector2(20, Global.viewPort.Height / 2 + 50), Color.Black);
 
                     Global.spriteBatch.End();
                     break;
