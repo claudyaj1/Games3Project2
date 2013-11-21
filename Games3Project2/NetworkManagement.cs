@@ -97,7 +97,7 @@ namespace Games3Project2
             }
         } //UpdateNetworkSession-- write data to network
 
-        private void WriteOutgoingPackets(LocalNetworkGamer gamer)
+        public void WriteOutgoingPackets(LocalNetworkGamer gamer)
         {
             packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
 
@@ -141,7 +141,7 @@ namespace Games3Project2
             //Always finish this function with this line:
             gamer.SendData(packetWriter, SendDataOptions.Reliable);
         }//WriteOutgoingPackets
-        private void ReadIncomingPackets(LocalNetworkGamer gamer)
+        public void ReadIncomingPackets(LocalNetworkGamer gamer)
         {
             MessageTypes mt;
             while (gamer.IsDataAvailable)
@@ -180,13 +180,10 @@ namespace Games3Project2
 
             }
         }//ReadIncomingPackets
-        #endregion
+        #endregion //P2P Packet Information Architecture
 
         #region Session Creation/Joining
-        /// <summary>
-        /// Starts hosting a new network session.
-        /// </summary>
-        private void CreateSession()
+        public void CreateSession()
         {
             Console.WriteLine("Creating a network session...");
             try
@@ -214,10 +211,7 @@ namespace Games3Project2
             //    networkSession.SimulatedPacketLoss = 0.9f;
             //}
         }
-        /// <summary>
-        /// Searches for existing session and attempts to join one.
-        /// </summary>
-        private void JoinSession()
+        public void JoinSession()
         {
             Console.WriteLine("Joining session...");
             try
@@ -247,7 +241,7 @@ namespace Games3Project2
                 Console.WriteLine(errorMessage);
             }
         }
-        #endregion
+        #endregion //Session Creating and Joining
 
         #region Hook Session Events
         void HookSessionEvents()
@@ -284,7 +278,7 @@ namespace Games3Project2
             networkSession.Dispose();
             networkSession = null;
         }
-        #endregion
+        #endregion //Hook Session Events
 
         #region Pre-defined functions for creating packets for game events like bullets being fired
         public void AnnounceBulletShootEventOnNetwork(Bullet bullet)

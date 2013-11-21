@@ -46,6 +46,7 @@ namespace Games3Project2
 
         public JuggernautGame()
         {
+            Components.Add(new GamerServicesComponent(this));
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 #if WINDOWS
@@ -140,24 +141,33 @@ namespace Games3Project2
                         Global.gameState = Global.GameState.Menu;
                     }
                     break;
-                #endregion
+                #endregion //Intro
+
                 #region Menu
                 case Global.GameState.Menu:
                     switch (mainMenu.update())
                     {
-                        case 0:
+                        case 0: //Create New Game (Host)
                             Global.networkManager.isHost = true;
-                            Global.gameState = Global.GameState.SetupLocalPlayers;
-                            Global.numLocalGamers = 1;
-                            joinedPlayers.Add(PlayerIndex.One);
+                            //Global.networkManager.CreateSession();
+                            //if (Global.networkManager.networkSession != null)
+                            {
+                                Global.gameState = Global.GameState.SetupLocalPlayers;
+                                Global.numLocalGamers = 1;
+                                joinedPlayers.Add(PlayerIndex.One);
+                            }
                             break;
-                        case 1:
+                        case 1: //Join Game
                             Global.networkManager.isHost = false;
-                            Global.gameState = Global.GameState.SetupLocalPlayers;
-                            Global.numLocalGamers = 1;
-                            joinedPlayers.Add(PlayerIndex.One);
+                            //Global.networkManager.JoinSession();
+                            //if (Global.networkManager.networkSession != null)
+                            {
+                                Global.gameState = Global.GameState.SetupLocalPlayers;
+                                Global.numLocalGamers = 1;
+                                joinedPlayers.Add(PlayerIndex.One);
+                            }
                             break;
-                        case 2:
+                        case 2: //Exit
                             // go to heat maps options
                             Global.networkManager.isHost = true;
                             Global.gameState = Global.GameState.SetupLocalPlayersHeatmap;
@@ -170,7 +180,8 @@ namespace Games3Project2
                             break;
                     }
                     break;
-                #endregion
+                #endregion //Menu
+
                 #region SetupLocalPlayers
                 case Global.GameState.SetupLocalPlayers:
                     if (setupLocalPlayers())
@@ -187,12 +198,13 @@ namespace Games3Project2
                             levelManager.setupLevelOne();
                         }
                     }
-                    if (Global.input.isFirstPress(Keys.Back))
-                    {
-                        Global.gameState = Global.GameState.Menu;
-                    }
+                    //if (Global.input.isFirstPress(Keys.Back)) //CRS:The back button should exit the game.
+                    //{
+                    //    Global.gameState = Global.GameState.Menu;
+                    //}
                     break;
-                #endregion
+                #endregion //SetupLocalPlayers
+
                 #region LevelPicking:
                 case Global.GameState.LevelPicking:
                     if (updateLevelPicking())
@@ -201,17 +213,20 @@ namespace Games3Project2
                         Global.gameState = Global.GameState.Playing;
                     }
                     break;
-                #endregion
+                #endregion //LevelPicking
+
                 #region NetworkJoining
                 case Global.GameState.NetworkJoining:
 
                     break;
-                #endregion
+                #endregion //NetworkJoining
+
                 #region NetworkWaitingHost
                 case Global.GameState.NetworkWaitingHost:
 
                     break;
-                #endregion
+                #endregion //NetworkWaitingHost
+
 
                 #region SetupLocalPlayersHeatmap
                 case Global.GameState.SetupLocalPlayersHeatmap:
@@ -278,18 +293,6 @@ namespace Games3Project2
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
                         player.update();
-                        //TODO:if(player.isJuggernaught == true) then do the bugbot check else do nothing
-                        foreach (BugBot bot in Global.bugBots)
-                        {
-                            if ((bot.position - player.Position).Length() < BugBot.ATTACK_RADIUS)
-                            {
-                                //shoot a bullet at the player if he is the juggernaught
-                                Vector3 dir = player.Position - bot.position;
-                                dir.Normalize();
-                                bot.ShootBullet(dir);
-                                debug = false;
-                            }
-                        }
                     }
 
                     for (int i = 0; i < Global.bullets.Count; i++)
@@ -301,22 +304,25 @@ namespace Games3Project2
 
                     levelManager.update();
                     break;
-                #endregion
+                #endregion //Playing
+
                 #region Paused
                 case Global.GameState.Paused:
 
                     break;
-                #endregion
+                #endregion //Paused
+
                 #region GameOver
                 case Global.GameState.GameOver:
 
                     break;
-                #endregion
+                #endregion //GameOver
+
                 #region NetworkQuit
                 case Global.GameState.NetworkQuit:
 
                     break;
-                #endregion
+                #endregion //NetworkQuit
             }
 
 
@@ -589,6 +595,7 @@ namespace Games3Project2
                     {
                         //Global.numLocalGamers = 3;
                         Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20 + i * 20, 0), joinedPlayers[i], i + 1));
+                        Global.localPlayers[i].isJuggernaut = true;
                         //Global.localPlayers.Add(new LocalPlayer(new Vector3(-10, 20, 0), PlayerIndex.Two, 2));
                         //Global.localPlayers.Add(new LocalPlayer(new Vector3(10, 20, 0), PlayerIndex.Three, 3));
                     }

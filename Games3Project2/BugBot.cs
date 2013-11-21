@@ -25,6 +25,7 @@ namespace Games3Project2
         public Vector3[] points;
         public Boolean Alive;
         public int pointCount = 0;
+        public int lastFiringTime;
         public const int ATTACK_RADIUS = 100;
         public readonly int npcID;
 
@@ -43,6 +44,7 @@ namespace Games3Project2
             points[2] = point3;
             points[3] = point4;
             Alive = true;
+            lastFiringTime = 0;
             npcID = -(new Random().Next(100));
 
         }
@@ -53,7 +55,7 @@ namespace Games3Project2
             if (Alive)
             {
                 direction = position - points[pointCount];
-
+                lastFiringTime += Global.gameTime.ElapsedGameTime.Milliseconds;
 
                 if ((position - points[pointCount]).Length() < 2)
                 {
@@ -68,7 +70,21 @@ namespace Games3Project2
 
                 body.Position = position;
                 body.Update(Global.gameTime);
-                
+
+                if (lastFiringTime > Global.Constants.BOT_FIRING_COOLDOWN)
+                {
+                    foreach (LocalPlayer player in Global.localPlayers)
+                    {
+                        if (player.isJuggernaut && (position - player.Position).Length() < BugBot.ATTACK_RADIUS)
+                        {
+                            //shoot a bullet at the player if he is the juggernaught
+                            Vector3 dir = player.Position - position;
+                            dir.Normalize();
+                            ShootBullet(dir);
+                            lastFiringTime = 0;
+                        }
+                    }
+                }
             }
 
         }
