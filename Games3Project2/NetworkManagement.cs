@@ -14,6 +14,7 @@ namespace Games3Project2
     {
         private Random Rand;
         public bool isHost;
+        LocalNetworkGamer theLocalLiveAccount;
 
         //Objects
         public NetworkSession networkSession;
@@ -161,12 +162,30 @@ namespace Games3Project2
                 {
                     case MessageTypes.Shoot:
                         {
-                            // TODO: Read in bullet shot announcement packet:
-                            // Initial bullet position
-                            // Bullet velocity (which will include direction)
-                            // Time of bullet fire
-                            // Who fired the bullet
-                            //someFloatVariable = (float)packetReader.ReadInt32();
+                            // Work out the difference between our current local time
+                            // and the remote time at which this packet was sent.
+                            float localTime = (float)Global.gameTime.TotalGameTime.TotalSeconds;
+                            float packetSendTime = packetReader.ReadSingle(); //Read the time of sending.
+                            float timeDelta = localTime - packetSendTime;
+
+                            Bullet b = new Bullet(Vector3.Zero, Vector3.Zero, 0, Global.Constants.BULLET_DAMAGE);
+                            b.shooterID     = packetReader.ReadUInt16();    //Who fired the bullet.
+                            b.startPosition = packetReader.ReadVector3();   //Where the bullet started.
+                            b.Velocity      = packetReader.ReadVector3();   //Direction/Speed of bullet.
+                            b.timeLived     = packetReader.ReadInt32();     //Milliseconds of time bullet has lived.
+                            
+                            //Find if who fired the bullet was juggernaut.
+                            foreach (RemotePlayer rPlayer in Global.remotePlayers)
+                            {
+                                if (rPlayer.networkPlayerID == b.shooterID)
+                                {
+                                    b.damage = (rPlayer.isJuggernaut ?
+                                        Global.Constants.JUG_BULLET_DAMAGE : Global.Constants.BULLET_DAMAGE);
+                                }
+                            }
+
+                            b.timeLived += (int)timeDelta; //TODO: is this value correct?
+                            Global.bullets.Add(b);
                         }
                         break;
                     case MessageTypes.PositionAndVelocity:
@@ -199,6 +218,10 @@ namespace Games3Project2
                     networkSessionProperties);
                 HookSessionEvents();
                 isHost = true;
+                for (int i = 0; i < Global.localPlayers.Count; i++) //For each localGamer in the collection
+                {
+                    Global.localPlayers[i].networkPlayerID = GenerateNetworkPlayerID(); //Assign non-colliding uid.
+                }
                 Console.WriteLine("Success");
             }
             catch (Exception e)
@@ -282,6 +305,10 @@ namespace Games3Project2
         void GamerJoinedEventHandler(object sender, GamerJoinedEventArgs e)
         {
             string foo = e.Gamer.Gamertag.ToString();
+            Global.remotePlayers.Add(
+                new RemotePlayer(Global.game,
+                new Vector3((float)Rand.Next(-5,5), 1f, (float)Rand.Next(-5,5)),
+                GenerateNetworkPlayerID()));
             // for now, we'll just assign a number to the game
             Global.numTotalGamers++;
             Console.WriteLine(foo + Global.Constants.MSG_JOINED);
@@ -307,6 +334,7 @@ namespace Games3Project2
         {
             messageType = MessageTypes.Shoot;
             packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
+            packetWriter.Write((float)Global.gameTime.TotalGameTime.TotalSeconds); // Send our current time.
             packetWriter.Write((short)bullet.shooterID);    //Who fired the bullet.
             packetWriter.Write(bullet.startPosition);       //Where the bullet started.
             packetWriter.Write(bullet.Velocity);            //Direction/Speed of bullet.
@@ -351,6 +379,7 @@ namespace Games3Project2
             packetWriter.Write((short)localPlayer.networkPlayerID);
             packetWriter.Write(localPlayer.Position);
             packetWriter.Write(localPlayer.Velocity);
+            packetWriter.Write(localPlayer.camera.lookRotation.Forward);
             packetWriter.Write((bool)localPlayer.jetpackDisabled);  //Is this useful?
             packetWriter.Write(localPlayer.jetPackThrust);          //Is this useful?
         }
