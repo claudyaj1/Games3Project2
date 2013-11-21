@@ -255,6 +255,7 @@ namespace Games3Project2
         {
             string foo = e.ToString();
             Console.WriteLine(foo);
+            Global.gameState = Global.GameState.Playing;
         }
         void GamerJoinedEventHandler(object sender, GamerJoinedEventArgs e)
         {
