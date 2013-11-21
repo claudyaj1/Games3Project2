@@ -90,6 +90,7 @@ namespace Games3Project2
             List<String> menuOptions = new List<String>();
             menuOptions.Add("Create New Game");
             menuOptions.Add("Join Game");
+            menuOptions.Add("Heatmaps");
             menuOptions.Add("Exit");
             mainMenu = new Menu(menuOptions, "Juggernaut", new Vector2(Global.titleSafe.Left + 30,
                 Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
@@ -151,6 +152,14 @@ namespace Games3Project2
                             joinedPlayers.Add(PlayerIndex.One);
                             break;
                         case 2:
+                            // go to heat maps options
+                            Global.networkManager.isHost = true;
+                            Global.gameState = Global.GameState.SetupLocalPlayersHeatmap;
+                            Global.numLocalGamers = 1;
+                            joinedPlayers.Clear();
+                            joinedPlayers.Add(PlayerIndex.One);
+                            break;
+                        case 3:
                             this.Exit();
                             break;
                     }
@@ -197,6 +206,66 @@ namespace Games3Project2
 
                     break;
                 #endregion
+
+                #region SetupLocalPlayersHeatmap
+                case Global.GameState.SetupLocalPlayersHeatmap:
+                    if (setupLocalPlayers())
+                    {
+                        if (Global.networkManager.isHost)
+                        {
+                            Global.gameState = Global.GameState.ChooseHeatmap;
+                        }
+                        
+                    }
+                    if (Global.input.isFirstPress(Keys.Back))
+                    {
+                        Global.gameState = Global.GameState.Menu;
+                    }
+                    break;
+                #endregion
+
+                #region ChooseHeatmap
+                case Global.GameState.ChooseHeatmap:
+                    if (updateLevelPicking())
+                    {
+                        Global.gameState = Global.GameState.playingHeatmap;
+                    }
+                    break;
+                #endregion
+
+                #region PlayHeatmap
+                case Global.GameState.playingHeatmap:
+                    debug = true;
+                    if (!Global.debugMode)
+                        Global.debugMode = true;
+                    foreach (LocalPlayer player in Global.localPlayers)
+                    {
+                        player.update();
+                        //TODO:if(player.isJuggernaught == true) then do the bugbot check else do nothing
+                        foreach (BugBot bot in Global.bugBots)
+                        {
+                            if ((bot.position - player.Position).Length() < BugBot.ATTACK_RADIUS)
+                            {
+                                //shoot a bullet at the player if he is the juggernaught
+                                Vector3 dir = player.Position - bot.position;
+                                dir.Normalize();
+                                //bot.ShootBullet(dir);
+                                debug = false;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < Global.bullets.Count; i++)
+                    {
+                        Global.bullets[i].update(gameTime);
+                        if (Global.bullets[i].timeLived >= 1)
+                            Global.bullets.RemoveAt(i);
+                    }
+
+                    levelManager.update();
+                    break;
+                #endregion
+
                 #region Playing
                 case Global.GameState.Playing:
                     debug = true;
@@ -295,6 +364,88 @@ namespace Games3Project2
                     Global.spriteBatch.End();
                     break;
                 #endregion
+
+                #region SetupLocalPlayersHeatmap
+                case Global.GameState.SetupLocalPlayersHeatmap:
+                    Global.spriteBatch.Begin();
+                    drawLocalPlayerSetup();
+                    Global.spriteBatch.End();
+                    break;
+                #endregion
+                #region ChooseHeatmap
+                case Global.GameState.ChooseHeatmap:
+                    Global.spriteBatch.Begin();
+                    drawLevelPicking();
+                    Global.spriteBatch.End();
+                    break;
+                #endregion
+
+                #region PlayHeatmap
+                case Global.GameState.playingHeatmap:
+                    //3D Drawing Section
+                    resetGraphicsDevice();
+                    foreach (LocalPlayer player in Global.localPlayers)
+                    {
+                        Global.CurrentCamera = player.camera;
+
+                        levelManager.drawWalls();
+                        levelManager.drawPlatforms();
+                        foreach (LocalPlayer drawPlayer in Global.localPlayers)
+                        {
+                            drawPlayer.draw();
+                        }
+                        if (Global.bullets.Count > 0)
+                        {
+                            foreach (Bullet bullet in Global.bullets)
+                            {
+                                bullet.draw();
+                            }
+                        }
+                    }
+
+                    //draw the heatmaps when debug mode is ran.
+                    Global.heatmapKills.draw();
+                    Global.heatmapDeaths.draw();
+                    Global.heatmapUsedJetpack.draw();
+
+                    //SpriteBatch Drawing Section
+                    Global.spriteBatch.Begin();
+
+                    if (Global.debugMode)
+                    {
+                        
+
+                        axisReference.Draw(Matrix.Identity, Global.CurrentCamera.view, Global.CurrentCamera.projection);
+                        Global.spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
+                                new Vector2(5f, 35f), Color.PaleGreen);
+                        Global.spriteBatch.DrawString(consolas, "Camera Position and View=\n" +
+                            "X:" + Global.CurrentCamera.cameraPos.X.ToString() +
+                            " Y:" + Global.CurrentCamera.cameraPos.Y.ToString() +
+                            " Z:" + Global.CurrentCamera.cameraPos.Z.ToString(),
+                            new Vector2(5f, 53f), Global.debugColor);
+                        Global.spriteBatch.DrawString(consolas,
+                            "Up:" + Global.CurrentCamera.view.Up.ToString() +
+                            "\nLookAt: " + debug.ToString() +
+                            "\nRight: " + Global.CurrentCamera.view.Right.ToString(),
+                            new Vector2(5f, 95f), Global.debugColor);
+                        Global.spriteBatch.DrawString(consolas,
+                            "Bullet Count: " + Global.bullets.Count.ToString(),
+                            new Vector2(400f, 0f), Global.debugColor);
+
+                    }
+
+                    foreach (LocalPlayer drawPlayer in Global.localPlayers)
+                    {
+                        Global.spriteBatch.End();
+                        Global.CurrentCamera = drawPlayer.camera;
+                        Global.spriteBatch.Begin();
+                        drawPlayer.drawHUD();
+                    }
+
+                    Global.spriteBatch.End();
+                    break;
+                #endregion
+
                 #region Playing
                 case Global.GameState.Playing:
                     //3D Drawing Section
