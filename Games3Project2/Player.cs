@@ -28,7 +28,7 @@ namespace Games3Project2
         Matrix cubeTransformation;
         const int gunLength = 3;
         public float jetPackThrust = 0;
-
+        public int score;
         public int health;
         public bool isJuggernaut;
         public float jetFuel;
@@ -51,8 +51,9 @@ namespace Games3Project2
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             playerIndex = index;
-            this.networkPlayerID = new Random().Next(1000000);
+            this.networkPlayerID = new Random().Next(65000);
             localPlayerIndex = localIndex;
+            score = 0;
             health = Global.Constants.MAX_HEALTH;
             isJuggernaut = false;
             jetpackDisabled = false;
@@ -340,21 +341,21 @@ namespace Games3Project2
             hud.Draw();
         }
 
-        /// <summary>
-        /// Fires a solid, non-projectile laser beam blast.
-        /// </summary>
-        public void ShootLaserBurstWeapon()
-        {
+        ///// <summary>
+        ///// Fires a solid, non-projectile laser beam blast.
+        ///// </summary>
+        //public void ShootLaserBurstWeapon()
+        //{
             
-            //Step one, drawWalls a line from just a smidge to the right of the avatar.
-            //TODO: Oh baby, Line_Primative...but when?
-            //Step two calculate collisions that might have occurred.
-            //TODO: Ray intersection
-            //Step three, Send message to the network to announce the event of the laser firing.
-            //TODO: step 3
-            //Step four, Play sound fx.
-            //TODO: Upht.wav
-        }
+        //    //Step one, drawWalls a line from just a smidge to the right of the avatar.
+        //    //TODO: Oh baby, Line_Primative...but when?
+        //    //Step two calculate collisions that might have occurred.
+        //    //TODO: Ray intersection
+        //    //Step three, Send message to the network to announce the event of the laser firing.
+        //    //TODO: step 3
+        //    //Step four, Play sound fx.
+        //    //TODO: Upht.wav
+        //}
 
         public void ShootBullet()
         {
@@ -373,6 +374,7 @@ namespace Games3Project2
                     -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, networkPlayerID, Global.Constants.BULLET_DAMAGE);
             }
             Global.bullets.Add(bullet);
+            Global.networkManager.AnnounceBulletShootEventOnNetwork(bullet);
             //TODO: Play bullet fired sound fx at full volume.
 
         }

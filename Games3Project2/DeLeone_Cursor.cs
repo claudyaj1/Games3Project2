@@ -28,12 +28,12 @@ namespace ReticuleCursor
         const float CursorSpeed = 400.0f;
         Rectangle rect;
 
-        // This is the sprite that is drawn at the current cursor Position.
+        // This is the sprite that is drawn at the current cursor PositionAndVelocity.
         // textureCenter is used to center the sprite when drawing.
         Texture2D cursorTexture;
         Vector2 textureCenter;
 
-        // Position is the cursor Position, and is in screen space. 
+        // PositionAndVelocity is the cursor PositionAndVelocity, and is in screen space. 
         public Vector2 Position;
 
         public Cursor(Vector2 screenPos)
@@ -52,7 +52,7 @@ namespace ReticuleCursor
         
         public void Draw()
         {
-            //Global.spriteBatch.Draw(cursorTexture, Position, null, Color.White, 0.0f, textureCenter, 1.0f, SpriteEffects.None, 0.0f);
+            //Global.spriteBatch.Draw(cursorTexture, PositionAndVelocity, null, Color.White, 0.0f, textureCenter, 1.0f, SpriteEffects.None, 0.0f);
             Global.spriteBatch.Draw(cursorTexture, rect, Color.White);
         }
         
@@ -63,10 +63,10 @@ namespace ReticuleCursor
         /*
         public Ray CalculateCursorRay(Matrix projectionMatrix, Matrix viewMatrix)
         {
-            // Create 2 positions in screenspace using the cursor Position. 0 is as
+            // Create 2 positions in screenspace using the cursor PositionAndVelocity. 0 is as
             // Close as possible to the camera, 1 is as far away as possible.
-            nearSource = new Vector3(Position, 0f);
-            farSource = new Vector3(Position, 1f);
+            nearSource = new Vector3(PositionAndVelocity, 0f);
+            farSource = new Vector3(PositionAndVelocity, 1f);
 
             // Use Viewport.Unproject to tell what those two screen space positions
             // would be in world space. we'll need the projection matrix and view
