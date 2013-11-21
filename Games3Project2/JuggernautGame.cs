@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Net;
 
 using BoundingVolumeRendering;
 using Camera3D;
@@ -246,6 +247,10 @@ namespace Games3Project2
                         if (Global.input.isFirstPress(Buttons.A, PlayerIndex.One))
                         {
                             Global.networkManager.gameSetupPacket(levelManager.currentLevel);
+                            foreach (NetworkGamer nGamer in Global.networkManager.networkSession.RemoteGamers)
+                            {
+                                Global.remotePlayers.Add(new RemotePlayer(new Vector3(0, 20, 0), nGamer.Id));
+                            }
                             Global.networkManager.networkSession.StartGame();
                             Global.gameState = Global.GameState.Playing;
                         }

@@ -45,7 +45,9 @@ namespace Games3Project2
             }
             Texture2D blankTex = Global.game.Content.Load<Texture2D>(@"Textures\blankTexture");
             sphere = new Sphere(Global.game, sphereColor, pos);
-            cube = new Cube(blankTex, sphereColor);
+            cube = new Cube(blankTex, sphereColor); 
+            sphere.localScale = Matrix.CreateScale(5);
+            sphere.SetWireframe(1);
             cube.wireFrame = false;
             cube.textured = false;
             cubeTransformation = Matrix.CreateScale(1, 1, gunLength) * Matrix.CreateTranslation(new Vector3(radius, 0, gunLength));
