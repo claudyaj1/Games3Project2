@@ -162,16 +162,17 @@ namespace Games3Project2
                 jetpackDisabled = false;
             }
 
-            if (Global.input.isPressed(Buttons.RightShoulder, playerIndex) ||
+            //Cheating attacks will target the jetpacking logic in this if statement.
+            if ((Global.input.isPressed(Buttons.RightShoulder, playerIndex) ||
                 Global.input.isPressed(Buttons.LeftShoulder, playerIndex) ||
-                Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Left > 0f && !jetpackDisabled)
+                Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Left > 0f) && !jetpackDisabled)
             {
                 jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
                 jetFuel -= Global.Constants.JET_FUEL_DECREMENT;
             }
             else
             {
-                //TODO: Jet Fuel addition only if the controller is plugged in.
+                //Cole: We could do jet fuel addition only if the controller is plugged in.
                 jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
                 jetFuel += Global.Constants.JET_FUEL_INCREMENT;
             }
@@ -282,6 +283,7 @@ namespace Games3Project2
         {
             isJuggernaut = true;
             //TODO: Play "New Juggernaut"
+            //TODO: Announce "Who is Juggernaut" , networkID
         }
 
         public void killed()

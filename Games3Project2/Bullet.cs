@@ -11,7 +11,6 @@ namespace Games3Project2
     public class Bullet : Collidable
     {
         BoundingSphere bs;
-        //TODO: CreateTranslation matrix
         public const int TTL = 2000; //Milliseconds
         public int timeLived;
         /// <summary>
