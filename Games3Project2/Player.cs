@@ -12,6 +12,7 @@ using ReticuleCursor;
 using InputHandler;
 using Geometry;
 using HUDUtility;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Games3Project2
 {
@@ -33,6 +34,7 @@ namespace Games3Project2
         public bool isJuggernaut;
         public float jetFuel;
         public bool jetpackDisabled;
+        
 
         public override Vector3 Position
         {
@@ -50,6 +52,7 @@ namespace Games3Project2
         public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex)
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
+            
             playerIndex = index;
             this.networkPlayerID = new Random().Next(65000);
             localPlayerIndex = localIndex;
@@ -186,13 +189,14 @@ namespace Games3Project2
                 jetFuel -= Global.Constants.JET_FUEL_DECREMENT;
                 if(!Global.debugMode)
                     Global.heatmapUsedJetpack.addPoint(position);
-
+                Global.jetpack.Play();
             }
             else
             {
                 //Cole: "We could do jet fuel addition only if the controller is plugged in"
                 jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
                 jetFuel += Global.Constants.JET_FUEL_INCREMENT;
+                Global.jetpack.Stop();
             }
 
             if (jetPackThrust > Global.Constants.JET_PACK_Y_VELOCITY_CAP)
@@ -363,6 +367,7 @@ namespace Games3Project2
               //  -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED,
                 //networkPlayerID);
             Bullet bullet = null;
+            Global.shot.Play();
             if (isJuggernaut)
             {
                 bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,

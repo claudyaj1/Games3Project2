@@ -83,6 +83,15 @@ namespace Games3Project2
             // Create a new SpriteBatch, which can be used to drawWalls textures.
             Global.spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            Global.shot = Global.game.Content.Load<SoundEffect>(@"Audio/plasma").CreateInstance();
+            Global.jetpack = Global.game.Content.Load<SoundEffect>(@"Audio/cole").CreateInstance();
+            Global.jetpack.IsLooped = true;
+            Global.menusong = Global.game.Content.Load<SoundEffect>(@"Audio/menusong").CreateInstance();
+            Global.menusong.IsLooped = true;
+            Global.actionsong = Global.game.Content.Load<SoundEffect>(@"Audio/actionsong").CreateInstance();
+            Global.actionsong.IsLooped = true;
+            Global.actionsong.Volume = 0.5f;
+
             music = new Music(this);
             //music.playBackgroundMusic();
             splashTexture = Content.Load<Texture2D>(@"Textures\splash");
@@ -147,6 +156,8 @@ namespace Games3Project2
 
                 #region Menu
                 case Global.GameState.Menu:
+                    Global.actionsong.Stop();
+                    Global.menusong.Play();
                     switch (mainMenu.update())
                     {
                         case 0: //Create New Game (Host)
@@ -258,6 +269,9 @@ namespace Games3Project2
 
                 #region PlayHeatmap
                 case Global.GameState.playingHeatmap:
+                    Global.menusong.Stop();
+                    Global.actionsong.Play();
+                    
                     debug = true;
                     if (!Global.debugMode)
                         Global.debugMode = true;
@@ -291,6 +305,8 @@ namespace Games3Project2
 
                 #region Playing
                 case Global.GameState.Playing:
+                    Global.menusong.Stop();
+                    Global.actionsong.Play();
                     debug = true;
                     foreach (LocalPlayer player in Global.localPlayers)
                     {

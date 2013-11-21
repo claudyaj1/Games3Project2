@@ -60,7 +60,12 @@ namespace Games3Project2.Globals
             }
         }
         private static Camera currentCamera;
-        
+
+        public static SoundEffectInstance shot;
+        public static SoundEffectInstance jetpack;
+        public static SoundEffectInstance menusong;
+        //kt22377 is the author from freesound.org
+        public static SoundEffectInstance actionsong;
 
         public static class Constants
         {
