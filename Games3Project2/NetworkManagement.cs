@@ -27,6 +27,8 @@ namespace Games3Project2
         private int numBytesSent = 0;
         private int numBytesReceived = 0;
 
+        byte guestID;
+
         //Message types
         enum MessageTypes { Shoot, PositionAndVelocity, ScoreUpdate, NewJuggernaut, PlayerKilledByJuggernaut, GameSetup };
         MessageTypes messageType;
@@ -399,10 +401,11 @@ namespace Games3Project2
             messageType = MessageTypes.GameSetup;
             packetWriter.Write((byte)messageType);
             packetWriter.Write(levelNumber);
+            byte currentID = 2;
             List<Byte> idList = new List<Byte>();
             foreach (NetworkGamer nGamer in networkSession.RemoteGamers)
             {
-                idList.Add(nGamer.Id);
+                idList.Add(currentID++);
             }
             packetWriter.Write(idList.Count);
             foreach (Byte leByte in idList)

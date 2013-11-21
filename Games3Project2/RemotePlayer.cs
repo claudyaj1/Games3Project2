@@ -13,7 +13,7 @@ namespace Games3Project2
 {
     public class RemotePlayer : Collidable
     {
-        public int networkPlayerID; //TODO: This needs set
+        public byte networkPlayerID; //TODO: This needs set
         public int score;
         Sphere sphere;
         Cube cube;
@@ -25,7 +25,7 @@ namespace Games3Project2
         public RemotePlayer(Vector3 pos, int networkPlayerID) :
             base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
-            this.networkPlayerID = networkPlayerID;
+            this.networkPlayerID = (byte)networkPlayerID;
             score = 0;
             Color sphereColor = Color.Red;
             switch(networkPlayerID)

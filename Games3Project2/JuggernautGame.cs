@@ -201,8 +201,7 @@ namespace Games3Project2
                 case Global.GameState.SetupLocalPlayers:
                     if (setupLocalPlayers())
                     {
-                        Global.gameState = Global.GameState.Playing;
-                        levelManager.setupLevelOne();
+                        Global.gameState = Global.GameState.LevelPicking;
                     }
                     break;
                 #endregion //SetupLocalPlayers
@@ -329,7 +328,7 @@ namespace Games3Project2
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
                         player.update();
-                        if (player.score > Global.Constants.MAX_SCORE)
+                        if (player.score >= Global.Constants.MAX_SCORE)
                         {
                             Global.gameState = Global.GameState.GameOver;
                             winningPlayer = player.networkPlayerID;
@@ -552,7 +551,7 @@ namespace Games3Project2
 
                     //SpriteBatch Drawing Section
                     Global.spriteBatch.Begin();
-                    
+                    /*
                     if (Global.debugMode)
                     {
                         //draw the heatmaps when debug mode is ran.
@@ -577,7 +576,7 @@ namespace Games3Project2
                             "Bullet Count: " + Global.bullets.Count.ToString(),
                             new Vector2(400f, 0f), Global.debugColor);
 
-                    }
+                    }*/
 
                     foreach (LocalPlayer drawPlayer in Global.localPlayers)
                     {

@@ -20,8 +20,6 @@ namespace HUDUtility
 		LocalPlayer player;
         Cursor cursor;
 
-        int keyCount;
-        public static int respawns;
         Color healthColor;
 
         Texture2D fuelTexture;
@@ -33,7 +31,8 @@ namespace HUDUtility
         int jetFuelWidth = 40;
         int jetFuelHeight = 200;
         Point healthBarPosition = new Point(20, 33);
-        Point jetFuelPosition; 
+        Point jetFuelPosition;
+        Vector2 scorePosition;
 
         Rectangle goodRect, badRect;
         Rectangle outlineLeft, outlineRight;
@@ -61,6 +60,8 @@ namespace HUDUtility
 
             fuelOutlineTop = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y + jetFuelHeight + 1, jetFuelWidth, 1);
             fuelOutlineBottom = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y - 1, jetFuelWidth, 1);
+
+            scorePosition = new Vector2(player.camera.viewport.Width - 60, 30);
 
             fuelTexture = Global.game.Content.Load<Texture2D>(@"Textures\fuelTexture");
             healthTexture = Global.game.Content.Load<Texture2D>(@"Textures\healthTexture");
@@ -95,7 +96,7 @@ namespace HUDUtility
 
         public void Draw()
         {
-            Global.spriteBatch.Draw(healthTexture, goodRect, Color.Green);
+            Global.spriteBatch.Draw(healthTexture, goodRect, healthColor);
             Global.spriteBatch.Draw(healthTexture, badRect, Color.Red);
             Global.spriteBatch.Draw(blankTexture, outlineLeft, Color.Black);
             Global.spriteBatch.Draw(blankTexture, outlineRight, Color.Black);
@@ -104,6 +105,8 @@ namespace HUDUtility
             Global.spriteBatch.Draw(fuelTexture, fuelEmptyRect, Color.Gray);
             Global.spriteBatch.Draw(blankTexture, fuelOutlineTop, Color.Black);
             Global.spriteBatch.Draw(blankTexture, fuelOutlineBottom, Color.Black);
+
+            Global.spriteBatch.DrawString(Global.consolas, player.score.ToString(), scorePosition, Color.White);
 
             cursor.Draw();
         }

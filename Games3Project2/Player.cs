@@ -22,7 +22,7 @@ namespace Games3Project2
         public PlayerIndex playerIndex;
         HUD hud;
         public int localPlayerIndex; // 1, 2, 3, or 4
-        public int networkPlayerID;
+        public byte networkPlayerID;
         int lastFiringTime;
         Sphere sphere;
         Cube cube;
@@ -54,7 +54,7 @@ namespace Games3Project2
         {
             
             playerIndex = index;
-            this.networkPlayerID = remoteIndex;
+            this.networkPlayerID = (byte)remoteIndex;
             localPlayerIndex = localIndex;
             score = 0;
             health = Global.Constants.MAX_HEALTH;
@@ -154,6 +154,7 @@ namespace Games3Project2
             health = Global.Constants.MAX_HEALTH;
             isJuggernaut = false;
             jetFuel = Global.Constants.MAX_JET_FUEL;
+            score = 0;
         }
 
         public void update()
@@ -194,8 +195,16 @@ namespace Games3Project2
             else
             {
                 //Cole: "We could do jet fuel addition only if the controller is plugged in"
-                jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
-                jetFuel += Global.Constants.JET_FUEL_INCREMENT;
+                if (isJuggernaut)
+                {
+                    jetPackThrust -= Global.Constants.JET_PACK_DECREMENT / 2;
+                    jetFuel += Global.Constants.JET_FUEL_INCREMENT * 1.2f;
+                }
+                else
+                {
+                    jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
+                    jetFuel += Global.Constants.JET_FUEL_INCREMENT;
+                }
                 Global.jetpack.Stop();
             }
 
@@ -336,9 +345,9 @@ namespace Games3Project2
                 if (Global.networkManager.isNetworked)
                 {
                     RemotePlayer killer = null;
-                    foreach(RemotePlayer rPlayer in Global.remotePlayers)
+                    foreach (RemotePlayer rPlayer in Global.remotePlayers)
                     {
-                        if(rPlayer.networkPlayerID == remotePlayerKiller)
+                        if (rPlayer.networkPlayerID == remotePlayerKiller)
                         {
                             killer = rPlayer;
                             break;
@@ -359,7 +368,37 @@ namespace Games3Project2
                         }
                     }
 
-                    //Global.networkManager.AnnounceJuggernautKilled(this, killer);
+                    if (killer == null)
+                    {
+                        int nextJug = Global.rand.Next(0, Global.localPlayers.Count);
+                        while (Global.localPlayers[nextJug] == this)
+                        {
+                            nextJug = Global.rand.Next(0, Global.localPlayers.Count);
+                        }
+                        Global.localPlayers[nextJug].isJuggernaut = true;
+                        isJuggernaut = false;
+                    }
+                    else
+                    {
+                        killer.isJuggernaut = true;
+                        isJuggernaut = false;
+                    }
+                }
+            }
+            else
+            {
+                LocalPlayer killer = null;
+                foreach (LocalPlayer lPlayer in Global.localPlayers)
+                {
+                    if (lPlayer.networkPlayerID == remotePlayerKiller)
+                    {
+                        killer = lPlayer;
+                        break;
+                    }
+                }
+
+                if (killer != null && killer.isJuggernaut)
+                {
                     killer.score++;
                 }
             }
