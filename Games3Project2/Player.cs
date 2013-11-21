@@ -11,18 +11,27 @@ using Camera3D;
 using ReticuleCursor;
 using InputHandler;
 using Geometry;
+using HUDUtility;
 
 namespace Games3Project2
 {
     public class LocalPlayer : Collidable
     {
         public Camera camera;
-        public Cursor cursor;
         public PlayerIndex playerIndex;
+        HUD hud;
         public int localPlayerIndex; // 1, 2, 3, or 4
+        public int networkPlayerID; 
         Sphere sphere;
-        bool isJuggernaut;
+        Cube cube;
+        Matrix cubeTransformation;
+        const int gunLength = 3;
         public float jetPackThrust = 0;
+
+        public int health;
+        public bool isJuggernaut;
+        public float jetFuel;
+        public bool jetpackDisabled;
 
         public override Vector3 Position
         {
@@ -41,8 +50,12 @@ namespace Games3Project2
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             playerIndex = index;
+            this.networkPlayerID = new Random().Next(1000000);
             localPlayerIndex = localIndex;
+            health = Global.Constants.MAX_HEALTH;
             isJuggernaut = false;
+            jetpackDisabled = false;
+            jetFuel = Global.Constants.MAX_JET_FUEL;
             Viewport viewport = new Viewport();
 
             Color sphereColor = Color.Red;
@@ -62,7 +75,11 @@ namespace Games3Project2
             sphere = new Sphere(Global.game, sphereColor, pos);
             sphere.localScale = Matrix.CreateScale(5);
             sphere.SetWireframe(1);
-
+            Texture2D blankTexture = Global.game.Content.Load<Texture2D>(@"Textures\blankTexture");
+            cube = new Cube(blankTexture, Color.Black);
+            cubeTransformation = Matrix.CreateScale(1, 1, gunLength) * Matrix.CreateTranslation(new Vector3(radius, 0, gunLength));
+            cube.wireFrame = false;
+            cube.textured = false;
             //split up viewport
             switch (Global.numLocalGamers)
             {
@@ -113,7 +130,7 @@ namespace Games3Project2
                     break;
             }
             camera = new Camera(pos, Vector3.Zero, Vector3.Up, viewport);
-            cursor = new Cursor(new Vector2(viewport.Width / 2, viewport.Height / 2));
+            hud = new HUD(this);
         }
 
         public override void platformCollision()
@@ -127,27 +144,49 @@ namespace Games3Project2
             #region Input
             float timeDelta = (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
             velocity = timeDelta * Global.input.get3DMovement14Directions(true, playerIndex);
-            float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[localPlayerIndex].ThumbSticks.Right.X;
-            float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[localPlayerIndex].ThumbSticks.Right.Y;
+            float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Input.indexAsInt(playerIndex)].ThumbSticks.Right.X;
+            float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Input.indexAsInt(playerIndex)].ThumbSticks.Right.Y;
 
-            if (Global.input.isPressed(Buttons.RightShoulder, playerIndex) ||
+            if (jetFuel <= 0)
+            {
+                jetFuel = 0;
+                jetpackDisabled = true;
+            }
+            if (jetFuel > Global.Constants.MAX_JET_FUEL)
+            {
+                jetFuel = Global.Constants.MAX_JET_FUEL;
+            }
+
+            if (jetpackDisabled && jetFuel > Global.Constants.MAX_JET_FUEL / 4)
+            {
+                jetpackDisabled = false;
+            }
+
+            //Cheating attacks will target the jetpacking logic in this if statement.
+            if ((Global.input.isPressed(Buttons.RightShoulder, playerIndex) ||
                 Global.input.isPressed(Buttons.LeftShoulder, playerIndex) ||
-                Global.input.GamepadByID[localPlayerIndex].Triggers.Left > 0f)
+                Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Left > 0f) && !jetpackDisabled)
             {
                 jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
-                //TODO: Jet Fuel subtraction.
+                jetFuel -= Global.Constants.JET_FUEL_DECREMENT;
+                if(!Global.debugMode)
+                    Global.heatmapUsedJetpack.addPoint(position);
+
             }
-            else if (Global.input.isConnected(playerIndex))
+            else
             {
-                //TODO: Jet Fuel addition only if the controller is plugged in.
+                //Cole: "We could do jet fuel addition only if the controller is plugged in"
                 jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
-                if (jetPackThrust < 0)
-                    jetPackThrust = 0;
+                jetFuel += Global.Constants.JET_FUEL_INCREMENT;
             }
 
             if (jetPackThrust > Global.Constants.JET_PACK_Y_VELOCITY_CAP)
             {
                 jetPackThrust = Global.Constants.JET_PACK_Y_VELOCITY_CAP;
+            }
+            if (jetPackThrust < 0)
+            {
+                jetPackThrust = 0;
             }
             velocity.Y += jetPackThrust * Global.gameTime.ElapsedGameTime.Milliseconds;
             velocity.Y -= Global.Constants.GRAVITY * Global.gameTime.ElapsedGameTime.Milliseconds;
@@ -207,23 +246,37 @@ namespace Games3Project2
             } //END
 #endif*/
             #endregion
-            #region Camera/Geometry
+            #region Camera/Geometry/HUD
             camera.Update(velocity, yawChange, pitchChange);
             prevPosition = position;
             position = camera.cameraPos;
             sphere.Position = position;
             sphere.Update(Global.gameTime);
+            hud.Update();
             #endregion
             #region Collision
             foreach (LocalPlayer collidePlayer in Global.localPlayers)
             {
                 if (collidePlayer == this)
                     continue;
-
+                Global.Collision.bounceCollidables(this, collidePlayer);
             }
             foreach (RemotePlayer collidePlayer in Global.remotePlayers)
             {
+                Global.Collision.bounceCollidables(this, collidePlayer);
+            }
 
+            for (int i = 0; i < Global.bullets.Count; ++i)
+            {
+                if (Global.bullets[i].shooterID != networkPlayerID && Global.Collision.didCollide(Global.bullets[i], this))
+                {
+                    health -= Global.bullets[i].damage;
+                    if (health < 0)
+                    {
+                        killed(0); //change that ish
+                    }
+                    Global.bullets.RemoveAt(i--);
+                }
             }
 
             #endregion
@@ -236,19 +289,26 @@ namespace Games3Project2
             if (Global.CurrentCamera != camera)
             {
                 sphere.Draw(Global.CurrentCamera);
+                cube.Draw(Global.CurrentCamera, cubeTransformation * 
+                    Matrix.CreateRotationX(MathHelper.ToRadians(camera.pitch)) * Matrix.CreateRotationY(MathHelper.ToRadians(camera.yaw)) 
+                    * Matrix.CreateTranslation(position));
             }
         }
+
 
         public void setAsJuggernaut()
         {
             isJuggernaut = true;
             //TODO: Play "New Juggernaut"
+            //TODO: Announce "Who is Juggernaut" , networkID
         }
 
-        public void killed()
+        public void killed(int remotePlayerKiller)
         {
             //TODO: Play "Die" noise
             //TODO: maybe trigger some message?
+            if (!Global.debugMode)
+                Global.heatmapDeaths.addPoint(position);
             if (isJuggernaut)
             {
                 //TODO: somehow, choosing a new juggernaut needs to occur
@@ -259,7 +319,7 @@ namespace Games3Project2
 
         public void drawHUD()
         {
-            cursor.Draw();
+            hud.Draw();
         }
 
         /// <summary>
@@ -280,11 +340,23 @@ namespace Games3Project2
 
         public void ShootBullet()
         {
-            //TODO: Create a bullet Class
-            Bullet bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-                -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED);
+            //Bullet bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+              //  -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED,
+                //networkPlayerID);
+            Bullet bullet = null;
+            if (isJuggernaut)
+            {
+                bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, networkPlayerID, Global.Constants.JUG_BULLET_DAMAGE);
+            }
+            else
+            {
+                bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, networkPlayerID, Global.Constants.BULLET_DAMAGE);
+            }
             Global.bullets.Add(bullet);
             //TODO: Play bullet fired sound fx at full volume.
+
         }
     }
 }

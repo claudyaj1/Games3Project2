@@ -25,7 +25,8 @@ namespace Games3Project2
         public Vector3[] points;
         public Boolean Alive;
         public int pointCount = 0;
-        public int attackRadius = 100;
+        public const int ATTACK_RADIUS = 100;
+        public readonly int npcID;
 
         Sphere body;
 
@@ -42,6 +43,7 @@ namespace Games3Project2
             points[2] = point3;
             points[3] = point4;
             Alive = true;
+            npcID = -(new Random().Next(100));
 
         }
         
@@ -78,9 +80,11 @@ namespace Games3Project2
 
         public void ShootBullet(Vector3 dir)
         {
-            //TODO: Create a bullet Class
+            //Basically, npcID is always negative so that players and npc's bullets
+            //can easily be distinguished yet seem the same.
             Bullet bullet = new Bullet(position,
-                dir * Global.Constants.BULLET_SPEED);
+                dir * Global.Constants.BULLET_SPEED,
+                npcID, Global.Constants.BULLET_DAMAGE);
             Global.bullets.Add(bullet);
             //TODO: Play bullet fired sound fx at full volume.
         }

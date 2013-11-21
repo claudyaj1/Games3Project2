@@ -18,8 +18,6 @@ namespace Games3Project2
         public List<Platform> platforms;
         List<Platform> walls;
 
-        public List<BugBot> bugBots;
-
         Texture2D platformWallTexture;
         Texture2D platformTexture;
         public int currentLevel;
@@ -35,8 +33,6 @@ namespace Games3Project2
         {
             platforms = new List<Platform>();
             walls = new List<Platform>();
-
-            bugBots = new List<BugBot>();
 
             platformWallTexture = Global.game.Content.Load<Texture2D>(@"Textures\walltexture");
             platformTexture = Global.game.Content.Load<Texture2D>(@"Textures\platformtexture");
@@ -98,15 +94,81 @@ namespace Games3Project2
             }
         }
 
+        public bool checkForCollision(Collidable collidable)
+        {
+            //hard boundary checks
+            float xCheck = 0;
+            float zCheck = 0;
+            float yCheck = 0;
+            switch (currentLevel)
+            {
+                case 1:
+                    xCheck = Global.Constants.LEVEL_ONE_WIDTH - collidable.Radius;
+                    zCheck = Global.Constants.LEVEL_ONE_LENGTH - collidable.Radius;
+                    yCheck = Global.Constants.LEVEL_ONE_HEIGHT - collidable.Radius;
+                    break;
+                case 2:
+                    xCheck = Global.Constants.LEVEL_TWO_WIDTH - collidable.Radius;
+                    zCheck = Global.Constants.LEVEL_TWO_LENGTH - collidable.Radius;
+                    yCheck = Global.Constants.LEVEL_TWO_HEIGHT - collidable.Radius;
+                    break;
+            }
+
+            if (collidable.Position.X > xCheck)
+            {
+                return true;
+            }
+            else if (collidable.Position.X < -xCheck)
+            {
+                return true;
+            }
+
+            if (collidable.Position.Y > yCheck)
+            {
+                return true;
+            }
+            else if (collidable.Position.Y < -yCheck)
+            {
+                return true;
+            }
+
+            if (collidable.Position.Z > zCheck)
+            {
+                return true;
+            }
+            else if (collidable.Position.Z < -zCheck)
+            {
+                return true;
+            }
+
+            //platforms
+            foreach (Platform platform in platforms)
+            {
+                if (platform.didCollide(collidable))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public void update()
         {
             foreach (LocalPlayer player in Global.localPlayers)
             {
                 checkCollision(player);
             }
-            foreach (BugBot bot in bugBots)
+            foreach (BugBot bot in Global.bugBots)
             {
                 bot.update();
+            }
+            for (int i = 0; i < Global.bullets.Count; ++i)
+            {
+                if(checkForCollision(Global.bullets[i]))
+                {
+                    Global.bullets.RemoveAt(i--);
+                }
             }
         }
 
@@ -131,7 +193,7 @@ namespace Games3Project2
                 platform.draw();
             }
 
-            foreach (BugBot bot in bugBots)
+            foreach (BugBot bot in Global.bugBots)
             {
                 bot.draw();
             }
@@ -178,10 +240,10 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(0, standardSpacing, -Global.Constants.LEVEL_ONE_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
             platforms.Add(new Platform(new Vector3(0, -2 * standardSpacing, -Global.Constants.LEVEL_ONE_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
 
-            bugBots.Add(new BugBot(new Vector3(75, 0, -180), .09f, new Vector3(-75, -50, -175), new Vector3(-50, 50, 190), new Vector3(92, 120, 95), new Vector3(75, 0, -180)));
-            bugBots.Add(new BugBot(new Vector3(-75, 0, -180), .09f, new Vector3(75, -50, -175), new Vector3(50, 50, 190), new Vector3(-92, -120, 95), new Vector3(-75, 0, -180)));
-            bugBots.Add(new BugBot(new Vector3(-75, 0, 180), .09f, new Vector3(75, 50, 175), new Vector3(50, -50, -190), new Vector3(-92, 120, -95), new Vector3(75, 0, 180)));
-            bugBots.Add(new BugBot(new Vector3(75, 0, 180), .09f, new Vector3(75, 50, -175), new Vector3(50, 50, 190), new Vector3(92, 120, -95), new Vector3(75, 0, -180)));
+            Global.bugBots.Add(new BugBot(new Vector3(75, 0, -180), .09f, new Vector3(-75, -50, -175), new Vector3(-50, 50, 190), new Vector3(92,90, 95), new Vector3(75, 0, -180)));
+            Global.bugBots.Add(new BugBot(new Vector3(-75, 0, -180), .09f, new Vector3(75, -50, -175), new Vector3(50, 50, 190), new Vector3(-92, -120, 95), new Vector3(-75, 0, -180)));
+            Global.bugBots.Add(new BugBot(new Vector3(-75, 0, 180), .09f, new Vector3(75, 50, 175), new Vector3(50, -50, -190), new Vector3(-92, 90, -95), new Vector3(75, 0, 180)));
+            Global.bugBots.Add(new BugBot(new Vector3(75, 0, 180), .09f, new Vector3(75, 50, -175), new Vector3(50, 50, 190), new Vector3(92, 90, -95), new Vector3(75, 0, -180)));
         }
 
         public void setupLevelTwo()
