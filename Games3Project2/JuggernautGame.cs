@@ -293,18 +293,6 @@ namespace Games3Project2
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
                         player.update();
-                        //TODO:if(player.isJuggernaught == true) then do the bugbot check else do nothing
-                        foreach (BugBot bot in Global.bugBots)
-                        {
-                            if ((bot.position - player.Position).Length() < BugBot.ATTACK_RADIUS)
-                            {
-                                //shoot a bullet at the player if he is the juggernaught
-                                Vector3 dir = player.Position - bot.position;
-                                dir.Normalize();
-                                bot.ShootBullet(dir);
-                                debug = false;
-                            }
-                        }
                     }
 
                     for (int i = 0; i < Global.bullets.Count; i++)
@@ -607,6 +595,7 @@ namespace Games3Project2
                     {
                         //Global.numLocalGamers = 3;
                         Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20 + i * 20, 0), joinedPlayers[i], i + 1));
+                        Global.localPlayers[i].isJuggernaut = true;
                         //Global.localPlayers.Add(new LocalPlayer(new Vector3(-10, 20, 0), PlayerIndex.Two, 2));
                         //Global.localPlayers.Add(new LocalPlayer(new Vector3(10, 20, 0), PlayerIndex.Three, 3));
                     }
