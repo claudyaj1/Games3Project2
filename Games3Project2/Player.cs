@@ -259,6 +259,11 @@ namespace Games3Project2
 
         public void drawHUD()
         {
+            if (isJuggernaut)
+            {
+                Global.spriteBatch.DrawString(Global.consolas, "JUGGERNAUT",
+                    new Vector2(camera.viewport.Width / 2 - 30f, 5f), Global.HUD_COLOR);
+            }
             cursor.Draw();
         }
 

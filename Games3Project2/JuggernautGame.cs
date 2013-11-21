@@ -81,7 +81,9 @@ namespace Games3Project2
             //music.playBackgroundMusic();
             splashTexture = Content.Load<Texture2D>(@"Textures\splash");
             consolas = Content.Load<SpriteFont>(@"Fonts/Consolas");
+            Global.consolas = consolas;
             tahoma = Content.Load<SpriteFont>(@"Fonts/Tahoma");
+            Global.tahoma = tahoma;
 
             List<String> menuOptions = new List<String>();
             menuOptions.Add("Create New Game");
