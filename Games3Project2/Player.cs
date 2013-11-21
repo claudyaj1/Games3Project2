@@ -21,6 +21,7 @@ namespace Games3Project2
         public PlayerIndex playerIndex;
         public int localPlayerIndex; // 1, 2, 3, or 4
         Sphere sphere;
+        bool isJuggernaut;
         public float jetPackThrust = 0;
 
         public override Vector3 Position
@@ -41,6 +42,7 @@ namespace Games3Project2
         {
             playerIndex = index;
             localPlayerIndex = localIndex;
+            isJuggernaut = false;
             Viewport viewport = new Viewport();
 
             Color sphereColor = Color.Red;
@@ -229,6 +231,24 @@ namespace Games3Project2
             if (Global.CurrentCamera != camera)
             {
                 sphere.Draw(Global.CurrentCamera);
+            }
+        }
+
+        public void setAsJuggernaut()
+        {
+            isJuggernaut = true;
+            //TODO: Play "New Juggernaut"
+        }
+
+        public void killed()
+        {
+            //TODO: Play "Die" noise
+            //TODO: maybe trigger some message?
+            if (isJuggernaut)
+            {
+                //TODO: somehow, choosing a new juggernaut needs to occur
+                //Perhaps Global.needToSelectNewJuggernaut = true;
+                //TODO: Award points to the killer.
             }
         }
 
