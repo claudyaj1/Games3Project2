@@ -154,7 +154,7 @@ namespace Games3Project2
             health = Global.Constants.MAX_HEALTH;
             isJuggernaut = false;
             jetFuel = Global.Constants.MAX_JET_FUEL;
-            score = 0;
+            //score = 0;
         }
 
         public void update()

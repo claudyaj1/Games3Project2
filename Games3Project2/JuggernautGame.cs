@@ -330,6 +330,10 @@ namespace Games3Project2
                         player.update();
                         if (player.score >= Global.Constants.MAX_SCORE)
                         {
+                            for (int i = 0; i < Global.localPlayers.Count; i++)
+                            {
+                                Global.localPlayers[i].score = 0;
+                            }
                             Global.gameState = Global.GameState.GameOver;
                             winningPlayer = player.networkPlayerID;
                             Global.graphics.GraphicsDevice.Viewport = new Viewport(0, 0, Global.viewPort.Width, Global.viewPort.Height);
@@ -551,7 +555,7 @@ namespace Games3Project2
 
                     //SpriteBatch Drawing Section
                     Global.spriteBatch.Begin();
-                    /*
+                    
                     if (Global.debugMode)
                     {
                         //draw the heatmaps when debug mode is ran.
@@ -576,7 +580,7 @@ namespace Games3Project2
                             "Bullet Count: " + Global.bullets.Count.ToString(),
                             new Vector2(400f, 0f), Global.debugColor);
 
-                    }*/
+                    }
 
                     foreach (LocalPlayer drawPlayer in Global.localPlayers)
                     {
