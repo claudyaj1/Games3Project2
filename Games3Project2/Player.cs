@@ -23,6 +23,9 @@ namespace Games3Project2
         public int localPlayerIndex; // 1, 2, 3, or 4
         public int networkPlayerID; 
         Sphere sphere;
+        Cube cube;
+        Matrix cubeTransformation;
+        const int gunLength = 3;
         public float jetPackThrust = 0;
 
         public int health;
@@ -72,7 +75,11 @@ namespace Games3Project2
             sphere = new Sphere(Global.game, sphereColor, pos);
             sphere.localScale = Matrix.CreateScale(5);
             sphere.SetWireframe(1);
-
+            Texture2D blankTexture = Global.game.Content.Load<Texture2D>(@"Textures\blankTexture");
+            cube = new Cube(blankTexture, Color.Black);
+            cubeTransformation = Matrix.CreateScale(1, 1, gunLength) * Matrix.CreateTranslation(new Vector3(radius, 0, gunLength));
+            cube.wireFrame = false;
+            cube.textured = false;
             //split up viewport
             switch (Global.numLocalGamers)
             {
@@ -265,6 +272,9 @@ namespace Games3Project2
             if (Global.CurrentCamera != camera)
             {
                 sphere.Draw(Global.CurrentCamera);
+                cube.Draw(Global.CurrentCamera, cubeTransformation * 
+                    Matrix.CreateRotationX(MathHelper.ToRadians(camera.pitch)) * Matrix.CreateRotationY(MathHelper.ToRadians(camera.yaw)) 
+                    * Matrix.CreateTranslation(position));
             }
         }
 
