@@ -15,6 +15,7 @@ namespace Games3Project2
         private Random Rand;
         public bool isHost;
         LocalNetworkGamer theLocalLiveAccount;
+        public bool isNetworked;
 
         //Objects
         public NetworkSession networkSession;
@@ -47,6 +48,7 @@ namespace Games3Project2
         public override void Initialize()
         {
             isHost = false;
+            isNetworked = false;
             gamertags = new string[Global.Constants.MAX_PLAYERS_TOTAL];
             packetReader = new PacketReader();
             packetWriter = new PacketWriter();
