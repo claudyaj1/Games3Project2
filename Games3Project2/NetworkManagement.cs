@@ -100,7 +100,7 @@ namespace Games3Project2
 
         public void WriteOutgoingPackets(LocalNetworkGamer gamer)
         {
-            packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
+            //packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
 
             switch (messageType)
 	        {
@@ -113,6 +113,9 @@ namespace Games3Project2
                         // Time of bullet fire
                         // Who fired the bullet
                     }
+                    break;
+                case MessageTypes.GameSetup:
+
                     break;
                 case MessageTypes.PositionAndVelocity:
                     {

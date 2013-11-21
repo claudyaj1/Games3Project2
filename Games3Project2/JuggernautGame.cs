@@ -245,6 +245,7 @@ namespace Games3Project2
                     {
                         if (Global.input.isFirstPress(Buttons.A, PlayerIndex.One))
                         {
+                            Global.networkManager.gameSetupPacket(levelManager.currentLevel);
                             Global.networkManager.networkSession.StartGame();
                             Global.gameState = Global.GameState.Playing;
                         }
@@ -375,7 +376,7 @@ namespace Games3Project2
 
             if (Global.networkManager.networkSession != null)
             {
-                Global.networkManager.networkSession.Update();
+                Global.networkManager.Update(Global.gameTime);
             }
 
             base.Update(gameTime);
