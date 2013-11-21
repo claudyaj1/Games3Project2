@@ -27,7 +27,7 @@ namespace Games3Project2
         Matrix cubeTransformation;
         const int gunLength = 3;
         public float jetPackThrust = 0;
-
+        public int score;
         public int health;
         public bool isJuggernaut;
         public float jetFuel;
@@ -52,6 +52,7 @@ namespace Games3Project2
             playerIndex = index;
             this.networkPlayerID = new Random().Next(65000);
             localPlayerIndex = localIndex;
+            score = 0;
             health = Global.Constants.MAX_HEALTH;
             isJuggernaut = false;
             jetpackDisabled = false;
@@ -355,7 +356,7 @@ namespace Games3Project2
                     -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, networkPlayerID, Global.Constants.BULLET_DAMAGE);
             }
             Global.bullets.Add(bullet);
-            Global.networkManager.AnnounceBulletShortOnNetwork(bullet);
+            Global.networkManager.AnnounceBulletShootEventOnNetwork(bullet);
             //TODO: Play bullet fired sound fx at full volume.
 
         }

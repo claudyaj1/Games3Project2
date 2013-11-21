@@ -88,7 +88,7 @@ namespace Camera3D
                 cameraPos += dt;
             }
 
-            // Updating collision BoundingSphere Position.
+            // Updating collision BoundingSphere PositionAndVelocity.
             BoundingSphere.Center = cameraPos;
 
             //// LookAt update ////
