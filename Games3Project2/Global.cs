@@ -94,6 +94,7 @@ namespace Games3Project2.Globals
             public static readonly float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
             public static readonly float BULLET_SPEED = .25f;
             public static readonly float BULLET_RADIUS = .5f;
+            public static readonly Color BULLET_COLOR = Color.DarkOrange;
             public static readonly int FIRING_COOLDOWN = 300;
             public static readonly int BOT_FIRING_COOLDOWN = 1000;
 
