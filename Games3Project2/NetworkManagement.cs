@@ -32,7 +32,7 @@ namespace Games3Project2
         private int numBytesReceived = 0;
 
         //Message types
-        enum MessageTypes { Shoot, PositionAndVelocity, ScoreUpdate, NewJuggernaut, PlayerKilledByJuggernaut };
+        enum MessageTypes { Shoot, PositionAndVelocity, ScoreUpdate, NewJuggernaut, PlayerKilledByJuggernaut, PositionAndVelocityBot };
         MessageTypes messageType;
 
         //CTOR
@@ -193,7 +193,21 @@ namespace Games3Project2
                     case MessageTypes.PositionAndVelocity:
                         {
                             //TODO: Read position packets.
+                            for (int i = 0; i < Global.remotePlayers.Count; i++)
+                            {
+                                if (Global.remotePlayers[i].networkPlayerID != packetReader.ReadUInt16())
+                                    continue; //Abort the current iteration of the for loop.
+                                Global.remotePlayers[i].Position = packetReader.ReadVector3();
+                                Global.remotePlayers[i].Velocity = packetReader.ReadVector3();
+                                Global.remotePlayers[i].yaw      = packetReader.ReadSingle(); //Throw away camera.lookRotation.Forward for now...might be useful in future
+                                Global.remotePlayers[i].pitch    = packetReader.ReadSingle();
+                                packetReader.ReadBoolean(); //Throw away
+                                packetReader.ReadSingle();  //Throw away
+                            }
                         }
+                        break;
+                    case MessageTypes.PositionAndVelocityBot:
+                        //TODO: Read Bot packets
                         break;
                     case MessageTypes.ScoreUpdate:
                         {
@@ -381,13 +395,14 @@ namespace Games3Project2
             packetWriter.Write((short)localPlayer.networkPlayerID);
             packetWriter.Write(localPlayer.Position);
             packetWriter.Write(localPlayer.Velocity);
-            packetWriter.Write(localPlayer.camera.lookRotation.Forward);
+            packetWriter.Write((float)localPlayer.camera.yaw);
+            packetWriter.Write((float)localPlayer.camera.pitch);
             packetWriter.Write((bool)localPlayer.jetpackDisabled);  //Is this useful?
             packetWriter.Write(localPlayer.jetPackThrust);          //Is this useful?
         }
         public void MovementNetworkMessage(BugBot bot)
         {
-            messageType = MessageTypes.PositionAndVelocity;
+            messageType = MessageTypes.PositionAndVelocityBot;
             packetWriter.Write((byte)messageType); // ALWAYS WRITE AT BEGINNING OF PACKET!
             packetWriter.Write((short)bot.npcID);
             packetWriter.Write(bot.position);
