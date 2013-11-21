@@ -149,8 +149,8 @@ namespace Games3Project2
                     {
                         case 0: //Create New Game (Host)
                             Global.networkManager.isHost = true;
-                            Global.networkManager.CreateSession();
-                            if (Global.networkManager.networkSession != null)
+                            //Global.networkManager.CreateSession();
+                            //if (Global.networkManager.networkSession != null)
                             {
                                 Global.gameState = Global.GameState.SetupLocalPlayers;
                                 Global.numLocalGamers = 1;
@@ -159,8 +159,8 @@ namespace Games3Project2
                             break;
                         case 1: //Join Game
                             Global.networkManager.isHost = false;
-                            Global.networkManager.JoinSession();
-                            if (Global.networkManager.networkSession != null)
+                            //Global.networkManager.JoinSession();
+                            //if (Global.networkManager.networkSession != null)
                             {
                                 Global.gameState = Global.GameState.SetupLocalPlayers;
                                 Global.numLocalGamers = 1;
