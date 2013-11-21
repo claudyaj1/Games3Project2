@@ -13,6 +13,7 @@ namespace Games3Project2.Globals
 {
     public static class Global
     {
+        public static Heatmap heatmapKills, heatmapDeaths, heatmapUsedJetpack;
         public static Input input = Input.Instance;
         public static NetworkManagement networkManager;
         public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();

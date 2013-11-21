@@ -135,6 +135,8 @@ namespace Games3Project2
                 Global.input.GamepadByID[localPlayerIndex].Triggers.Left > 0f)
             {
                 jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
+                if(!Global.debugMode)
+                    Global.heatmapUsedJetpack.addPoint(position);
                 //TODO: Jet Fuel subtraction.
             }
             else if (Global.input.isConnected(playerIndex))
@@ -249,6 +251,8 @@ namespace Games3Project2
         {
             //TODO: Play "Die" noise
             //TODO: maybe trigger some message?
+            if (!Global.debugMode)
+                Global.heatmapDeaths.addPoint(position);
             if (isJuggernaut)
             {
                 //TODO: somehow, choosing a new juggernaut needs to occur
@@ -285,6 +289,7 @@ namespace Games3Project2
                 -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED);
             Global.bullets.Add(bullet);
             //TODO: Play bullet fired sound fx at full volume.
+
         }
     }
 }

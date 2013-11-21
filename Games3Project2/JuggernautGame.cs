@@ -59,6 +59,7 @@ namespace Games3Project2
 
         protected override void Initialize()
         {
+           
             Global.game = this;
             Global.networkManager = new NetworkManagement();
             Global.graphics = graphics;
@@ -67,6 +68,9 @@ namespace Games3Project2
             Global.titleSafe = GetTitleSafeArea(.85f);
             axisReference = new Axis_Reference(GraphicsDevice, 1.0f);
             BoundingSphereRenderer.Initialize(GraphicsDevice, 45);
+            Global.heatmapKills = new Heatmap(Color.Black);
+            Global.heatmapDeaths = new Heatmap(Color.Red);
+            Global.heatmapUsedJetpack = new Heatmap(Color.Green);
 
             this.IsMouseVisible = true;
             base.Initialize();
@@ -319,6 +323,11 @@ namespace Games3Project2
                     
                     if (Global.debugMode)
                     {
+                        //draw the heatmaps when debug mode is ran.
+                        Global.heatmapKills.draw();
+                        Global.heatmapDeaths.draw();
+                        Global.heatmapUsedJetpack.draw();
+
                         axisReference.Draw(Matrix.Identity, Global.CurrentCamera.view, Global.CurrentCamera.projection);
                         Global.spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
                                 new Vector2(5f, 35f), Color.PaleGreen);

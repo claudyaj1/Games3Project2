@@ -74,6 +74,7 @@
     <Compile Include="Cylinder.cs" />
     <Compile Include="DeLeone_Cursor.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Heatmap.cs" />
     <Compile Include="Line_Primitive.cs" />
     <Compile Include="Music.cs" />
     <Compile Include="NetworkManagement.cs" />
