@@ -49,12 +49,12 @@ namespace Games3Project2
             }
         }
 
-        public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex)
+        public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex, int remoteIndex)
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             
             playerIndex = index;
-            this.networkPlayerID = new Random().Next(65000);
+            this.networkPlayerID = remoteIndex;
             localPlayerIndex = localIndex;
             score = 0;
             health = Global.Constants.MAX_HEALTH;
@@ -65,7 +65,7 @@ namespace Games3Project2
             Viewport viewport = new Viewport();
 
             Color sphereColor = Color.Red;
-            switch (localPlayerIndex)
+            switch (networkPlayerID)
             {
                 //case 1 default is red
                 case 2:
@@ -294,7 +294,7 @@ namespace Games3Project2
                     health -= Global.bullets[i].damage;
                     if (health < 0)
                     {
-                        killed(0); //change that ish
+                        killed(Global.bullets[i].shooterID);
                     }
                     Global.bullets.RemoveAt(i--);
                 }
@@ -332,9 +332,35 @@ namespace Games3Project2
                 Global.heatmapDeaths.addPoint(position);
             if (isJuggernaut)
             {
-                //TODO: somehow, choosing a new juggernaut needs to occur
-                //Perhaps Global.needToSelectNewJuggernaut = true;
-                //TODO: Award points to the killer.
+                if (Global.networkManager.isNetworked)
+                {
+                    RemotePlayer killer = null;
+                    foreach(RemotePlayer rPlayer in Global.remotePlayers)
+                    {
+                        if(rPlayer.networkPlayerID == remotePlayerKiller)
+                        {
+                            killer = rPlayer;
+                            break;
+                        }
+                    }
+                    Global.networkManager.AnnounceJuggernautKilled(this, killer);
+                    killer.score++;
+                }
+                else
+                {
+                    LocalPlayer killer = null;
+                    foreach (LocalPlayer lPlayer in Global.localPlayers)
+                    {
+                        if (lPlayer.networkPlayerID == remotePlayerKiller)
+                        {
+                            killer = lPlayer;
+                            break;
+                        }
+                    }
+
+                    //Global.networkManager.AnnounceJuggernautKilled(this, killer);
+                    killer.score++;
+                }
             }
 
             Global.levelManager.respawnPlayer(this);
