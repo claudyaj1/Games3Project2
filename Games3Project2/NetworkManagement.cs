@@ -28,7 +28,7 @@ namespace Games3Project2
         private int numBytesReceived = 0;
 
         //Message types
-        enum MessageTypes { Shoot, PositionAndVelocity, ScoreUpdate, NewJuggernaut, PlayerKilledByJuggernaut };
+        enum MessageTypes { Shoot, PositionAndVelocity, ScoreUpdate, NewJuggernaut, PlayerKilledByJuggernaut, GameSetup };
         MessageTypes messageType;
 
         //CTOR
@@ -166,6 +166,19 @@ namespace Games3Project2
                             //someFloatVariable = (float)packetReader.ReadInt32();
                         }
                         break;
+                    case MessageTypes.GameSetup:
+                        int levelNum = packetReader.ReadInt32();
+                        int playerCount = packetReader.ReadInt32();
+                        byte[] IDs = new byte[playerCount];
+                        for (int i = 0; i < playerCount; ++i)
+                        {
+                            IDs[i] = packetReader.ReadByte();
+                        }
+                        for (int i = 0; i < playerCount; ++i)
+                        {
+                            Global.remotePlayers.Add(new RemotePlayer(new Vector3(0, 20, 0), (int)IDs[i]));
+                        }
+                        break;
                     case MessageTypes.PositionAndVelocity:
                         {
                             //TODO: Read position packets.
@@ -234,14 +247,6 @@ namespace Games3Project2
                     // Join the first session we found.
                     networkSession = NetworkSession.Join(availableSessions[0]);
                     HookSessionEvents();
-
-                    foreach (NetworkGamer nGamer in networkSession.RemoteGamers)
-                    {
-                        if (!nGamer.IsLocal)
-                        {
-                            Global.remotePlayers.Add(new RemotePlayer(new Vector3(0, 20, 0), (int)nGamer.Id));
-                        }
-                    }
                 }
             }
             catch (Exception ex)
@@ -366,6 +371,23 @@ namespace Games3Project2
             {
                 packetWriter.Write((byte)localPlayer.score);
                 packetWriter.Write((byte)localPlayer.health);
+            }
+        }
+
+        public void gameSetupPacket(int levelNumber)
+        {
+            messageType = MessageTypes.GameSetup;
+            packetWriter.Write((byte)messageType);
+            packetWriter.Write(levelNumber);
+            List<Byte> idList = new List<Byte>();
+            foreach (NetworkGamer nGamer in networkSession.RemoteGamers)
+            {
+                idList.Add(nGamer.Id);
+            }
+            packetWriter.Write(idList.Count);
+            foreach (Byte leByte in idList)
+            {
+                packetWriter.Write((byte)leByte);
             }
         }
 
