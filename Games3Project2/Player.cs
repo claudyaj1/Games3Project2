@@ -169,6 +169,9 @@ namespace Games3Project2
             {
                 jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
                 jetFuel -= Global.Constants.JET_FUEL_DECREMENT;
+                if(!Global.debugMode)
+                    Global.heatmapUsedJetpack.addPoint(position);
+
             }
             else
             {
@@ -290,6 +293,8 @@ namespace Games3Project2
         {
             //TODO: Play "Die" noise
             //TODO: maybe trigger some message?
+            if (!Global.debugMode)
+                Global.heatmapDeaths.addPoint(position);
             if (isJuggernaut)
             {
                 //TODO: somehow, choosing a new juggernaut needs to occur
@@ -326,6 +331,7 @@ namespace Games3Project2
                 networkPlayerID);
             Global.bullets.Add(bullet);
             //TODO: Play bullet fired sound fx at full volume.
+
         }
     }
 }
