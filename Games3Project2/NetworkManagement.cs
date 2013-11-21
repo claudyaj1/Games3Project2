@@ -12,6 +12,7 @@ namespace Games3Project2
 {
     public class NetworkManagement : Microsoft.Xna.Framework.GameComponent
     {
+        private Random Rand;
         public bool isHost;
 
         //Objects
@@ -22,6 +23,7 @@ namespace Games3Project2
 
         private string errorMessage;
         private string[] gamertags; // TODO: is this even a good idea?
+        private List<int> usedIDs;
 
         //Statistics
         private int numBytesSent = 0;
@@ -35,6 +37,8 @@ namespace Games3Project2
         public NetworkManagement()
             : base(Global.game)
         {
+            usedIDs = new List<int>();
+            Rand = new Random();
             Initialize();
         }
 
@@ -241,6 +245,24 @@ namespace Games3Project2
                 Console.WriteLine(errorMessage);
             }
         }
+        public int GenerateNetworkPlayerID()
+        {
+            int ann = Rand.Next(65000);
+            while (usedIDs.Contains(ann))
+            {
+                ann = Rand.Next(65000);
+            }
+            usedIDs.Add(ann);
+            return ann;
+        }
+        public void GenerateNetworkPlayerID(ref LocalPlayer player)
+        {
+            player.networkPlayerID = GenerateNetworkPlayerID();
+        }
+        public void GenerateNetworkPlayerID(ref RemotePlayer player)
+        {
+            player.networkPlayerID = GenerateNetworkPlayerID();
+        }
         #endregion //Session Creating and Joining
 
         #region Hook Session Events
@@ -354,5 +376,7 @@ namespace Games3Project2
         }
 
         #endregion
+
+
     }
 }
