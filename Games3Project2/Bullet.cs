@@ -14,10 +14,17 @@ namespace Games3Project2
         //TODO: CreateTranslation matrix
         public const int TTL = 2000; //Milliseconds
         public int timeLived;
+        /// <summary>
+        /// // The networkPlayerID of the shooter who shot this bullet.
+        /// </summary>
+        public int shooterID; 
+        public Vector3 startPosition;
 
-        public Bullet(Vector3 startPosition, Vector3 velocity) :
+        /// <param name="shooterID">networkPlayerID</param>
+        public Bullet(Vector3 startPosition, Vector3 velocity, int shooterID) :
             base(Global.game, startPosition, velocity, Global.Constants.BULLET_RADIUS)
         {
+            this.startPosition = startPosition;
             bs = new BoundingSphere(startPosition, Global.Constants.BULLET_RADIUS);
             timeLived = 0;
         }
@@ -34,6 +41,8 @@ namespace Games3Project2
             BoundingSphereRenderer.Draw(bs,
                 Global.CurrentCamera.view,
                 Global.CurrentCamera.projection);
+
+            //TODO: Add bullet geometry. Perhaps a sideways cylinder.
         }
             
     }

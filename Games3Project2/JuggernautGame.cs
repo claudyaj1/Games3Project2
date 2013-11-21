@@ -110,7 +110,11 @@ namespace Games3Project2
                 // TODO: Depending on the game state...behavior of back button will differ.
                 this.Exit();
             }
-            if (Global.input.isFirstPress(Keys.OemTilde))
+            if (Global.input.isFirstPress(Keys.OemTilde) ||
+                Global.input.isFirstPress(Buttons.DPadDown, PlayerIndex.One) ||
+                Global.input.isFirstPress(Buttons.DPadDown, PlayerIndex.Two) ||
+                Global.input.isFirstPress(Buttons.DPadDown, PlayerIndex.Three) ||
+                Global.input.isFirstPress(Buttons.DPadDown, PlayerIndex.Four))
             {
                 Global.debugMode = !Global.debugMode; //Toggle mode
             }

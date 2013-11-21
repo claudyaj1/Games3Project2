@@ -21,6 +21,7 @@ namespace Games3Project2
         public PlayerIndex playerIndex;
         HUD hud;
         public int localPlayerIndex; // 1, 2, 3, or 4
+        public int networkPlayerID; 
         Sphere sphere;
         public float jetPackThrust = 0;
 
@@ -46,6 +47,7 @@ namespace Games3Project2
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             playerIndex = index;
+            this.networkPlayerID = new Random().Next(1000000);
             localPlayerIndex = localIndex;
             health = Global.Constants.MAX_HEALTH;
             isJuggernaut = false;
@@ -307,9 +309,9 @@ namespace Games3Project2
 
         public void ShootBullet()
         {
-            //TODO: Create a bullet Class
             Bullet bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-                -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED);
+                -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED,
+                networkPlayerID);
             Global.bullets.Add(bullet);
             //TODO: Play bullet fired sound fx at full volume.
         }
