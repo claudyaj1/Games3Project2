@@ -332,6 +332,11 @@ namespace Games3Project2
                         }
                     }
 
+                    foreach (RemotePlayer rPlayer in Global.remotePlayers)
+                    {
+                        rPlayer.update();
+                    }
+
                     for (int i = 0; i < Global.bullets.Count; i++)
                     {
                         Global.bullets[i].update(gameTime);
@@ -533,6 +538,11 @@ namespace Games3Project2
                                 bullet.draw();
                             }
                         }
+                    }
+
+                    foreach (RemotePlayer rPlayer in Global.remotePlayers)
+                    {
+                        rPlayer.draw();
                     }
 
                     //SpriteBatch Drawing Section
