@@ -46,7 +46,7 @@ namespace Games3Project2
             gamertags = new string[Global.Constants.MAX_PLAYERS_TOTAL];
             packetReader = new PacketReader();
             packetWriter = new PacketWriter();
-            networkSessionProperties = new NetworkSessionProperties();
+            networkSessionProperties = null;
             messageType = MessageTypes.ScoreUpdate;
             base.Initialize();
         }
@@ -191,9 +191,9 @@ namespace Games3Project2
             {
                 networkSession = NetworkSession.Create(NetworkSessionType.PlayerMatch,
                     Global.Constants.MAX_PLAYERS_LOCAL,
-                    Global.Constants.MAX_PLAYERS_TOTAL,
-                    0, // No private slots.
-                    networkSessionProperties);
+                    Global.Constants.MAX_PLAYERS_TOTAL);
+                    //0, // No private slots.
+                    //null);
                 HookSessionEvents();
                 isHost = true;
                 Console.WriteLine("Success");
@@ -222,7 +222,7 @@ namespace Games3Project2
                 using (AvailableNetworkSessionCollection availableSessions =
                             NetworkSession.Find(NetworkSessionType.PlayerMatch,
                                                 Global.Constants.MAX_PLAYERS_LOCAL,
-                                                networkSessionProperties))
+                                                null))
                 {
                     if (availableSessions.Count == 0)
                     {
