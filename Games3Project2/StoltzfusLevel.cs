@@ -302,6 +302,12 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(Global.Constants.LEVEL_TWO_WIDTH - mediumPlatformSize, -3 * standardSpacing, 0), mediumPlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
             platforms.Add(new Platform(new Vector3(-Global.Constants.LEVEL_TWO_WIDTH + mediumPlatformSize, -3 * standardSpacing, 0), mediumPlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
 
+
+            Global.bugBots.Add(new BugBot(new Vector3(75, 0, -18), .09f, new Vector3(-75, 130, -17), new Vector3(-50, 50, 19), new Vector3(92, 0, 95), new Vector3(75, 130, -18)));
+            Global.bugBots.Add(new BugBot(new Vector3(-75, -45, -18), .09f, new Vector3(75, -45, 17), new Vector3(50, -50, 19), new Vector3(-92, 130, 95), new Vector3(-75, 0, -18)));
+            Global.bugBots.Add(new BugBot(new Vector3(-75, -100, 18), .09f, new Vector3(75, -150,35), new Vector3(50, 130, -19), new Vector3(-92, 90, -95), new Vector3(75, -45, 18)));
+            Global.bugBots.Add(new BugBot(new Vector3(75, -150, 18), .09f, new Vector3(75, 130, -17), new Vector3(50, -45, 19), new Vector3(92, 50, -95), new Vector3(75, -150, -18)));
+
             spawnPoints.Add(new Vector3(0, -30, -90));
             spawnPoints.Add(new Vector3(0, -30, 90));
             spawnPoints.Add(new Vector3(0, 10, 0));
