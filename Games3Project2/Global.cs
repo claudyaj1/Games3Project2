@@ -66,6 +66,8 @@ namespace Games3Project2.Globals
 
             public static readonly float JET_PACK_INCREMENT = 0.00003f;
             public static readonly float JET_PACK_DECREMENT = JET_PACK_INCREMENT * 0.6f; //Yes, this must remain positive.
+            public static readonly float JET_FUEL_INCREMENT = .2f;
+            public static readonly float JET_FUEL_DECREMENT = .6f;
             public static readonly float JET_PACK_Y_VELOCITY_CAP = 0.0007f;
             public static readonly float GRAVITY = 0.0003f;
             public static readonly float MAX_JET_FUEL = 100f;
@@ -74,8 +76,10 @@ namespace Games3Project2.Globals
             public static readonly float SPIN_RATE = 100f;
             public static readonly float PLAYER_RADIUS = 5f;
 
-            public static readonly int START_HEALTH = 100;
+            public static readonly int MAX_HEALTH = 100;
             public static readonly int BULLET_HIT_HEALTH_IMPACT = 10;
+            public static readonly int MAX_JUG_HEALTH = 300;
+            public static readonly int JUG_BULLET_DAMAGE = 30;
 
             public static readonly float WALL_BUFFER = 5;
 

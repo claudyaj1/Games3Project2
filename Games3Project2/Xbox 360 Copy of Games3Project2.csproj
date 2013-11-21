@@ -86,6 +86,7 @@
     <Compile Include="StoltzfusLevel.cs" />
     <Compile Include="StoltzfusMenu.cs" />
     <Compile Include="StoltzfusPlatform.cs" />
+    <Compile Include="Stoltzfus_HUD.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

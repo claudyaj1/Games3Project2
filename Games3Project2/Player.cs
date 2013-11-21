@@ -11,17 +11,23 @@ using Camera3D;
 using ReticuleCursor;
 using InputHandler;
 using Geometry;
+using HUDUtility;
 
 namespace Games3Project2
 {
     public class LocalPlayer : Collidable
     {
         public Camera camera;
-        public Cursor cursor;
         public PlayerIndex playerIndex;
+        HUD hud;
         public int localPlayerIndex; // 1, 2, 3, or 4
         Sphere sphere;
         public float jetPackThrust = 0;
+
+        public int health;
+        public bool isJuggernaut;
+        public float jetFuel;
+        public bool jetpackDisabled;
 
         public override Vector3 Position
         {
@@ -41,6 +47,10 @@ namespace Games3Project2
         {
             playerIndex = index;
             localPlayerIndex = localIndex;
+            health = Global.Constants.MAX_HEALTH;
+            isJuggernaut = false;
+            jetpackDisabled = false;
+            jetFuel = Global.Constants.MAX_JET_FUEL;
             Viewport viewport = new Viewport();
 
             Color sphereColor = Color.Red;
@@ -111,7 +121,7 @@ namespace Games3Project2
                     break;
             }
             camera = new Camera(pos, Vector3.Zero, Vector3.Up, viewport);
-            cursor = new Cursor(new Vector2(viewport.Width / 2, viewport.Height / 2));
+            hud = new HUD(this);
         }
 
         public override void platformCollision()
@@ -128,19 +138,33 @@ namespace Games3Project2
             float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[localPlayerIndex].ThumbSticks.Right.X;
             float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[localPlayerIndex].ThumbSticks.Right.Y;
 
+            if (jetpackDisabled && jetFuel > Global.Constants.MAX_JET_FUEL / 4)
+            {
+                jetpackDisabled = false;
+            }
+
             if (Global.input.isPressed(Buttons.RightShoulder, playerIndex) ||
                 Global.input.isPressed(Buttons.LeftShoulder, playerIndex) ||
-                Global.input.GamepadByID[localPlayerIndex].Triggers.Left > 0f)
+                Global.input.GamepadByID[localPlayerIndex].Triggers.Left > 0f && !jetpackDisabled)
             {
                 jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
-                //TODO: Jet Fuel subtraction.
+                jetFuel -= Global.Constants.JET_FUEL_DECREMENT;
+                if (jetFuel <= 0)
+                {
+                    jetpackDisabled = true;
+                }
             }
-            else if (Global.input.isConnected(playerIndex))
+            else
             {
                 //TODO: Jet Fuel addition only if the controller is plugged in.
                 jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
                 if (jetPackThrust < 0)
                     jetPackThrust = 0;
+                jetFuel += Global.Constants.JET_FUEL_INCREMENT;
+                if (jetFuel > Global.Constants.MAX_JET_FUEL)
+                {
+                    jetFuel = Global.Constants.MAX_JET_FUEL;
+                }
             }
 
             if (jetPackThrust > Global.Constants.JET_PACK_Y_VELOCITY_CAP)
@@ -200,12 +224,13 @@ namespace Games3Project2
             } //END
 #endif*/
             #endregion
-            #region Camera/Geometry
+            #region Camera/Geometry/HUD
             camera.Update(velocity, yawChange, pitchChange);
             prevPosition = position;
             position = camera.cameraPos;
             sphere.Position = position;
             sphere.Update(Global.gameTime);
+            hud.Update();
             #endregion
             #region Collision
             foreach (LocalPlayer collidePlayer in Global.localPlayers)
@@ -234,7 +259,7 @@ namespace Games3Project2
 
         public void drawHUD()
         {
-            cursor.Draw();
+            hud.Draw();
         }
 
         /// <summary>
