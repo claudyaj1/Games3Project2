@@ -240,10 +240,10 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(0, standardSpacing, -Global.Constants.LEVEL_ONE_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
             platforms.Add(new Platform(new Vector3(0, -2 * standardSpacing, -Global.Constants.LEVEL_ONE_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
 
-            Global.bugBots.Add(new BugBot(new Vector3(75, 0, -180), .09f, new Vector3(-75, -50, -175), new Vector3(-50, 50, 190), new Vector3(92, 120, 95), new Vector3(75, 0, -180)));
+            Global.bugBots.Add(new BugBot(new Vector3(75, 0, -180), .09f, new Vector3(-75, -50, -175), new Vector3(-50, 50, 190), new Vector3(92,90, 95), new Vector3(75, 0, -180)));
             Global.bugBots.Add(new BugBot(new Vector3(-75, 0, -180), .09f, new Vector3(75, -50, -175), new Vector3(50, 50, 190), new Vector3(-92, -120, 95), new Vector3(-75, 0, -180)));
-            Global.bugBots.Add(new BugBot(new Vector3(-75, 0, 180), .09f, new Vector3(75, 50, 175), new Vector3(50, -50, -190), new Vector3(-92, 120, -95), new Vector3(75, 0, 180)));
-            Global.bugBots.Add(new BugBot(new Vector3(75, 0, 180), .09f, new Vector3(75, 50, -175), new Vector3(50, 50, 190), new Vector3(92, 120, -95), new Vector3(75, 0, -180)));
+            Global.bugBots.Add(new BugBot(new Vector3(-75, 0, 180), .09f, new Vector3(75, 50, 175), new Vector3(50, -50, -190), new Vector3(-92, 90, -95), new Vector3(75, 0, 180)));
+            Global.bugBots.Add(new BugBot(new Vector3(75, 0, 180), .09f, new Vector3(75, 50, -175), new Vector3(50, 50, 190), new Vector3(92, 90, -95), new Vector3(75, 0, -180)));
         }
 
         public void setupLevelTwo()
