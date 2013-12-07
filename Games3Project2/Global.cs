@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using Camera3D;
 using InputHandler;
+using Networking;
 
 namespace Games3Project2.Globals
 {
@@ -15,7 +16,7 @@ namespace Games3Project2.Globals
     {
         public static Heatmap heatmapKills, heatmapDeaths, heatmapUsedJetpack;
         public static Input input = Input.Instance;
-        public static NetworkManagement networkManager;
+        public static NetworkManager networkManager;
         public static Level levelManager;
         public static Random rand = new Random();
         public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();
@@ -25,8 +26,8 @@ namespace Games3Project2.Globals
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
         public static Game game;
-        public enum GameState { Intro, Menu, SetupLocalPlayers, LevelPicking, 
-            NetworkWaitingHost, NetworkJoining, Playing, Paused, NetworkQuit,
+        public enum GameState { Intro, Menu, CreateMenu, JoinMenu, SetupLocalPlayers, LevelPicking, 
+            Lobby, Playing, Paused, NetworkQuit,
             GameOver, ChooseHeatmap, playingHeatmap, SetupLocalPlayersHeatmap};
         public static GameState gameState = GameState.Intro;
         /// <summary>

@@ -121,7 +121,7 @@
     <Compile Include="Heatmap.cs" />
     <Compile Include="Line_Primitive.cs" />
     <Compile Include="Music.cs" />
-    <Compile Include="NetworkManagement.cs" />
+    <Compile Include="NetworkManager.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Quad.cs" />
     <Compile Include="RemotePlayer.cs" />

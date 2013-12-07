@@ -19,6 +19,7 @@ using MusicClasses;
 using ReticuleCursor;
 using Geometry;
 using Games3Project2.Globals;
+using Networking;
 
 namespace Games3Project2
 {
@@ -32,11 +33,15 @@ namespace Games3Project2
 
         Music music;
         Texture2D splashTexture;
+        Texture2D background;
 
         int splashTimer = 0;
         const int SPLASH_LENGTH = 3000;
 
         Menu mainMenu;
+        Menu levelMenu;
+        Menu createGameMenu;
+        Menu joinGameMenu;
         Level levelManager;
 
         Boolean debug = true;
@@ -64,7 +69,7 @@ namespace Games3Project2
         {
            
             Global.game = this;
-            Global.networkManager = new NetworkManagement();
+            Global.networkManager = new NetworkManager();
             Global.graphics = graphics;
             Global.graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             Global.viewPort = Global.graphics.GraphicsDevice.Viewport.Bounds;
@@ -100,14 +105,34 @@ namespace Games3Project2
             Global.consolas = consolas;
             tahoma = Content.Load<SpriteFont>(@"Fonts/Tahoma");
             Global.tahoma = tahoma;
+            background = Content.Load<Texture2D>(@"Textures\menubackground");
 
             List<String> menuOptions = new List<String>();
-            menuOptions.Add("Create New Networked Game");
-            menuOptions.Add("Create New Local Game");
-            menuOptions.Add("Join Network Game");
+            menuOptions.Add("Create New Game");
+            menuOptions.Add("Join Game");
             menuOptions.Add("Heatmaps");
             menuOptions.Add("Exit");
             mainMenu = new Menu(menuOptions, "Juggernaut", new Vector2(Global.titleSafe.Left + 30,
+                Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
+
+            List<String> levelOptions = new List<string>();
+            levelOptions.Add("Level One");
+            levelOptions.Add("Level Two");
+            levelOptions.Add("Level Three");
+            levelMenu = new Menu(levelOptions, "Juggernaut", new Vector2(Global.titleSafe.Left + 30,
+                Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
+
+            List<String> gameOptions = new List<String>();
+            gameOptions.Add("Local");
+            gameOptions.Add("System Link");
+            gameOptions.Add("Player Match");
+            createGameMenu = new Menu(gameOptions, "Juggernaut", new Vector2(Global.titleSafe.Left + 30,
+                Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
+
+            List<String> joinGameOptions = new List<string>();
+            joinGameOptions.Add("System Link");
+            joinGameOptions.Add("Player Match");
+            joinGameMenu = new Menu(joinGameOptions, "Juggernaut", new Vector2(Global.titleSafe.Left + 30,
                 Global.viewPort.Height / 2 - (menuOptions.Count / 2 * consolas.MeasureString("C").Y)));
 
             levelManager = new Level();
@@ -123,6 +148,7 @@ namespace Games3Project2
         {
             Global.gameTime = gameTime;
             Global.input.Update();
+            Global.networkManager.update();
             // Allows the game to exit
             if (Global.input.DetectBackPressedByAnyPlayer())
             {
@@ -162,40 +188,78 @@ namespace Games3Project2
                     Global.menusong.Play();
                     switch (mainMenu.update())
                     {
-                        case 0: //Create New Game (Host)
-                            Global.networkManager.isHost = true;
-                            Global.networkManager.isNetworked = true;
-                            Global.gameState = Global.GameState.LevelPicking;
-                            Global.numLocalGamers = 1;
-                            Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), PlayerIndex.One, 1, 1));
+                        case 0: //Create New Game (Networking or Local)
+                            Global.gameState = Global.GameState.CreateMenu;
                             break;
-                        case 1: //Create New Local Game
-                            Global.gameState = Global.GameState.SetupLocalPlayers;
-                            Global.numLocalGamers = 1;
-                            Global.networkManager.isHost = false;
-                            Global.networkManager.isNetworked = false;
-                            joinedPlayers.Add(PlayerIndex.One);
+                        case 1: //Join Game
+                            //local player joining code
+                            Global.gameState = Global.GameState.JoinMenu;
                             break;
-                        case 2: //Join Game
-                            Global.networkManager.isHost = false;
-                            Global.networkManager.isNetworked = true;
-                            Global.gameState = Global.GameState.NetworkJoining;
-                            //Global.numLocalGamers = 1;
-                            //Global.localPlayers.Add(new LocalPlayer(new Vector3(0, 20, 0), PlayerIndex.One, 1));
-                            break;
-                        case 3: //Heat maps
-                            Global.networkManager.isHost = true;
+                        case 2: //Heatmaps
+                            this.Exit();
                             Global.gameState = Global.GameState.SetupLocalPlayersHeatmap;
                             Global.numLocalGamers = 1;
                             joinedPlayers.Clear();
                             joinedPlayers.Add(PlayerIndex.One);
                             break;
-                        case 4: //Exit
+                        case 3: //Exit
                             this.Exit();
                             break;
                     }
                     break;
                 #endregion //Menu
+
+                #region CreateMenu
+                case Global.GameState.CreateMenu:
+                    if (Global.input.isFirstPress(Buttons.B))
+                    {
+                        Global.gameState = Global.GameState.Menu;
+                    }
+                    switch (createGameMenu.update())
+                    {
+                        case 0: //Local
+                            Global.networkManager.sessionType = NetworkSessionType.Local;
+                            Global.gameState = Global.GameState.SetupLocalPlayers;
+                            Global.numLocalGamers = 1;
+                            joinedPlayers.Add(PlayerIndex.One);
+                            break;
+                        case 1: //System Link
+                            Global.networkManager.sessionType = NetworkSessionType.SystemLink;
+                            Global.networkManager.hostSessionType = NetworkManager.HostSessionType.Host;
+                            Global.gameState = Global.GameState.LevelPicking;
+                            break;
+                        case 2: //Player Match
+                            Global.networkManager.sessionType = NetworkSessionType.PlayerMatch;
+                            Global.networkManager.hostSessionType = NetworkManager.HostSessionType.Host;
+                            Global.gameState = Global.GameState.LevelPicking;
+                            break;
+                    }
+                    break;
+                #endregion //CreateMenu
+
+                #region JoinMenu
+                case Global.GameState.JoinMenu:
+                    if (Global.input.isFirstPress(Buttons.B))
+                    {
+                        Global.gameState = Global.GameState.Menu;
+                    }
+                    switch (joinGameMenu.update())
+                    {
+                        case 0: //System Link
+                            Global.networkManager.sessionType = NetworkSessionType.SystemLink;
+                            Global.networkManager.hostSessionType = NetworkManager.HostSessionType.Client;
+                            Global.gameState = Global.GameState.Lobby;
+                            Global.networkManager.joinSession();
+                            break;
+                        case 1: //Player Match
+                            Global.networkManager.sessionType = NetworkSessionType.PlayerMatch;
+                            Global.networkManager.hostSessionType = NetworkManager.HostSessionType.Client;
+                            Global.gameState = Global.GameState.Lobby;
+                            Global.networkManager.joinSession();
+                            break;
+                    }
+                    break;
+                #endregion //JoinMenu
 
                 #region SetupLocalPlayers
                 case Global.GameState.SetupLocalPlayers:
@@ -206,63 +270,70 @@ namespace Games3Project2
                     break;
                 #endregion //SetupLocalPlayers
 
-                #region LevelPicking:
+                #region LevelPicking
                 case Global.GameState.LevelPicking:
-                    if (updateLevelPicking())
+                    if (Global.input.isFirstPress(Buttons.B))
                     {
-                        if (Global.networkManager.isNetworked)
-                        {
-                            Global.gameState = Global.GameState.NetworkWaitingHost;
-                        }
-                        else
-                        {
-                            Global.gameState = Global.GameState.Playing;
-                            Global.localPlayers[0].isJuggernaut = true;
-                        }
+                        Global.gameState = Global.GameState.Menu;
+                    }
+                    switch (levelMenu.update())
+                    {
+                        case 0:
+                            if (Global.networkManager.sessionType == NetworkSessionType.Local)
+                            {
+                                levelManager.setupLevelOne();
+                                Global.gameState = Global.GameState.Playing;
+                            }
+                            else
+                            {
+                                Global.gameState = Global.GameState.Lobby;
+                                Global.networkManager.createSession();
+                            }
+                            break;
+                        case 1:
+                            if (Global.networkManager.sessionType == NetworkSessionType.Local)
+                            {
+                                levelManager.setupLevelTwo();
+                                Global.gameState = Global.GameState.Playing;
+                            }
+                            else
+                            {
+                                Global.gameState = Global.GameState.Lobby;
+                                Global.networkManager.createSession();
+                            }
+                            break;
+                        case 2:
+                            //levelManager.setupLevelThree();
+                            break;
                     }
                     break;
                 #endregion //LevelPicking
 
-                #region NetworkJoining
-                case Global.GameState.NetworkJoining:
-                    if (Global.networkManager.networkSession == null)
+                #region Lobby
+                case Global.GameState.Lobby:
+                    if (Global.networkManager.currentState == NetworkManager.CurrentState.Running)
                     {
-                        Global.networkManager.JoinSession();
-                    }
-                    //Chill here until remote host calls StartGame().
-
-                    break;
-                #endregion //NetworkJoining
-
-                #region NetworkWaitingHost
-                case Global.GameState.NetworkWaitingHost:
-
-                    if (Global.networkManager.networkSession == null)
-                    {
-                        Global.networkManager.CreateSession();
-                    }
-                    else 
-                    {
-                        if (Global.input.isFirstPress(Buttons.A, PlayerIndex.One))
+                        if (Global.input.isFirstPress(Buttons.B))
                         {
-                            Global.networkManager.gameSetupPacket(levelManager.currentLevel);
-                            foreach (NetworkGamer nGamer in Global.networkManager.networkSession.RemoteGamers)
-                            {
-                                Global.remotePlayers.Add(new RemotePlayer(new Vector3(0, 20, 0), nGamer.Id));
-                            }
-                            Global.networkManager.networkSession.StartGame();
+                            Global.gameState = Global.GameState.Menu;
+                            Global.networkManager.disposeNetworkSession();
+                        }
+                        else if(Global.networkManager.hostSessionType == NetworkManager.HostSessionType.Host &&
+                            Global.networkManager.networkSession.AllGamers.Count > 1 && 
+                            (Global.input.isFirstPress(Buttons.A) || Global.input.isFirstPress(Buttons.Start)))
+                        {
                             Global.gameState = Global.GameState.Playing;
+                            Global.networkManager.networkSession.StartGame();
                         }
                     }
                     break;
-                #endregion //NetworkWaitingHost
-
+                #endregion //Lobby
 
                 #region SetupLocalPlayersHeatmap
                 case Global.GameState.SetupLocalPlayersHeatmap:
                     if (setupLocalPlayers())
                     {
-                        if (Global.networkManager.isHost)
+                        if (Global.networkManager.hostSessionType == NetworkManager.HostSessionType.Host)
                         {
                             Global.gameState = Global.GameState.ChooseHeatmap;
                         }
@@ -277,9 +348,19 @@ namespace Games3Project2
 
                 #region ChooseHeatmap
                 case Global.GameState.ChooseHeatmap:
-                    if (updateLevelPicking())
+                    switch (levelMenu.update())
                     {
-                        Global.gameState = Global.GameState.playingHeatmap;
+                        case 0: //Level 1
+                            levelManager.setupLevelOne();
+                            Global.gameState = Global.GameState.playingHeatmap;
+                            break;
+                        case 1: //Level 2
+                            levelManager.setupLevelTwo();
+                            Global.gameState = Global.GameState.playingHeatmap;
+                            break;
+                        case 2: //Level 3
+
+                            break;
                     }
                     break;
                 #endregion
@@ -387,11 +468,6 @@ namespace Games3Project2
                 #endregion //NetworkQuit
             }
 
-            if (Global.networkManager.networkSession != null)
-            {
-                Global.networkManager.Update(Global.gameTime);
-            }
-
             base.Update(gameTime);
         }
 
@@ -409,6 +485,7 @@ namespace Games3Project2
                     Global.spriteBatch.End();
                     break;
                 #endregion
+
                 #region Menu
                 case Global.GameState.Menu:
                     Global.spriteBatch.Begin();
@@ -416,6 +493,23 @@ namespace Games3Project2
                     Global.spriteBatch.End();
                     break;
                 #endregion
+
+                #region CreateMenu
+                case Global.GameState.CreateMenu:
+                    Global.spriteBatch.Begin();
+                    createGameMenu.draw();
+                    Global.spriteBatch.End();
+                    break;
+                #endregion //CreateMenu
+
+                #region JoinMenu
+                case Global.GameState.JoinMenu:
+                    Global.spriteBatch.Begin();
+                    joinGameMenu.draw();
+                    Global.spriteBatch.End();
+                    break;
+                #endregion //JoinMenu
+
                 #region SetupLocalPlayers
                 case Global.GameState.SetupLocalPlayers:
                     Global.spriteBatch.Begin();
@@ -423,26 +517,43 @@ namespace Games3Project2
                     Global.spriteBatch.End();
                     break;
                 #endregion
+
                 #region LevelPicking:
                 case Global.GameState.LevelPicking:
                     Global.spriteBatch.Begin();
-                    drawLevelPicking();
+                    levelMenu.draw();
                     Global.spriteBatch.End();
                     break;
                 #endregion
-                #region NetworkJoining
-                case Global.GameState.NetworkJoining:
+
+                #region Lobby
+                case Global.GameState.Lobby:
                     Global.spriteBatch.Begin();
+                    Global.networkManager.draw();
+                    if (Global.networkManager.currentState == NetworkManager.CurrentState.Running)
+                    {
+                        Global.spriteBatch.Draw(background, Global.viewPort, Color.White);
+
+                        Vector2 playerTextStarting = new Vector2(Global.viewPort.Left + 30, Global.viewPort.Height / 2 - 30);
+                        Vector2 promptStarting = new Vector2(Global.viewPort.Left + 30, Global.viewPort.Height - 50);
+                        float textOffset = consolas.MeasureString("A").Y + 5;
+
+                        Global.spriteBatch.DrawString(consolas, "Joined Players:", playerTextStarting, Color.Black);
+                        int off = 1;
+                        foreach (NetworkGamer nGamer in Global.networkManager.networkSession.AllGamers)
+                        {
+                            Global.spriteBatch.DrawString(consolas, nGamer.Gamertag, new Vector2(playerTextStarting.X, playerTextStarting.Y + off++ * textOffset), Color.Black);
+                        }
+
+                        if (Global.networkManager.networkSession.AllGamers.Count > 1)
+                        {
+                            Global.spriteBatch.DrawString(consolas, "Press A to Start the Game", promptStarting, Color.Black);
+                        }
+                        Global.spriteBatch.DrawString(consolas, "Press B to Return", new Vector2(promptStarting.X, promptStarting.Y + textOffset), Color.Black);
+                    }
                     Global.spriteBatch.End();
                     break;
-                #endregion
-                #region NetworkWaitingHost
-                case Global.GameState.NetworkWaitingHost:
-                    Global.spriteBatch.Begin();
-                    drawNetworkWaitingHost();
-                    Global.spriteBatch.End();
-                    break;
-                #endregion
+                #endregion //Lobby
 
                 #region SetupLocalPlayersHeatmap
                 case Global.GameState.SetupLocalPlayersHeatmap:
@@ -451,10 +562,11 @@ namespace Games3Project2
                     Global.spriteBatch.End();
                     break;
                 #endregion
+
                 #region ChooseHeatmap
                 case Global.GameState.ChooseHeatmap:
                     Global.spriteBatch.Begin();
-                    drawLevelPicking();
+                    levelMenu.draw();
                     Global.spriteBatch.End();
                     break;
                 #endregion
@@ -593,6 +705,7 @@ namespace Games3Project2
                     Global.spriteBatch.End();
                     break;
                 #endregion
+
                 #region Paused
                 case Global.GameState.Paused:
                     Global.spriteBatch.Begin();
@@ -600,6 +713,7 @@ namespace Games3Project2
                     Global.spriteBatch.End();
                     break;
                 #endregion
+
                 #region GameOver
                 case Global.GameState.GameOver:
                     Global.spriteBatch.Begin();
@@ -611,6 +725,7 @@ namespace Games3Project2
                     Global.spriteBatch.End();
                     break;
                 #endregion
+
                 #region NetworkQuit
                 case Global.GameState.NetworkQuit:
                     Global.spriteBatch.Begin();
@@ -728,45 +843,6 @@ namespace Games3Project2
             {
                 Global.spriteBatch.DrawString(consolas, "Press Start to Continue", new Vector2(startingPosition.X, startingPosition.Y + 6 * yOffset), Color.Black);
             }
-        }
-
-        private bool updateLevelPicking()
-        {
-            bool didSelect = false;
-            if (Global.input.isFirstPress(Buttons.A, Global.localPlayers[0].playerIndex) ||
-                Global.input.isFirstPress(Keys.A) ||
-                Global.input.isFirstPress(Keys.Enter))
-            {
-                levelManager.setupLevelOne();
-                didSelect = true;
-            }
-            else if (Global.input.isFirstPress(Buttons.B, Global.localPlayers[0].playerIndex) ||
-                Global.input.isFirstPress(Keys.B))
-            {
-                levelManager.setupLevelTwo();
-                didSelect = true;
-            }
-
-            return didSelect;
-        }
-
-        private void drawLevelPicking()
-        {
-            Global.spriteBatch.Draw(mainMenu.background, Global.viewPort, Color.White);
-            float yOffset = consolas.MeasureString("A").Y;
-            Vector2 startingPosition = new Vector2(Global.titleSafe.Left + 30, Global.titleSafe.Top + 100);
-
-            Global.spriteBatch.DrawString(consolas, "Press A For Level One", startingPosition, Color.Black);
-            Global.spriteBatch.DrawString(consolas, "Press B For Level Two", new Vector2(startingPosition.X, startingPosition.Y + yOffset), Color.Black);
-        }
-
-        private void drawNetworkWaitingHost()
-        {
-            Global.spriteBatch.Draw(mainMenu.background, Global.viewPort, Color.White);
-            float yOffset = consolas.MeasureString("A").Y;
-            Vector2 startingPosition = new Vector2(Global.titleSafe.Left + 30, Global.titleSafe.Top + 100);
-
-            Global.spriteBatch.DrawString(consolas, "Press A to continue when all gamers have joined", startingPosition, Color.Black);
         }
 
         private void resetGraphicsDevice()

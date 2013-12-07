@@ -13,6 +13,7 @@ using InputHandler;
 using Geometry;
 using HUDUtility;
 using Microsoft.Xna.Framework.Audio;
+using Networking;
 
 namespace Games3Project2
 {
@@ -280,7 +281,6 @@ namespace Games3Project2
             camera.Update(velocity, yawChange, pitchChange);
             prevPosition = position;
             position = camera.cameraPos;
-            Global.networkManager.MovementNetworkMessage(this);
             sphere.Position = position;
             sphere.Update(Global.gameTime);
             hud.Update();
@@ -342,7 +342,7 @@ namespace Games3Project2
                 Global.heatmapDeaths.addPoint(position);
             if (isJuggernaut)
             {
-                if (Global.networkManager.isNetworked)
+                if (Global.networkManager.currentState == NetworkManager.CurrentState.Running)
                 {
                     RemotePlayer killer = null;
                     foreach (RemotePlayer rPlayer in Global.remotePlayers)
@@ -353,7 +353,6 @@ namespace Games3Project2
                             break;
                         }
                     }
-                    Global.networkManager.AnnounceJuggernautKilled(this, killer);
                     killer.score++;
                 }
                 else
@@ -445,7 +444,6 @@ namespace Games3Project2
                     -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, networkPlayerID, Global.Constants.BULLET_DAMAGE);
             }
             Global.bullets.Add(bullet);
-            Global.networkManager.AnnounceBulletShootEventOnNetwork(bullet);
             //TODO: Play bullet fired sound fx at full volume.
 
         }
