@@ -27,7 +27,6 @@ namespace Games3Project2
         public enum State { Active, Idle };
         public State state;
 
-        /// <param name="shooterID">networkPlayerID</param>
         public Bullet() :
             base(Global.game, Vector3.Zero, Vector3.Zero, Global.Constants.BULLET_RADIUS)
         {
@@ -48,6 +47,7 @@ namespace Games3Project2
             this.damage = damage;
             timeLived = 0;
             state = State.Active;
+            Global.shot.Play();
         }
 
         public void disable()

@@ -31,7 +31,7 @@ namespace Networking
         /// Progress is a message to announce to the other player how much progress has been made
         /// Winning message is sent to announce that the other player has won and to end the play state.
         /// </summary>
-        public enum MessageType { Level, FireBullet, PlayerUpdate };
+        public enum MessageType { Level, FireBullet, PlayerUpdate, NewJuggernaut };
         string lastErrorMessage;
 
         public enum CurrentState { Idle, Joining, Creating, Running, JoinFailed, CreateFailed }
@@ -251,8 +251,20 @@ namespace Networking
                     MessageType incomingPacketType = (MessageType)reader.ReadByte(); //Read the packet type.
                     switch (incomingPacketType)
                     {
-                        
-                        default: break;
+                        case MessageType.FireBullet:
+                            readBullet();
+                            break;
+                        case MessageType.Level:
+                            readLevel();
+                            break;
+                        case MessageType.NewJuggernaut:
+                            readNewJuggernaut();
+                            break;
+                        case MessageType.PlayerUpdate:
+                            readPlayerUpdate();
+                            break;
+                        default: 
+                            break;
                     }
 
                     // Estimate how long this packet took to arrive.
@@ -262,20 +274,89 @@ namespace Networking
             }
         }
 
+        private NetworkGamer findGamerWithTag(string tag)
+        {
+            foreach (NetworkGamer gamer in networkSession.AllGamers)
+            {
+                if (gamer.Gamertag == tag)
+                    return gamer;
+            }
+
+            return null;
+        }
+
         public void fireBullet(Bullet bullet)
         {
             writer.Write((byte)MessageType.FireBullet);
+            writer.Write(bullet.startPosition);
+            writer.Write(bullet.Velocity);
+            writer.Write(bullet.shooter.Gamertag);
+            writer.Write(bullet.damage);
+        }
 
+        private void readBullet()
+        {
+            Vector3 startPos = reader.ReadVector3();
+            Vector3 vel = reader.ReadVector3();
+            string tag = reader.ReadString();
+            NetworkGamer shooter = findGamerWithTag(tag);
+            int damage = reader.ReadInt32();
+
+            Global.BulletManager.fireBullet(startPos, vel, shooter, damage);
         }
 
         public void announceLevel(int levelNumber)
         {
+            writer.Write((byte)MessageType.Level);
+            writer.Write(levelNumber);
+        }
 
+        private void readLevel()
+        {
+            int levelNum = reader.ReadInt32();
+            Global.levelManager.currentLevel = levelNum;
+            Global.levelManager.setupLevel();
         }
 
         public void playerUpdate(LocalPlayer player)
         {
+            writer.Write((byte)MessageType.PlayerUpdate);
+            writer.Write(player.gamer.Gamertag);
+            writer.Write(player.Position);
+            writer.Write(player.Velocity);
+        }
 
+        private void readPlayerUpdate()
+        {
+            string tag = reader.ReadString();
+            NetworkGamer gamer = findGamerWithTag(tag);
+            Vector3 newPos = reader.ReadVector3();
+            Vector3 newVel = reader.ReadVector3();
+            LocalPlayer player = gamer.Tag as LocalPlayer;
+            player.Position = newPos;
+            player.Velocity = newVel;
+        }
+
+        public void newJuggernaut(NetworkGamer gamer)
+        {
+            writer.Write((byte)MessageType.NewJuggernaut);
+            writer.Write(gamer.Gamertag);
+        }
+
+        private void readNewJuggernaut()
+        {
+            string tag = reader.ReadString();
+            NetworkGamer gamer = findGamerWithTag(tag);
+            if (gamer.Tag.GetType() == Global.localPlayers[0].GetType())
+            {
+                LocalPlayer player = gamer.Tag as LocalPlayer;
+                player.setAsJuggernaut();
+            }
+            else
+            {
+                RemotePlayer player = gamer.Tag as RemotePlayer;
+                player.isJuggernaut = true;
+            }
         }
     }
 }
