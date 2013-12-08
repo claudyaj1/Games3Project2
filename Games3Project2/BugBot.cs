@@ -96,13 +96,7 @@ namespace Games3Project2
 
         public void ShootBullet(Vector3 dir)
         {
-            //Basically, npcID is always negative so that players and npc's bullets
-            //can easily be distinguished yet seem the same.
-            Bullet bullet = new Bullet(position,
-                dir * Global.Constants.BULLET_SPEED,
-                npcID, Global.Constants.BULLET_DAMAGE);
-            Global.bullets.Add(bullet);
-            //TODO: Play bullet fired sound fx at full volume.
+            Global.BulletManager.fireBullet(position, dir * Global.Constants.BULLET_SPEED, null, Global.Constants.BULLET_DAMAGE);
         }
 
     }

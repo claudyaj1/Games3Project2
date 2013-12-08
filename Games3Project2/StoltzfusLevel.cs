@@ -165,11 +165,11 @@ namespace Games3Project2
             {
                 bot.update();
             }
-            for (int i = 0; i < Global.bullets.Count; ++i)
+            for (int i = 0; i < Global.BulletManager.bullets.Count; ++i)
             {
-                if(checkForCollision(Global.bullets[i]))
+                if(Global.BulletManager.bullets[i].state == Bullet.State.Active && checkForCollision(Global.BulletManager.bullets[i]))
                 {
-                    Global.bullets.RemoveAt(i--);
+                    Global.BulletManager.bullets[i].disable();
                 }
             }
         }
@@ -208,9 +208,24 @@ namespace Games3Project2
             player.respawn(spawnPoints[spawnIndex]);
         }
 
-        public void setupLevelOne()
+        public void setupLevel()
         {
-            currentLevel = 1;
+            switch (currentLevel)
+            {
+                case 1:
+                    setupLevelOne();
+                    break;
+                case 2:
+                    setupLevelTwo();
+                    break;
+                case 3:
+                    setupLevelThree();
+                    break;
+            }
+        }
+
+        private void setupLevelOne()
+        {
             walls.Clear();
             platforms.Clear();
             spawnPoints.Clear();
@@ -264,7 +279,7 @@ namespace Games3Project2
             spawnAllPlayers();
         }
 
-        public void setupLevelTwo()
+        private void setupLevelTwo()
         {
             currentLevel = 2;
             walls.Clear();
@@ -314,6 +329,11 @@ namespace Games3Project2
             spawnPoints.Add(new Vector3(0, -70, 0));
 
             spawnAllPlayers();
+        }
+
+        private void setupLevelThree()
+        {
+
         }
 
         public void spawnAllPlayers()

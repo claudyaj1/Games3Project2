@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Input;
 
+using Games3Project2;
 using Games3Project2.Globals;
 
 namespace Networking
@@ -30,7 +31,7 @@ namespace Networking
         /// Progress is a message to announce to the other player how much progress has been made
         /// Winning message is sent to announce that the other player has won and to end the play state.
         /// </summary>
-        public enum MessageType { Dumpski };
+        public enum MessageType { Level, FireBullet, PlayerUpdate };
         string lastErrorMessage;
 
         public enum CurrentState { Idle, Joining, Creating, Running, JoinFailed, CreateFailed }
@@ -186,6 +187,8 @@ namespace Networking
                 networkSession = null;
             }
 
+            Global.localPlayers.Clear();
+            Global.remotePlayers.Clear();
             currentState = CurrentState.Idle;
         }
 
@@ -199,25 +202,24 @@ namespace Networking
 
         void GameStartedEventHandler(object sender, GameStartedEventArgs e)
         {
+            Global.levelManager.setupLevel();
             Global.gameState = Global.GameState.Playing;
         }
 
-        /// <summary>
-        /// This event handler will be called whenever a new gamer joins the session.
-        /// We use it to allocate a Tank object, and associate it with the new gamer.
-        /// </summary>
         void GamerJoinedEventHandler(object sender, GamerJoinedEventArgs e)
         {
-            int gamerIndex = networkSession.AllGamers.IndexOf(e.Gamer);
-            //e.Gamer.Tag = new Tank(gamerIndex, Content, screenWidth, screenHeight);
+            if (!e.Gamer.IsLocal)
+            {
+                e.Gamer.Tag = new RemotePlayer(Vector3.Zero, e.Gamer);
+                Global.remotePlayers.Add((RemotePlayer)e.Gamer.Tag);
+            }
         }
-        /// <summary>
-        /// Event handler notifies us when the network session has ended.
-        /// </summary>
+
         void SessionEndedEventHandler(object sender, NetworkSessionEndedEventArgs e)
         {
             lastErrorMessage = e.EndReason.ToString();
             disposeNetworkSession();
+            Global.gameState = Global.GameState.NetworkQuit;
         }
         #endregion
 
@@ -258,6 +260,22 @@ namespace Networking
                                        TimeSpan.FromTicks(sender.RoundtripTime.Ticks / 2);*/
                 }
             }
+        }
+
+        public void fireBullet(Bullet bullet)
+        {
+            writer.Write((byte)MessageType.FireBullet);
+
+        }
+
+        public void announceLevel(int levelNumber)
+        {
+
+        }
+
+        public void playerUpdate(LocalPlayer player)
+        {
+
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Net;
 
 using Games3Project2.Globals;
 using Camera3D;
@@ -13,7 +14,6 @@ namespace Games3Project2
 {
     public class RemotePlayer : Collidable
     {
-        public byte networkPlayerID; //TODO: This needs set
         public int score;
         Sphere sphere;
         Cube cube;
@@ -22,27 +22,12 @@ namespace Games3Project2
         public bool isJuggernaut;
         public float yaw;
         public float pitch;
-        public RemotePlayer(Vector3 pos, int networkPlayerID) :
+        public NetworkGamer gamer;
+        public RemotePlayer(Vector3 pos, NetworkGamer associatedGamer) :
             base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
-            this.networkPlayerID = (byte)networkPlayerID;
             score = 0;
-            Color sphereColor = Color.Red;
-            switch(networkPlayerID)
-            {
-                case 1:
-                    sphereColor = Color.Red;
-                    break;
-                case 2:
-                    sphereColor = Color.Blue;
-                    break;
-                case 3:
-                    sphereColor = Color.Green;
-                    break;
-                case 4:
-                    sphereColor = Color.Yellow;
-                    break;
-            }
+            Color sphereColor = Color.Blue; 
             Texture2D blankTex = Global.game.Content.Load<Texture2D>(@"Textures\blankTexture");
             sphere = new Sphere(Global.game, sphereColor, pos);
             cube = new Cube(blankTex, sphereColor); 

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Net;
 
 using Camera3D;
 using InputHandler;
@@ -21,7 +22,6 @@ namespace Games3Project2.Globals
         public static Random rand = new Random();
         public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();
         public static List<RemotePlayer> remotePlayers = new List<RemotePlayer>();
-        public static List<Bullet> bullets = new List<Bullet>();
         public static List<BugBot> bugBots = new List<BugBot>();
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
@@ -68,6 +68,31 @@ namespace Games3Project2.Globals
         //kt22377 is the author from freesound.org
         public static SoundEffectInstance actionsong;
 
+        public static class BulletManager
+        {
+            public static List<Bullet> bullets = new List<Bullet>();
+            private static int nextBullet = 0;
+            public static void fireBullet(Vector3 startPosition, Vector3 velocity, NetworkGamer shooter, int damage)
+            {
+                bullets[nextBullet++].fire(startPosition, velocity, shooter, damage);
+                nextBullet %= Constants.MAX_ALLOCATED_BULLETS;
+            }
+            public static void update()
+            {
+                foreach (Bullet bullet in bullets)
+                {
+                    bullet.update(gameTime);
+                }
+            }
+            public static void draw()
+            {
+                foreach (Bullet bullet in bullets)
+                {
+                    bullet.draw();
+                }
+            }
+        }
+
         public static class Constants
         {
             public static readonly byte MAX_PLAYERS_TOTAL = 4;
@@ -102,6 +127,7 @@ namespace Games3Project2.Globals
             public static readonly float BULLET_SPEED = .25f;
             public static readonly float BULLET_RADIUS = .5f;
             public static readonly Color BULLET_COLOR = Color.DarkOrange;
+            public static readonly int MAX_ALLOCATED_BULLETS = 300;
             public static readonly int FIRING_COOLDOWN = 300;
             public static readonly int BOT_FIRING_COOLDOWN = 1000;
 

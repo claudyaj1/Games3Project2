@@ -35,7 +35,7 @@ namespace MenuUtility
         public Vector2 titlePosition;
 
         SpriteFont menuFont;
-        SpriteFont titleFont;
+        public SpriteFont titleFont;
         SoundEffect menuMove;
 
         #region Setters/Getters

@@ -438,6 +438,14 @@ namespace InputHandler
             return GamePadCurrent1.IsButtonDown(b_) && gamePadPrevious1.IsButtonUp(b_);
         }
 
+        public bool isAnyFirstPress(Buttons b_)
+        {
+            return (gamePadCurrent1.IsButtonDown(b_) && gamePadPrevious1.IsButtonUp(b_)) ||
+                   (gamePadCurrent2.IsButtonDown(b_) && gamePadPrevious2.IsButtonUp(b_)) ||
+                   (gamePadCurrent3.IsButtonDown(b_) && gamePadPrevious3.IsButtonUp(b_)) ||
+                   (gamePadCurrent4.IsButtonDown(b_) && gamePadPrevious4.IsButtonUp(b_));
+        }
+
         /// <summary>
         /// Detects the down stroke of a button press. Returns true if the button was just pressed. Will not repeat true.
         /// </summary>

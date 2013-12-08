@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Net;
 
 using Games3Project2.Globals;
 using Camera3D;
@@ -23,7 +24,6 @@ namespace Games3Project2
         public PlayerIndex playerIndex;
         HUD hud;
         public int localPlayerIndex; // 1, 2, 3, or 4
-        public byte networkPlayerID;
         int lastFiringTime;
         Sphere sphere;
         Cube cube;
@@ -35,7 +35,7 @@ namespace Games3Project2
         public bool isJuggernaut;
         public float jetFuel;
         public bool jetpackDisabled;
-        
+        public LocalNetworkGamer gamer;
 
         public override Vector3 Position
         {
@@ -50,12 +50,11 @@ namespace Games3Project2
             }
         }
 
-        public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex, int remoteIndex)
+        public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex, LocalNetworkGamer associatedGamer)
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             
             playerIndex = index;
-            this.networkPlayerID = (byte)remoteIndex;
             localPlayerIndex = localIndex;
             score = 0;
             health = Global.Constants.MAX_HEALTH;
@@ -63,22 +62,8 @@ namespace Games3Project2
             jetpackDisabled = false;
             lastFiringTime = 0;
             jetFuel = Global.Constants.MAX_JET_FUEL;
-            Viewport viewport = new Viewport();
 
-            Color sphereColor = Color.Red;
-            switch (networkPlayerID)
-            {
-                //case 1 default is red
-                case 2:
-                    sphereColor = Color.Blue;
-                    break;
-                case 3:
-                    sphereColor = Color.Green;
-                    break;
-                case 4:
-                    sphereColor = Color.Yellow;
-                    break;
-            }
+            Color sphereColor = Color.Blue;
             sphere = new Sphere(Global.game, sphereColor, pos);
             sphere.localScale = Matrix.CreateScale(5);
             sphere.SetWireframe(1);
@@ -87,7 +72,14 @@ namespace Games3Project2
             cubeTransformation = Matrix.CreateScale(1, 1, gunLength) * Matrix.CreateTranslation(new Vector3(radius, 0, gunLength));
             cube.wireFrame = false;
             cube.textured = false;
-            //split up viewport
+
+            gamer = associatedGamer;
+            setupViewport();
+        }
+
+        public void setupViewport()
+        {
+            Viewport viewport = new Viewport();
             switch (Global.numLocalGamers)
             {
                 case 1:
@@ -136,7 +128,7 @@ namespace Games3Project2
                     }
                     break;
             }
-            camera = new Camera(pos, Vector3.Zero, Vector3.Up, viewport);
+            camera = new Camera(position, Vector3.Zero, Vector3.Up, viewport);
             hud = new HUD(this);
         }
 
@@ -297,16 +289,16 @@ namespace Games3Project2
                 Global.Collision.bounceCollidables(this, collidePlayer);
             }
 
-            for (int i = 0; i < Global.bullets.Count; ++i)
+            for (int i = 0; i < Global.BulletManager.bullets.Count; ++i)
             {
-                if (Global.bullets[i].shooterID != networkPlayerID && Global.Collision.didCollide(Global.bullets[i], this))
+                if (Global.BulletManager.bullets[i].shooter != gamer && Global.Collision.didCollide(Global.BulletManager.bullets[i], this))
                 {
-                    health -= Global.bullets[i].damage;
+                    health -= Global.BulletManager.bullets[i].damage;
                     if (health < 0)
                     {
-                        killed(Global.bullets[i].shooterID);
+                        killed(Global.BulletManager.bullets[i].shooter);
                     }
-                    Global.bullets.RemoveAt(i--);
+                    Global.BulletManager.bullets[i].disable();
                 }
             }
 
@@ -334,72 +326,20 @@ namespace Games3Project2
             //TODO: Announce "Who is Juggernaut" , networkID
         }
 
-        public void killed(int remotePlayerKiller)
+        public void killed(NetworkGamer killer)
         {
             //TODO: Play "Die" noise
             //TODO: maybe trigger some message?
             if (!Global.debugMode)
                 Global.heatmapDeaths.addPoint(position);
+
             if (isJuggernaut)
             {
-                if (Global.networkManager.currentState == NetworkManager.CurrentState.Running)
-                {
-                    RemotePlayer killer = null;
-                    foreach (RemotePlayer rPlayer in Global.remotePlayers)
-                    {
-                        if (rPlayer.networkPlayerID == remotePlayerKiller)
-                        {
-                            killer = rPlayer;
-                            break;
-                        }
-                    }
-                    killer.score++;
-                }
-                else
-                {
-                    LocalPlayer killer = null;
-                    foreach (LocalPlayer lPlayer in Global.localPlayers)
-                    {
-                        if (lPlayer.networkPlayerID == remotePlayerKiller)
-                        {
-                            killer = lPlayer;
-                            break;
-                        }
-                    }
-
-                    if (killer == null)
-                    {
-                        int nextJug = Global.rand.Next(0, Global.localPlayers.Count);
-                        while (Global.localPlayers[nextJug] == this)
-                        {
-                            nextJug = Global.rand.Next(0, Global.localPlayers.Count);
-                        }
-                        Global.localPlayers[nextJug].isJuggernaut = true;
-                        isJuggernaut = false;
-                    }
-                    else
-                    {
-                        killer.isJuggernaut = true;
-                        isJuggernaut = false;
-                    }
-                }
+                
             }
             else
             {
-                LocalPlayer killer = null;
-                foreach (LocalPlayer lPlayer in Global.localPlayers)
-                {
-                    if (lPlayer.networkPlayerID == remotePlayerKiller)
-                    {
-                        killer = lPlayer;
-                        break;
-                    }
-                }
-
-                if (killer != null && killer.isJuggernaut)
-                {
-                    killer.score++;
-                }
+                
             }
 
             Global.levelManager.respawnPlayer(this);
@@ -428,24 +368,18 @@ namespace Games3Project2
 
         public void ShootBullet()
         {
-            //Bullet bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-              //  -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED,
-                //networkPlayerID);
-            Bullet bullet = null;
-            Global.shot.Play();
             if (isJuggernaut)
             {
-                bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, networkPlayerID, Global.Constants.JUG_BULLET_DAMAGE);
+                Global.BulletManager.fireBullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, gamer, Global.Constants.JUG_BULLET_DAMAGE);
             }
             else
             {
-                bullet = new Bullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, networkPlayerID, Global.Constants.BULLET_DAMAGE);
+                Global.BulletManager.fireBullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, gamer, Global.Constants.BULLET_DAMAGE);
             }
-            Global.bullets.Add(bullet);
-            //TODO: Play bullet fired sound fx at full volume.
-
         }
+
+        
     }
 }
