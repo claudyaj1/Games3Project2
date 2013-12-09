@@ -118,7 +118,7 @@ namespace Games3Project2.Globals
             public static readonly float MAX_JET_FUEL = 100f;
 
             public static readonly float MOVEMENT_VELOCITY = .0031f;
-            public static readonly float SPIN_RATE = 100f;
+            public static readonly float SPIN_RATE = .1f;
             public static readonly float PLAYER_RADIUS = 5f;
             public static readonly int MAX_SCORE = 10;
 
