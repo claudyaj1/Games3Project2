@@ -266,7 +266,7 @@ namespace Games3Project2
                         case 1: //Player Match
                             Global.networkManager.sessionType = NetworkSessionType.PlayerMatch;
                             Global.gameState = Global.GameState.Lobby;
-                            int localIndex = 1;
+                            localIndex = 1;
                             foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
                             {
                                 gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex++, gamer);
