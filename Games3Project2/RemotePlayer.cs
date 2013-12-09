@@ -23,7 +23,7 @@ namespace Games3Project2
         public float yaw;
         public float pitch;
         public NetworkGamer gamer;
-        const int PACKET_INTERVAL = 10;
+        const int PACKET_INTERVAL = 60;
         float currentSmoothing;
         int framesSinceLastPacket;
 
@@ -79,7 +79,7 @@ namespace Games3Project2
             position = Vector3.Lerp(simulationState.position, previousState.position, currentSmoothing);
             velocity = Vector3.Lerp(simulationState.velocity, previousState.velocity, currentSmoothing);
             sphere.Position = position;
-            //sphere.Update(Global.gameTime);
+            sphere.Update(Global.gameTime);
         }
 
         public void draw()
