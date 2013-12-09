@@ -94,7 +94,7 @@ namespace Games3Project2
             targetState.pitch = newPitch;
             targetState.yaw = newYaw;
 
-            Velocity = targetState.velocity - lastState.velocity;
+            Velocity = targetState.position - lastState.position;
             Velocity /= 10;
 
             framesSinceLastPacket = 0;
