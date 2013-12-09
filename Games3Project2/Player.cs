@@ -38,7 +38,7 @@ namespace Games3Project2
         public LocalNetworkGamer gamer;
 
         int timeSinceLastPacketSent = 0;
-        const int PACKET_INTERVAL = 10;
+        const int PACKET_INTERVAL = 600;
 
         public override Vector3 Position
         {
