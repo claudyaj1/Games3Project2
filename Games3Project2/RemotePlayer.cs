@@ -25,6 +25,8 @@ namespace Games3Project2
         public NetworkGamer gamer;
         const int PACKET_INTERVAL = 10;
         int framesSinceLastPacket;
+        float yawInterpolate;
+        float pitchInterpolate;
 
         struct RemotePlayerState
         {
@@ -65,11 +67,15 @@ namespace Games3Project2
             lastState.pitch = pitch;
             lastState.yaw = yaw;
             framesSinceLastPacket = 0;
+            yawInterpolate = 0;
+            pitchInterpolate = 0;
         }
 
         public void update()
         {
-            position += velocity;
+            pitch += pitchInterpolate;
+            yaw += yawInterpolate;
+            position += velocity * Global.Constants.MOVEMENT_VELOCITY * Global.gameTime.ElapsedGameTime.Milliseconds;
             sphere.Position = position;
             sphere.Update(Global.gameTime);
         }
@@ -94,8 +100,11 @@ namespace Games3Project2
             targetState.pitch = newPitch;
             targetState.yaw = newYaw;
 
+            yawInterpolate = targetState.yaw - lastState.yaw;
+            pitchInterpolate = targetState.pitch - lastState.pitch;
             Velocity = targetState.position - lastState.position;
             Velocity /= PACKET_INTERVAL;
+            Velocity.Normalize();
 
             framesSinceLastPacket = 0;
         }
