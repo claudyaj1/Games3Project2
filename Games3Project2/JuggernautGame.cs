@@ -256,23 +256,23 @@ namespace Games3Project2
                             Global.networkManager.sessionType = NetworkSessionType.SystemLink;
                             Global.gameState = Global.GameState.Lobby;
                             int localIndex1 = 1;
+                            Global.networkManager.joinSession();
                             foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
                             {
                                 gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex1++, gamer);
                                 Global.localPlayers.Add((LocalPlayer)gamer.Tag);
                             }
-                            Global.networkManager.joinSession();
                             break;
                         case 1: //Player Match
                             Global.networkManager.sessionType = NetworkSessionType.PlayerMatch;
                             Global.gameState = Global.GameState.Lobby;
                             int localIndex2 = 1;
+                            Global.networkManager.joinSession();
                             foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
                             {
                                 gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex2++, gamer);
                                 Global.localPlayers.Add((LocalPlayer)gamer.Tag);
                             }
-                            Global.networkManager.joinSession();
                             break;
                     }
                     break;
