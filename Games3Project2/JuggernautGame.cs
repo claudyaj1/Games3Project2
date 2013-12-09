@@ -250,12 +250,13 @@ namespace Games3Project2
                     {
                         Global.gameState = Global.GameState.Menu;
                     }
+                    int localIndex = 1;
                     switch (joinGameMenu.update())
                     {
                         case 0: //System Link
                             Global.networkManager.sessionType = NetworkSessionType.SystemLink;
                             Global.gameState = Global.GameState.Lobby;
-                            int localIndex = 1;
+                            localIndex = 1;
                             foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
                             {
                                 gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex++, gamer);
