@@ -23,6 +23,20 @@ namespace Games3Project2
         public float yaw;
         public float pitch;
         public NetworkGamer gamer;
+        const int PACKET_INTERVAL = 10;
+        int framesSinceLastPacket;
+
+        struct RemotePlayerState
+        {
+            public Vector3 position;
+            public Vector3 velocity;
+            public float pitch;
+            public float yaw;
+        }
+
+        RemotePlayerState targetState;
+        RemotePlayerState lastState;
+
         public RemotePlayer(Vector3 pos, NetworkGamer associatedGamer) :
             base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
@@ -39,6 +53,18 @@ namespace Games3Project2
             isJuggernaut = false;
             yaw = 0;
             pitch = 0;
+
+            targetState = new RemotePlayerState();
+            targetState.position = position;
+            targetState.velocity = velocity;
+            targetState.pitch = pitch;
+            targetState.yaw = yaw;
+            lastState = new RemotePlayerState();
+            lastState.position = position;
+            lastState.velocity = velocity;
+            lastState.pitch = pitch;
+            lastState.yaw = yaw;
+            framesSinceLastPacket = 0;
         }
 
         public void update()
@@ -55,6 +81,24 @@ namespace Games3Project2
             cube.Draw(Global.CurrentCamera, cubeTransformation *
                 Matrix.CreateRotationX(MathHelper.ToRadians(pitch)) * Matrix.CreateRotationY(MathHelper.ToRadians(yaw))
                 * Matrix.CreateTranslation(position));
+        }
+
+        public void receiveNewPacketUpdate(Vector3 newPos, Vector3 newVel, float newPitch, float newYaw)
+        {
+            lastState.position = position;
+            lastState.velocity = velocity;
+            lastState.pitch = pitch;
+            lastState.yaw = yaw;
+
+            targetState.position = newPos;
+            targetState.velocity = newVel;
+            targetState.pitch = newPitch;
+            targetState.yaw = newYaw;
+
+            Velocity = targetState.velocity - lastState.velocity;
+            Velocity /= 10;
+
+            framesSinceLastPacket = 0;
         }
     }
 }

@@ -354,10 +354,7 @@ namespace Networking
             float pitch = reader.ReadSingle();
             float yaw = reader.ReadSingle();
             RemotePlayer player = gamer.Tag as RemotePlayer;
-            player.Position = newPos;
-            player.Velocity = newVel;
-            player.pitch = pitch;
-            player.yaw = yaw;
+            player.receiveNewPacketUpdate(newPos, newVel, pitch, yaw);
         }
 
         public void newJuggernaut(NetworkGamer gamer)
