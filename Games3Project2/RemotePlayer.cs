@@ -23,7 +23,7 @@ namespace Games3Project2
         public float yaw;
         public float pitch;
         public NetworkGamer gamer;
-        const int PACKET_INTERVAL = 60;
+        const int PACKET_INTERVAL = 10;
         float currentSmoothing;
         int framesSinceLastPacket;
 
@@ -71,8 +71,8 @@ namespace Games3Project2
 
         public void update()
         {
-            simulationState.position += simulationState.velocity * Global.Constants.MOVEMENT_VELOCITY * (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
-            previousState.position += previousState.velocity * Global.Constants.MOVEMENT_VELOCITY * (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
+            simulationState.position += simulationState.velocity * Global.Constants.MOVEMENT_VELOCITY * (float)Global.gameTime.ElapsedGameTime.TotalSeconds * Global.gameTime.ElapsedGameTime.Milliseconds;
+            previousState.position += previousState.velocity * Global.Constants.MOVEMENT_VELOCITY * (float)Global.gameTime.ElapsedGameTime.TotalSeconds * Global.gameTime.ElapsedGameTime.Milliseconds;
             currentSmoothing -= 1.0f / (float)PACKET_INTERVAL;
             if (currentSmoothing < 0)
                 currentSmoothing = 0;
