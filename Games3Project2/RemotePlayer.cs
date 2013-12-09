@@ -76,7 +76,7 @@ namespace Games3Project2
             currentSmoothing -= 1.0f / (float)PACKET_INTERVAL;
             if (currentSmoothing < 0)
                 currentSmoothing = 0;
-            position = Vector3.Lerp(simulationState.position, previousState.position, currentSmoothing);
+            position = Vector3.Lerp(previousState.position, simulationState.position, currentSmoothing);
             velocity = Vector3.Lerp(simulationState.velocity, previousState.velocity, currentSmoothing);
             sphere.Position = position;
             sphere.Update(Global.gameTime);
