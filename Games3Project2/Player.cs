@@ -37,6 +37,9 @@ namespace Games3Project2
         public bool jetpackDisabled;
         public LocalNetworkGamer gamer;
 
+        int timeSinceLastPacketSent = 0;
+        const int PACKET_INTERVAL = 10;
+
         public override Vector3 Position
         {
             get
@@ -303,6 +306,14 @@ namespace Games3Project2
             }
 
             #endregion
+            #region Networking
+            timeSinceLastPacketSent++;
+            if (timeSinceLastPacketSent > PACKET_INTERVAL)
+            {
+                Global.networkManager.playerUpdate(this);
+                timeSinceLastPacketSent = 0;
+            }
+            #endregion
 
             base.Update(Global.gameTime);
         }
@@ -370,13 +381,13 @@ namespace Games3Project2
         {
             if (isJuggernaut)
             {
-                Global.BulletManager.fireBullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, gamer, Global.Constants.JUG_BULLET_DAMAGE);
+                Global.networkManager.fireBullet(Global.BulletManager.fireBullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, gamer, Global.Constants.JUG_BULLET_DAMAGE));
             }
             else
             {
-                Global.BulletManager.fireBullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
-                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, gamer, Global.Constants.BULLET_DAMAGE);
+                Global.networkManager.fireBullet(Global.BulletManager.fireBullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
+                    -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, gamer, Global.Constants.BULLET_DAMAGE));
             }
         }
 

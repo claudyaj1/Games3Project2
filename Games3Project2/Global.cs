@@ -72,10 +72,12 @@ namespace Games3Project2.Globals
         {
             public static List<Bullet> bullets = new List<Bullet>();
             private static int nextBullet = 0;
-            public static void fireBullet(Vector3 startPosition, Vector3 velocity, NetworkGamer shooter, int damage)
+            public static Bullet fireBullet(Vector3 startPosition, Vector3 velocity, NetworkGamer shooter, int damage)
             {
-                bullets[nextBullet++].fire(startPosition, velocity, shooter, damage);
+                bullets[nextBullet].fire(startPosition, velocity, shooter, damage);
+                Bullet bullet = bullets[nextBullet++];
                 nextBullet %= Constants.MAX_ALLOCATED_BULLETS;
+                return bullet;
             }
             public static void update()
             {
