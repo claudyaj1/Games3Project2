@@ -161,6 +161,10 @@ namespace Games3Project2
             {
                 checkCollision(player);
             }
+            foreach (RemotePlayer player in Global.remotePlayers)
+            {
+                checkCollision(player);
+            }
             foreach (BugBot bot in Global.bugBots)
             {
                 bot.update();
@@ -174,9 +178,6 @@ namespace Games3Project2
             }
         }
 
-        /// <summary>
-        /// Call before the player avatars are drawn.
-        /// </summary>
         public void drawWalls()
         {
             foreach (Platform wall in walls)
@@ -185,9 +186,6 @@ namespace Games3Project2
             }
         }
 
-        /// <summary>
-        /// Call after the players are drawn. Not true says claudy...a half truth at best.
-        /// </summary>
         public void drawPlatforms()
         {
             foreach (Platform platform in platforms)

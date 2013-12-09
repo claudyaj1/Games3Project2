@@ -148,7 +148,6 @@ namespace Games3Project2
             jetPackThrust = 0;
             jetpackDisabled = false;
             health = Global.Constants.MAX_HEALTH;
-            isJuggernaut = false;
             jetFuel = Global.Constants.MAX_JET_FUEL;
             //score = 0;
         }
@@ -222,56 +221,6 @@ namespace Games3Project2
             }
             #endregion
 
-            #region If DEBUG && WINDOWS && (No Controller) Then Keyboard-and-Mouse does control
-            /*
-#if DEBUG && WINDOWS
-            if (!Global.input.isConnected(PlayerIndex.One))
-            {
-                const float MOUSE_SENSITIVITY = 20f;
-                const float KEYBOARD_SENSITIVITY = 0.04f;
-                dir -= Global.input.get3DMovement14Directions(false);
-                dir *= KEYBOARD_SENSITIVITY;
-                Vector2 mouseDelta = Global.input.getMouseDelta();
-
-                if (mouseDelta.X < 0)
-                {
-                    yaw += (MOUSE_SENSITIVITY * timeDelta * -mouseDelta.X);
-                }
-                else if (mouseDelta.X > 0)
-                {
-                    yaw -= (MOUSE_SENSITIVITY * timeDelta * mouseDelta.X);
-                }
-                if (yaw > 360)
-                    yaw -= 360;
-                else if (yaw < 0)
-                    yaw += 360;
-
-                if (mouseDelta.Y < 0)
-                {
-                    pitch -= (MOUSE_SENSITIVITY * timeDelta);
-                }
-                else if (mouseDelta.Y > 0)
-                {
-                    pitch += (MOUSE_SENSITIVITY * timeDelta);
-                }
-                if (pitch > 360)
-                    pitch -= 360;
-                else if (pitch < 0)
-                    pitch += 360;
-
-                if (Global.input.isPressed(Keys.Space))
-                {
-                    jetPackThrust += Global.Constants.JET_PACK_INCREMENT;
-                }
-                else
-                {
-                    jetPackThrust -= Global.Constants.JET_PACK_DECREMENT;
-                    if (jetPackThrust < 0)
-                        jetPackThrust = 0;
-                }
-            } //END
-#endif*/
-            #endregion
             #region Camera/Geometry/HUD
             camera.Update(velocity, yawChange, pitchChange);
             prevPosition = position;
@@ -346,6 +295,7 @@ namespace Games3Project2
 
             if (isJuggernaut)
             {
+                isJuggernaut = false;
                 if (killer == null)
                 {
                     int nextJuggernaut = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
@@ -377,12 +327,12 @@ namespace Games3Project2
                     LocalPlayer player = killer.Tag as LocalPlayer;
                     if (player.isJuggernaut)
                     {
-
+                        player.score++;
                     }
                 }
                 else
                 {
-
+                    Global.networkManager.juggernautKill();
                 }
             }
 
