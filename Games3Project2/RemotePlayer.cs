@@ -73,9 +73,7 @@ namespace Games3Project2
 
         public void update()
         {
-            pitch += pitchInterpolate;
-            yaw += yawInterpolate;
-            position += velocity * Global.Constants.MOVEMENT_VELOCITY * Global.gameTime.ElapsedGameTime.Milliseconds;
+            position += velocity * Global.Constants.MOVEMENT_VELOCITY * (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
             sphere.Position = position;
             sphere.Update(Global.gameTime);
         }
@@ -100,10 +98,9 @@ namespace Games3Project2
             targetState.pitch = newPitch;
             targetState.yaw = newYaw;
 
-            yawInterpolate = targetState.yaw - lastState.yaw;
-            pitchInterpolate = targetState.pitch - lastState.pitch;
+            yaw = newYaw;
+            pitch = newPitch;
             Velocity = targetState.position - lastState.position;
-            Velocity /= PACKET_INTERVAL;
             Velocity.Normalize();
 
             framesSinceLastPacket = 0;

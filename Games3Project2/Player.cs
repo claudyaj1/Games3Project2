@@ -155,7 +155,7 @@ namespace Games3Project2
         public void update()
         {
             #region Input
-            float timeDelta = (float)Global.gameTime.ElapsedGameTime.Milliseconds;
+            float timeDelta = (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
             velocity = timeDelta * Global.input.get3DMovement14Directions(true, playerIndex);
             float yawChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Input.indexAsInt(playerIndex)].ThumbSticks.Right.X;
             float pitchChange = Global.Constants.SPIN_RATE * timeDelta * Global.input.GamepadByID[Input.indexAsInt(playerIndex)].ThumbSticks.Right.Y;
