@@ -250,16 +250,15 @@ namespace Games3Project2
                     {
                         Global.gameState = Global.GameState.Menu;
                     }
-                    int localIndex = 1;
                     switch (joinGameMenu.update())
                     {
                         case 0: //System Link
                             Global.networkManager.sessionType = NetworkSessionType.SystemLink;
                             Global.gameState = Global.GameState.Lobby;
-                            localIndex = 1;
+                            int localIndex1 = 1;
                             foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
                             {
-                                gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex++, gamer);
+                                gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex1++, gamer);
                                 Global.localPlayers.Add((LocalPlayer)gamer.Tag);
                             }
                             Global.networkManager.joinSession();
@@ -267,10 +266,10 @@ namespace Games3Project2
                         case 1: //Player Match
                             Global.networkManager.sessionType = NetworkSessionType.PlayerMatch;
                             Global.gameState = Global.GameState.Lobby;
-                            localIndex = 1;
+                            int localIndex2 = 1;
                             foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
                             {
-                                gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex++, gamer);
+                                gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex2++, gamer);
                                 Global.localPlayers.Add((LocalPlayer)gamer.Tag);
                             }
                             Global.networkManager.joinSession();
