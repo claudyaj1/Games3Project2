@@ -95,7 +95,7 @@ namespace Games3Project2
             targetState.yaw = newYaw;
 
             Velocity = targetState.position - lastState.position;
-            Velocity /= 10;
+            Velocity /= PACKET_INTERVAL;
 
             framesSinceLastPacket = 0;
         }

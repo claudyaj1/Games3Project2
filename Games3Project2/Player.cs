@@ -238,7 +238,10 @@ namespace Games3Project2
             }
             foreach (RemotePlayer collidePlayer in Global.remotePlayers)
             {
-                Global.Collision.bounceCollidables(this, collidePlayer);
+                if (Global.Collision.didCollide(this, collidePlayer))
+                {
+                    collidePlayer.Velocity = Vector3.Zero;
+                }
             }
 
             for (int i = 0; i < Global.BulletManager.bullets.Count; ++i)

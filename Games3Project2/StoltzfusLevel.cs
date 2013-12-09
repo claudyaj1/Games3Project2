@@ -163,7 +163,10 @@ namespace Games3Project2
             }
             foreach (RemotePlayer player in Global.remotePlayers)
             {
-                checkCollision(player);
+                if (checkForCollision(player))
+                {
+                    player.Velocity = Vector3.Zero;
+                }
             }
             foreach (BugBot bot in Global.bugBots)
             {
