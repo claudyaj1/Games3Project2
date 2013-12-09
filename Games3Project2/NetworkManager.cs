@@ -332,7 +332,7 @@ namespace Networking
             NetworkGamer gamer = findGamerWithTag(tag);
             Vector3 newPos = reader.ReadVector3();
             Vector3 newVel = reader.ReadVector3();
-            LocalPlayer player = gamer.Tag as LocalPlayer;
+            RemotePlayer player = gamer.Tag as RemotePlayer;
             player.Position = newPos;
             player.Velocity = newVel;
         }
