@@ -324,6 +324,8 @@ namespace Networking
             writer.Write(player.gamer.Gamertag);
             writer.Write(player.Position);
             writer.Write(player.Velocity);
+            writer.Write(player.camera.pitch);
+            writer.Write(player.camera.yaw);
         }
 
         private void readPlayerUpdate()
@@ -332,9 +334,13 @@ namespace Networking
             NetworkGamer gamer = findGamerWithTag(tag);
             Vector3 newPos = reader.ReadVector3();
             Vector3 newVel = reader.ReadVector3();
+            float pitch = reader.ReadSingle();
+            float yaw = reader.ReadSingle();
             RemotePlayer player = gamer.Tag as RemotePlayer;
             player.Position = newPos;
             player.Velocity = newVel;
+            player.pitch = pitch;
+            player.yaw = yaw;
         }
 
         public void newJuggernaut(NetworkGamer gamer)
