@@ -24,9 +24,8 @@ namespace Games3Project2
         public float pitch;
         public NetworkGamer gamer;
         const int PACKET_INTERVAL = 10;
+        float currentSmoothing;
         int framesSinceLastPacket;
-        float yawInterpolate;
-        float pitchInterpolate;
 
         struct RemotePlayerState
         {
@@ -36,8 +35,8 @@ namespace Games3Project2
             public float yaw;
         }
 
-        RemotePlayerState targetState;
-        RemotePlayerState lastState;
+        RemotePlayerState simulationState;
+        RemotePlayerState previousState;
 
         public RemotePlayer(Vector3 pos, NetworkGamer associatedGamer) :
             base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
@@ -56,24 +55,29 @@ namespace Games3Project2
             yaw = 0;
             pitch = 0;
 
-            targetState = new RemotePlayerState();
-            targetState.position = position;
-            targetState.velocity = velocity;
-            targetState.pitch = pitch;
-            targetState.yaw = yaw;
-            lastState = new RemotePlayerState();
-            lastState.position = position;
-            lastState.velocity = velocity;
-            lastState.pitch = pitch;
-            lastState.yaw = yaw;
+            simulationState = new RemotePlayerState();
+            simulationState.position = position;
+            simulationState.velocity = velocity;
+            simulationState.pitch = pitch;
+            simulationState.yaw = yaw;
+            previousState = new RemotePlayerState();
+            previousState.position = position;
+            previousState.velocity = velocity;
+            previousState.pitch = pitch;
+            previousState.yaw = yaw;
             framesSinceLastPacket = 0;
-            yawInterpolate = 0;
-            pitchInterpolate = 0;
+            currentSmoothing = 0;
         }
 
         public void update()
         {
-            position += velocity * Global.Constants.MOVEMENT_VELOCITY * (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
+            simulationState.position += simulationState.velocity * Global.Constants.MOVEMENT_VELOCITY * (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
+            previousState.position += previousState.velocity * Global.Constants.MOVEMENT_VELOCITY * (float)Global.gameTime.ElapsedGameTime.TotalSeconds;
+            currentSmoothing -= 1.0f / PACKET_INTERVAL;
+            if (currentSmoothing < 0)
+                currentSmoothing = 0;
+            position = Vector3.Lerp(simulationState.position, previousState.position, currentSmoothing);
+            velocity = Vector3.Lerp(simulationState.velocity, previousState.velocity, currentSmoothing);
             sphere.Position = position;
             sphere.Update(Global.gameTime);
         }
@@ -88,20 +92,18 @@ namespace Games3Project2
 
         public void receiveNewPacketUpdate(Vector3 newPos, Vector3 newVel, float newPitch, float newYaw)
         {
-            lastState.position = position;
-            lastState.velocity = velocity;
-            lastState.pitch = pitch;
-            lastState.yaw = yaw;
+            previousState.position = position;
+            previousState.velocity = velocity;
+            previousState.pitch = pitch;
+            previousState.yaw = yaw;
 
-            targetState.position = newPos;
-            targetState.velocity = newVel;
-            targetState.pitch = newPitch;
-            targetState.yaw = newYaw;
+            simulationState.position = newPos;
+            simulationState.velocity = newVel;
+            simulationState.pitch = newPitch;
+            simulationState.yaw = newYaw;
 
             yaw = newYaw;
             pitch = newPitch;
-            Velocity = targetState.position - lastState.position;
-            Velocity.Normalize();
 
             framesSinceLastPacket = 0;
         }
