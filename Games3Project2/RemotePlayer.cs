@@ -23,7 +23,7 @@ namespace Games3Project2
         public float yaw;
         public float pitch;
         public NetworkGamer gamer;
-        const int PACKET_INTERVAL = 600;
+        const int PACKET_INTERVAL = 10;
         float currentSmoothing;
         int framesSinceLastPacket;
 
@@ -66,7 +66,7 @@ namespace Games3Project2
             previousState.pitch = pitch;
             previousState.yaw = yaw;
             framesSinceLastPacket = 0;
-            currentSmoothing = 0;
+            currentSmoothing = 1;
         }
 
         public void update()
@@ -76,7 +76,7 @@ namespace Games3Project2
             currentSmoothing -= 1.0f / (float)PACKET_INTERVAL;
             if (currentSmoothing < 0)
                 currentSmoothing = 0;
-            position = Vector3.Lerp(previousState.position, simulationState.position, currentSmoothing);
+            position = Vector3.Lerp(simulationState.position, previousState.position, currentSmoothing);
             velocity = Vector3.Lerp(simulationState.velocity, previousState.velocity, currentSmoothing);
             sphere.Position = position;
             sphere.Update(Global.gameTime);
@@ -106,6 +106,7 @@ namespace Games3Project2
             pitch = newPitch;
 
             framesSinceLastPacket = 0;
+            currentSmoothing = 1;
         }
     }
 }
