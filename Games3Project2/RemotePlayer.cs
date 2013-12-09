@@ -23,7 +23,7 @@ namespace Games3Project2
         public float yaw;
         public float pitch;
         public NetworkGamer gamer;
-        const int PACKET_INTERVAL = 10;
+        const int PACKET_INTERVAL = 600;
         float currentSmoothing;
         int framesSinceLastPacket;
 
