@@ -347,9 +347,17 @@ namespace Games3Project2
                             Global.networkManager.disposeNetworkSession();
                         }
                         else if(Global.networkManager.hostSessionType == NetworkManager.HostSessionType.Host &&
-                            //Global.networkManager.networkSession.AllGamers.Count > 1 && 
+                            Global.networkManager.networkSession.AllGamers.Count > 1 && 
                             (Global.input.isFirstPress(Buttons.A) || Global.input.isFirstPress(Buttons.Start)))
                         {
+                            int firstJugIndex = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
+                            NetworkGamer firstJug = Global.networkManager.networkSession.AllGamers[firstJugIndex];
+                            Global.networkManager.newJuggernaut(firstJug);
+                            if (firstJug.IsLocal)
+                            {
+                                LocalPlayer player = firstJug.Tag as LocalPlayer;
+                                player.isJuggernaut = true;
+                            }
                             Global.gameState = Global.GameState.Playing;
                             Global.networkManager.networkSession.StartGame();
                         }
@@ -478,13 +486,8 @@ namespace Games3Project2
 
                 #region NetworkQuit
                 case Global.GameState.NetworkQuit:
-                    foreach (LocalPlayer player in Global.localPlayers)
-                    {
-                        if (Global.input.isFirstPress(Buttons.A, player.playerIndex))
-                        {
-                            Global.gameState = Global.GameState.Menu;
-                        }
-                    }
+                    if (Global.input.isAnyFirstPress(Buttons.A) || Global.input.isAnyFirstPress(Buttons.Start))
+                        Global.gameState = Global.GameState.Menu;
                     break;
                 #endregion //NetworkQuit
             }
@@ -566,7 +569,7 @@ namespace Games3Project2
                             Global.spriteBatch.DrawString(consolas, nGamer.Gamertag, new Vector2(playerTextStarting.X, playerTextStarting.Y + off++ * textOffset), Color.Black);
                         }
 
-                        if (Global.networkManager.networkSession.AllGamers.Count > 1)
+                        if (Global.networkManager.networkSession.AllGamers.Count > 1 && Global.networkManager.hostSessionType == NetworkManager.HostSessionType.Host)
                         {
                             Global.spriteBatch.DrawString(consolas, "Press A to Start the Game", promptStarting, Color.Black);
                         }

@@ -341,9 +341,9 @@ namespace Games3Project2
             List<Vector3> takenSpawns = new List<Vector3>();
             for (int i = 0; i < Global.localPlayers.Count; ++i)
             {
-                int index = Global.rand.Next(0, Global.localPlayers.Count);
+                int index = Global.rand.Next(0, spawnPoints.Count);
                 while(takenSpawns.Contains(spawnPoints[index]))
-                    index = Global.rand.Next(0, Global.localPlayers.Count);
+                    index = Global.rand.Next(0, spawnPoints.Count);
                 Global.localPlayers[i].respawn(spawnPoints[index]);
                 takenSpawns.Add(spawnPoints[index]);
             }

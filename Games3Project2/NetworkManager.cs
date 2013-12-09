@@ -31,7 +31,7 @@ namespace Networking
         /// Progress is a message to announce to the other player how much progress has been made
         /// Winning message is sent to announce that the other player has won and to end the play state.
         /// </summary>
-        public enum MessageType { Level, FireBullet, PlayerUpdate, NewJuggernaut };
+        public enum MessageType { Level, FireBullet, PlayerUpdate, NewJuggernaut, JuggernautKill };
         string lastErrorMessage;
 
         public enum CurrentState { Idle, Joining, Creating, Running, JoinFailed, CreateFailed }
@@ -197,6 +197,7 @@ namespace Networking
         {
             networkSession.GameStarted += GameStartedEventHandler;
             networkSession.GamerJoined += GamerJoinedEventHandler;
+            networkSession.GamerLeft += GamerLeftEventHandler;
             networkSession.SessionEnded += SessionEndedEventHandler;
         }
 
@@ -217,9 +218,22 @@ namespace Networking
 
         void SessionEndedEventHandler(object sender, NetworkSessionEndedEventArgs e)
         {
-            lastErrorMessage = e.EndReason.ToString();
             disposeNetworkSession();
             Global.gameState = Global.GameState.NetworkQuit;
+        }
+
+        void GamerLeftEventHandler(object sender, GamerLeftEventArgs e)
+        {
+            if (e.Gamer.IsLocal)
+            {
+                LocalPlayer player = e.Gamer.Tag as LocalPlayer;
+                Global.localPlayers.Remove(player);
+            }
+            else
+            {
+                RemotePlayer player = e.Gamer.Tag as RemotePlayer;
+                Global.remotePlayers.Remove(player);
+            }
         }
         #endregion
 
@@ -262,6 +276,9 @@ namespace Networking
                             break;
                         case MessageType.PlayerUpdate:
                             readPlayerUpdate();
+                            break;
+                        case MessageType.JuggernautKill:
+                            readJuggernautKill();
                             break;
                         default: 
                             break;
@@ -362,6 +379,23 @@ namespace Networking
             {
                 RemotePlayer player = gamer.Tag as RemotePlayer;
                 player.isJuggernaut = true;
+            }
+        }
+
+        public void juggernautKill()
+        {
+            writer.Write((byte)MessageType.JuggernautKill);
+        }
+
+        private void readJuggernautKill()
+        {
+            foreach (LocalPlayer player in Global.localPlayers)
+            {
+                if (player.isJuggernaut)
+                {
+                    player.score++;
+                    break;
+                }
             }
         }
     }

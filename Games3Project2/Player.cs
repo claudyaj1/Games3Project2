@@ -346,11 +346,44 @@ namespace Games3Project2
 
             if (isJuggernaut)
             {
-                
+                if (killer == null)
+                {
+                    int nextJuggernaut = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
+                    killer = Global.networkManager.networkSession.AllGamers[nextJuggernaut];
+                    while (killer == gamer)
+                    {
+                        nextJuggernaut = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
+                        killer = Global.networkManager.networkSession.AllGamers[nextJuggernaut];
+                    }
+                }
+
+                if (killer.IsLocal)
+                {
+                    LocalPlayer player = killer.Tag as LocalPlayer;
+                    player.setAsJuggernaut();
+                }
+                else
+                {
+                    RemotePlayer player = killer.Tag as RemotePlayer;
+                    player.isJuggernaut = true;
+                }
+
+                Global.networkManager.newJuggernaut(killer);
             }
-            else
+            else if(killer != null)
             {
-                
+                if (killer.IsLocal)
+                {
+                    LocalPlayer player = killer.Tag as LocalPlayer;
+                    if (player.isJuggernaut)
+                    {
+
+                    }
+                }
+                else
+                {
+
+                }
             }
 
             Global.levelManager.respawnPlayer(this);
