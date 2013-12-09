@@ -49,7 +49,6 @@ namespace Games3Project2
         //local player joining
         List<PlayerIndex> connectedPlayers = new List<PlayerIndex>();
         List<PlayerIndex> joinedPlayers = new List<PlayerIndex>();
-        string winningPlayer = "";
 
         public JuggernautGame()
         {
@@ -450,8 +449,10 @@ namespace Games3Project2
                                 Global.localPlayers[i].score = 0;
                             }
                             Global.gameState = Global.GameState.GameOver;
-                            winningPlayer = player.gamer.Gamertag;
+                            Global.winningPlayer = player.gamer.Gamertag;
                             Global.graphics.GraphicsDevice.Viewport = new Viewport(0, 0, Global.viewPort.Width, Global.viewPort.Height);
+                            Global.networkManager.announceWinner(player.gamer);
+                            Global.networkManager.disposeNetworkSession();
                         }
                     }
 
@@ -726,7 +727,7 @@ namespace Games3Project2
                     Global.spriteBatch.Begin();
 
                     Global.spriteBatch.Draw(mainMenu.background, Global.viewPort, Color.White);
-                    Global.spriteBatch.DrawString(consolas, "Player " + winningPlayer.ToString() + " Won!", new Vector2(20, Global.viewPort.Height / 2), Color.Black);
+                    Global.spriteBatch.DrawString(consolas, "Player " + Global.winningPlayer + " Won!", new Vector2(20, Global.viewPort.Height / 2), Color.Black);
                     Global.spriteBatch.DrawString(consolas, "Press A To Continue", new Vector2(20, Global.viewPort.Height / 2 + 50), Color.Black);
 
                     Global.spriteBatch.End();
@@ -785,6 +786,10 @@ namespace Games3Project2
                 {
                     Global.gameState = Global.GameState.JoinMenu;
                 }
+            }
+            else if (Global.input.isFirstPress(Buttons.B))
+            {
+                Global.gameState = Global.GameState.Menu;
             }
         }
 

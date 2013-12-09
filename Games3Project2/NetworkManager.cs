@@ -31,7 +31,7 @@ namespace Networking
         /// Progress is a message to announce to the other player how much progress has been made
         /// Winning message is sent to announce that the other player has won and to end the play state.
         /// </summary>
-        public enum MessageType { Level, FireBullet, PlayerUpdate, NewJuggernaut, JuggernautKill };
+        public enum MessageType { Level, FireBullet, PlayerUpdate, NewJuggernaut, JuggernautKill, AnnounceWinner };
         string lastErrorMessage;
 
         public enum CurrentState { Idle, Joining, Creating, Running, JoinFailed, CreateFailed }
@@ -397,6 +397,19 @@ namespace Networking
                     break;
                 }
             }
+        }
+
+        public void announceWinner(NetworkGamer gamer)
+        {
+            writer.Write((byte)MessageType.AnnounceWinner);
+            writer.Write(gamer.Gamertag);
+        }
+
+        private void readAnnounceWinner()
+        {
+            Global.winningPlayer = reader.ReadString();
+            Global.gameState = Global.GameState.GameOver;
+            disposeNetworkSession();
         }
     }
 }

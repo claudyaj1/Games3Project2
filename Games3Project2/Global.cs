@@ -45,6 +45,7 @@ namespace Games3Project2.Globals
         public static readonly Color debugColor = Color.Black;
         #endregion
         public static readonly Color HUD_COLOR = Color.WhiteSmoke;
+        public static string winningPlayer = "";
         public static SpriteFont consolas;  //To be assigned in LoadContent()
         public static SpriteFont tahoma;    //To be assigned in LoadContent()
 
