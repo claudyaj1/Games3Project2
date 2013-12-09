@@ -69,8 +69,7 @@ namespace Games3Project2
 
         public void update()
         {
-            Vector3 dt = Global.Constants.MOVEMENT_VELOCITY * velocity * Global.gameTime.ElapsedGameTime.Milliseconds;
-            position += dt;
+            position += velocity;
             sphere.Position = position;
             sphere.Update(Global.gameTime);
         }
