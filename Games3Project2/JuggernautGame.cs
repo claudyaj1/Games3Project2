@@ -255,11 +255,23 @@ namespace Games3Project2
                         case 0: //System Link
                             Global.networkManager.sessionType = NetworkSessionType.SystemLink;
                             Global.gameState = Global.GameState.Lobby;
+                            int localIndex = 1;
+                            foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                            {
+                                gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex++, gamer);
+                                Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                            }
                             Global.networkManager.joinSession();
                             break;
                         case 1: //Player Match
                             Global.networkManager.sessionType = NetworkSessionType.PlayerMatch;
                             Global.gameState = Global.GameState.Lobby;
+                            int localIndex = 1;
+                            foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                            {
+                                gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex++, gamer);
+                                Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                            }
                             Global.networkManager.joinSession();
                             break;
                     }
@@ -644,12 +656,13 @@ namespace Games3Project2
                             drawPlayer.draw();
                         }
                         Global.BulletManager.draw();
+                        foreach (RemotePlayer rPlayer in Global.remotePlayers)
+                        {
+                            rPlayer.draw();
+                        }
                     }
 
-                    foreach (RemotePlayer rPlayer in Global.remotePlayers)
-                    {
-                        rPlayer.draw();
-                    }
+                    
 
                     //SpriteBatch Drawing Section
                     Global.spriteBatch.Begin();
