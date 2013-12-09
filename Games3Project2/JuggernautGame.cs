@@ -256,22 +256,26 @@ namespace Games3Project2
                             Global.networkManager.sessionType = NetworkSessionType.SystemLink;
                             Global.gameState = Global.GameState.Lobby;
                             int localIndex1 = 1;
-                            Global.networkManager.joinSession();
-                            foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                            if (Global.networkManager.joinSession())
                             {
-                                gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex1++, gamer);
-                                Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                                foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                                {
+                                    gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex1++, gamer);
+                                    Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                                }
                             }
                             break;
                         case 1: //Player Match
                             Global.networkManager.sessionType = NetworkSessionType.PlayerMatch;
                             Global.gameState = Global.GameState.Lobby;
                             int localIndex2 = 1;
-                            Global.networkManager.joinSession();
-                            foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                            if(Global.networkManager.joinSession())
                             {
-                                gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex2++, gamer);
-                                Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                                foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                                {
+                                    gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex2++, gamer);
+                                    Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                                }
                             }
                             break;
                     }
@@ -294,24 +298,28 @@ namespace Games3Project2
                     {
                         case 0:
                             Global.gameState = Global.GameState.Lobby;
-                            Global.networkManager.createSession();
                             Global.levelManager.currentLevel = 1;
                             int localIndex = 1;
-                            foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                            if (Global.networkManager.createSession())
                             {
-                                gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex++, gamer);
-                                Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                                foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                                {
+                                    gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex++, gamer);
+                                    Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                                }
                             }
                             break;
                         case 1:
                             Global.gameState = Global.GameState.Lobby;
-                            Global.networkManager.createSession();
                             Global.levelManager.currentLevel = 2;
                             localIndex = 1;
-                            foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                            if (Global.networkManager.createSession())
                             {
-                                gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex++, gamer);
-                                Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                                foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                                {
+                                    gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex++, gamer);
+                                    Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                                }
                             }
                             break;
                         case 2:
