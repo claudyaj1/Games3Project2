@@ -357,13 +357,13 @@ namespace Networking
             player.receiveNewPacketUpdate(newPos, newVel, pitch, yaw);
         }
 
-        public void newJuggernaut(NetworkGamer gamer)
+        public void newJuggernaut(NetworkGamer gamer) //Announces who shall be the new juggernaut.
         {
             writer.Write((byte)MessageType.NewJuggernaut);
             writer.Write(gamer.Gamertag);
         }
 
-        private void readNewJuggernaut()
+        private void readNewJuggernaut() //Reads in who should be the new juggernaut.
         {
             string tag = reader.ReadString();
             NetworkGamer gamer = findGamerWithTag(tag);
@@ -376,7 +376,7 @@ namespace Networking
             else
             {
                 RemotePlayer rPlayer = gamer.Tag as RemotePlayer;
-                rPlayer.setAsNewJuggernaut();
+                rPlayer.setAsJuggernaut();
                 for (int i = 0; i < Global.remotePlayers.Count; i++) //Loop
                 {
                     if (Global.remotePlayers[i] != rPlayer)
@@ -389,12 +389,12 @@ namespace Networking
             //TODO: Announce msg "Who is Juggernaut" ,tag so that remote players know who is the new juggernaut is.
         }
 
-        public void juggernautKill()
+        public void juggernautKill() //Juggernaut earns a kill.
         {
             writer.Write((byte)MessageType.JuggernautKill);
         }
 
-        private void readJuggernautKill()
+        private void readJuggernautKill() //Juggernaut earns a kill.
         {
             foreach (LocalPlayer player in Global.localPlayers)
             {

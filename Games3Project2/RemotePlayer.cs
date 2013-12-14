@@ -108,10 +108,11 @@ namespace Games3Project2
             currentSmoothing = 1;
         }
 
-        public void setAsNewJuggernaut()
+        public void setAsJuggernaut()
         {
             isJuggernaut = true;
             sphere.ChangeAllVertexColors(Global.Constants.JUGGERNAUT_COLOR);
+            //TODO: Play "New Juggernaut" sound if not triggered in the network manager.
         }
 
         public void setAsNotJuggernaut()

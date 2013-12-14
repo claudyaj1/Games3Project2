@@ -286,7 +286,12 @@ namespace Games3Project2
             isJuggernaut = true;
             sphere.ChangeAllVertexColors(Global.Constants.JUGGERNAUT_COLOR); //This change is not visible by the player nor the remotes.
             //TODO: Play "New Juggernaut"
-            
+        }
+
+        public void setAsNotJuggernaut()
+        {
+            isJuggernaut = false;
+            sphere.ChangeAllVertexColors(Global.Constants.DEFAULT_PLAYER_COLOR);
         }
 
         public void killed(NetworkGamer killer)
@@ -298,8 +303,7 @@ namespace Games3Project2
 
             if (isJuggernaut)
             {
-                isJuggernaut = false;
-                sphere.ChangeAllVertexColors(Global.Constants.DEFAULT_PLAYER_COLOR); //This change is not visible by the player nor the remotes.
+                setAsNotJuggernaut();
 
                 if (killer == null)
                 {
@@ -320,7 +324,7 @@ namespace Games3Project2
                 else
                 {
                     RemotePlayer player = killer.Tag as RemotePlayer;
-                    player.isJuggernaut = true;
+                    player.setAsJuggernaut();
                 }
 
                 Global.networkManager.newJuggernaut(killer);
