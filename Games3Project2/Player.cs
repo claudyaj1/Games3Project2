@@ -66,8 +66,7 @@ namespace Games3Project2
             lastFiringTime = 0;
             jetFuel = Global.Constants.MAX_JET_FUEL;
 
-            Color sphereColor = Color.Blue;
-            sphere = new Sphere(Global.game, sphereColor, pos);
+            sphere = new Sphere(Global.game, Global.Constants.DEFAULT_PLAYER_COLOR, pos);
             sphere.localScale = Matrix.CreateScale(5);
             sphere.SetWireframe(1);
             Texture2D blankTexture = Global.game.Content.Load<Texture2D>(@"Textures\blankTexture");
@@ -297,8 +296,14 @@ namespace Games3Project2
         public void setAsJuggernaut()
         {
             isJuggernaut = true;
+            sphere.ChangeAllVertexColors(Global.Constants.JUGGERNAUT_COLOR); //This change is not visible by the player nor the remotes.
             //TODO: Play "New Juggernaut"
-            //TODO: Announce "Who is Juggernaut" , networkID
+        }
+
+        public void setAsNotJuggernaut()
+        {
+            isJuggernaut = false;
+            sphere.ChangeAllVertexColors(Global.Constants.DEFAULT_PLAYER_COLOR);
         }
 
         public void killed(NetworkGamer killer)
@@ -310,7 +315,8 @@ namespace Games3Project2
 
             if (isJuggernaut)
             {
-                isJuggernaut = false;
+                setAsNotJuggernaut();
+
                 if (killer == null)
                 {
                     int nextJuggernaut = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
@@ -330,7 +336,7 @@ namespace Games3Project2
                 else
                 {
                     RemotePlayer player = killer.Tag as RemotePlayer;
-                    player.isJuggernaut = true;
+                    player.setAsJuggernaut();
                 }
 
                 Global.networkManager.newJuggernaut(killer);

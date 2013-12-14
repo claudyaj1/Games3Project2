@@ -19,14 +19,14 @@ namespace Games3Project2
         Cube cube;
         Matrix cubeTransformation;
         const int gunLength = 3;
-        public bool isJuggernaut;
+        public bool isJuggernaut; //Uh, be sure to call setAsJuggernaut or NotJuggernaut instead of editing this variable directly.
         public float yaw;
         public float pitch;
         public NetworkGamer gamer;
         const int PACKET_INTERVAL = 10;
         float currentSmoothing;
         int framesSinceLastPacket;
-
+        
         struct RemotePlayerState
         {
             public Vector3 position;
@@ -42,10 +42,9 @@ namespace Games3Project2
             base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             score = 0;
-            Color sphereColor = Color.Blue; 
             Texture2D blankTex = Global.game.Content.Load<Texture2D>(@"Textures\blankTexture");
-            sphere = new Sphere(Global.game, sphereColor, pos);
-            cube = new Cube(blankTex, sphereColor); 
+            sphere = new Sphere(Global.game, Global.Constants.DEFAULT_PLAYER_COLOR, pos);
+            cube = new Cube(blankTex, Color.Gray); 
             sphere.localScale = Matrix.CreateScale(5);
             sphere.SetWireframe(1);
             cube.wireFrame = false;
@@ -107,6 +106,19 @@ namespace Games3Project2
 
             framesSinceLastPacket = 0;
             currentSmoothing = 1;
+        }
+
+        public void setAsJuggernaut()
+        {
+            isJuggernaut = true;
+            sphere.ChangeAllVertexColors(Global.Constants.JUGGERNAUT_COLOR);
+            //TODO: Play "New Juggernaut" sound if not triggered in the network manager.
+        }
+
+        public void setAsNotJuggernaut()
+        {
+            isJuggernaut = false;
+            sphere.ChangeAllVertexColors(Global.Constants.DEFAULT_PLAYER_COLOR);
         }
     }
 }
