@@ -45,7 +45,7 @@ namespace Games3Project2
             Color sphereColor = Color.Blue; 
             Texture2D blankTex = Global.game.Content.Load<Texture2D>(@"Textures\blankTexture");
             sphere = new Sphere(Global.game, sphereColor, pos);
-            cube = new Cube(blankTex, sphereColor); 
+            cube = new Cube(blankTex, Color.Gray); 
             sphere.localScale = Matrix.CreateScale(5);
             sphere.SetWireframe(1);
             cube.wireFrame = false;
@@ -79,6 +79,14 @@ namespace Games3Project2
             position = Vector3.Lerp(simulationState.position, previousState.position, currentSmoothing);
             velocity = Vector3.Lerp(simulationState.velocity, previousState.velocity, currentSmoothing);
             sphere.Position = position;
+            if (isJuggernaut)
+            {
+                sphere.ChangeAllVertexColors(Color.LightPink);
+            }
+            else
+            {
+                sphere.ChangeAllVertexColors(Color.Blue);
+            }
             sphere.Update(Global.gameTime);
         }
 
