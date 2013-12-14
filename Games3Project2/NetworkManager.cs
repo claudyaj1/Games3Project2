@@ -211,7 +211,7 @@ namespace Networking
         {
             if (!e.Gamer.IsLocal)
             {
-                e.Gamer.Tag = new RemotePlayer(Vector3.Zero, e.Gamer);
+                e.Gamer.Tag = new RemotePlayer(new Vector3(-5000, -5000, -5000), e.Gamer);
                 Global.remotePlayers.Add((RemotePlayer)e.Gamer.Tag);
             }
         }
@@ -367,7 +367,7 @@ namespace Networking
         {
             string tag = reader.ReadString();
             NetworkGamer gamer = findGamerWithTag(tag);
-            if (gamer.Tag.GetType() == Global.localPlayers[0].GetType())
+            if (gamer.IsLocal)
             {
                 LocalPlayer player = gamer.Tag as LocalPlayer;
                 player.setAsJuggernaut();
