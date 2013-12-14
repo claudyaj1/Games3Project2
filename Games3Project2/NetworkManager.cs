@@ -371,12 +371,22 @@ namespace Networking
             {
                 LocalPlayer player = gamer.Tag as LocalPlayer;
                 player.setAsJuggernaut();
+                
             }
             else
             {
-                RemotePlayer player = gamer.Tag as RemotePlayer;
-                player.isJuggernaut = true;
+                RemotePlayer rPlayer = gamer.Tag as RemotePlayer;
+                rPlayer.setAsNewJuggernaut();
+                for (int i = 0; i < Global.remotePlayers.Count; i++) //Loop
+                {
+                    if (Global.remotePlayers[i] != rPlayer)
+                    {
+                        Global.remotePlayers[i].setAsNotJuggernaut();
+                    }
+                }
             }
+
+            //TODO: Announce msg "Who is Juggernaut" ,tag so that remote players know who is the new juggernaut is.
         }
 
         public void juggernautKill()

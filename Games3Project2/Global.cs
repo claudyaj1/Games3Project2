@@ -100,6 +100,8 @@ namespace Games3Project2.Globals
         {
             public static readonly byte MAX_PLAYERS_TOTAL = 4;
             public static readonly byte MAX_PLAYERS_LOCAL = 4;
+            public static readonly Color DEFAULT_PLAYER_COLOR = Color.Blue;
+            public static readonly Color JUGGERNAUT_COLOR = Color.LightPink;
 
             public static readonly float LEVEL_ONE_WIDTH = 100;
             public static readonly float LEVEL_ONE_LENGTH = 200;

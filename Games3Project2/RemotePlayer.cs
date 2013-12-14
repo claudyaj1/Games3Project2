@@ -19,14 +19,14 @@ namespace Games3Project2
         Cube cube;
         Matrix cubeTransformation;
         const int gunLength = 3;
-        public bool isJuggernaut;
+        public bool isJuggernaut; //Uh, be sure to call setAsJuggernaut or NotJuggernaut instead of editing this variable directly.
         public float yaw;
         public float pitch;
         public NetworkGamer gamer;
         const int PACKET_INTERVAL = 10;
         float currentSmoothing;
         int framesSinceLastPacket;
-
+        
         struct RemotePlayerState
         {
             public Vector3 position;
@@ -42,9 +42,8 @@ namespace Games3Project2
             base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
             score = 0;
-            Color sphereColor = Color.Blue; 
             Texture2D blankTex = Global.game.Content.Load<Texture2D>(@"Textures\blankTexture");
-            sphere = new Sphere(Global.game, sphereColor, pos);
+            sphere = new Sphere(Global.game, Global.Constants.DEFAULT_PLAYER_COLOR, pos);
             cube = new Cube(blankTex, Color.Gray); 
             sphere.localScale = Matrix.CreateScale(5);
             sphere.SetWireframe(1);
@@ -79,14 +78,6 @@ namespace Games3Project2
             position = Vector3.Lerp(simulationState.position, previousState.position, currentSmoothing);
             velocity = Vector3.Lerp(simulationState.velocity, previousState.velocity, currentSmoothing);
             sphere.Position = position;
-            if (isJuggernaut)
-            {
-                sphere.ChangeAllVertexColors(Color.LightPink);
-            }
-            else
-            {
-                sphere.ChangeAllVertexColors(Color.Blue);
-            }
             sphere.Update(Global.gameTime);
         }
 
@@ -115,6 +106,18 @@ namespace Games3Project2
 
             framesSinceLastPacket = 0;
             currentSmoothing = 1;
+        }
+
+        public void setAsNewJuggernaut()
+        {
+            isJuggernaut = true;
+            sphere.ChangeAllVertexColors(Global.Constants.JUGGERNAUT_COLOR);
+        }
+
+        public void setAsNotJuggernaut()
+        {
+            isJuggernaut = false;
+            sphere.ChangeAllVertexColors(Global.Constants.DEFAULT_PLAYER_COLOR);
         }
     }
 }
