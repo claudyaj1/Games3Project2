@@ -60,6 +60,11 @@ namespace Games3Project2
                     zCheck = Global.Constants.LEVEL_TWO_LENGTH - collidable.Radius;
                     yCheck = Global.Constants.LEVEL_TWO_HEIGHT - collidable.Radius;
                     break;
+                case 3:
+                    xCheck = Global.Constants.LEVEL_THREE_WIDTH - collidable.Radius;
+                    zCheck = Global.Constants.LEVEL_THREE_LENGTH - collidable.Radius;
+                    yCheck = Global.Constants.LEVEL_THREE_HEIGHT - collidable.Radius;
+                    break;
             }
             
             if (collidable.Position.X > xCheck)
@@ -113,6 +118,11 @@ namespace Games3Project2
                     xCheck = Global.Constants.LEVEL_TWO_WIDTH - collidable.Radius;
                     zCheck = Global.Constants.LEVEL_TWO_LENGTH - collidable.Radius;
                     yCheck = Global.Constants.LEVEL_TWO_HEIGHT - collidable.Radius;
+                    break;
+                case 3:
+                    xCheck = Global.Constants.LEVEL_THREE_WIDTH - collidable.Radius;
+                    zCheck = Global.Constants.LEVEL_THREE_LENGTH - collidable.Radius;
+                    yCheck = Global.Constants.LEVEL_THREE_HEIGHT - collidable.Radius;
                     break;
             }
 
@@ -334,7 +344,43 @@ namespace Games3Project2
 
         private void setupLevelThree()
         {
+            currentLevel = 3;
+            walls.Clear();
+            platforms.Clear();
+            spawnPoints.Clear();
 
+            //exterior walls
+            walls.Add(new Platform(new Vector3(Global.Constants.LEVEL_THREE_WIDTH, 0, 0), Global.Constants.LEVEL_THREE_HEIGHT, Global.Constants.LEVEL_THREE_WIDTH, platformWallTexture, Platform.PlatformType.VerticalZ));
+            walls[0].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
+            walls.Add(new Platform(new Vector3(-Global.Constants.LEVEL_THREE_WIDTH, 0, 0), Global.Constants.LEVEL_THREE_HEIGHT, Global.Constants.LEVEL_THREE_WIDTH, platformWallTexture, Platform.PlatformType.VerticalZ));
+            walls[1].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
+            walls.Add(new Platform(new Vector3(0, 0, Global.Constants.LEVEL_THREE_LENGTH), Global.Constants.LEVEL_THREE_WIDTH, Global.Constants.LEVEL_THREE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
+            walls[2].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
+            walls.Add(new Platform(new Vector3(0, 0, -Global.Constants.LEVEL_THREE_LENGTH), Global.Constants.LEVEL_THREE_WIDTH, Global.Constants.LEVEL_THREE_HEIGHT, platformWallTexture, Platform.PlatformType.VerticalX));
+            walls[3].rotation = Matrix.CreateRotationX((float)Math.PI / 2);
+            //ceiling and floor
+            walls.Add(new Platform(new Vector3(0, Global.Constants.LEVEL_THREE_HEIGHT, 0), Global.Constants.LEVEL_THREE_WIDTH, Global.Constants.LEVEL_THREE_LENGTH, platformWallTexture, Platform.PlatformType.Horizontal));
+            walls.Add(new Platform(new Vector3(0, -Global.Constants.LEVEL_THREE_HEIGHT, 0), Global.Constants.LEVEL_THREE_WIDTH, Global.Constants.LEVEL_THREE_LENGTH, platformWallTexture, Platform.PlatformType.Horizontal));
+
+            //top platforms
+            platforms.Add(new Platform(new Vector3(standardSpacing, standardSpacing, standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(standardSpacing, -standardSpacing, standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(standardSpacing, standardSpacing, -standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(standardSpacing, -standardSpacing, -standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //middle platform
+            platforms.Add(new Platform(Vector3.Zero, largePlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            //bottom platforms
+            platforms.Add(new Platform(new Vector3(-standardSpacing, standardSpacing, standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(-standardSpacing, -standardSpacing, standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(-standardSpacing, standardSpacing, -standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+            platforms.Add(new Platform(new Vector3(-standardSpacing, -standardSpacing, -standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+
+            //spawn points
+            spawnPoints.Add(Vector3.Zero);
+            spawnPoints.Add(new Vector3(40, 45, 40));
+            spawnPoints.Add(new Vector3(-40, 45, -40));
+            spawnPoints.Add(new Vector3(40, -45, 40));
+            spawnPoints.Add(new Vector3(-40, -40, -40));
         }
 
         public void spawnAllPlayers()

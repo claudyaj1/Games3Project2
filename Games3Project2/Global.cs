@@ -109,6 +109,10 @@ namespace Games3Project2.Globals
             public static readonly float LEVEL_TWO_LENGTH = 100;
             public static readonly float LEVEL_TWO_HEIGHT = 165;
 
+            public static readonly float LEVEL_THREE_WIDTH = 75;
+            public static readonly float LEVEL_THREE_LENGTH = 75;
+            public static readonly float LEVEL_THREE_HEIGHT = 75;
+
             public static readonly float JET_PACK_INCREMENT = 0.00006f;
             public static readonly float JET_PACK_DECREMENT = JET_PACK_INCREMENT * 0.4f; //Yes, this must remain positive.
             public static readonly float JET_FUEL_INCREMENT = .3f;
