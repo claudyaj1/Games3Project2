@@ -194,6 +194,12 @@ namespace Games3Project2
                     switch (mainMenu.update())
                     {
                         case 0: //Single Player
+                            Global.gameState = Global.GameState.SetupSinglePlayer;
+                            Global.networkManager.hostSessionType = NetworkManager.HostSessionType.Host;
+                            joinedPlayers.Clear();
+                            Global.numLocalGamers = 1;
+                            Global.numTotalGamers = 1;
+                            joinedPlayers.Add(PlayerIndex.One);
 
                             break;
                         case 1: //Create New Game (Networking or Local)
@@ -206,7 +212,7 @@ namespace Games3Project2
                             Global.networkManager.hostSessionType = NetworkManager.HostSessionType.Client;
                             break;
                         case 3: //Heatmaps
-                            this.Exit();
+                            this.Exit(); //TODO: Heatmaps is currently disabled for safety reasons.
                             Global.gameState = Global.GameState.SetupLocalPlayersHeatmap;
                             Global.numLocalGamers = 1;
                             joinedPlayers.Clear();
@@ -364,6 +370,12 @@ namespace Games3Project2
                     break;
                 #endregion //Lobby
 
+                #region SetupSinglePlayer
+                case Global.GameState.SetupSinglePlayer:
+                    setupSinglePlayer();
+                    break;
+                #endregion
+
                 #region SetupLocalPlayersHeatmap
                 case Global.GameState.SetupLocalPlayersHeatmap:
                     //if (setupLocalPlayers())
@@ -489,6 +501,7 @@ namespace Games3Project2
                 case Global.GameState.NetworkQuit:
                     if (Global.input.isAnyFirstPress(Buttons.A) || Global.input.isAnyFirstPress(Buttons.Start))
                         Global.gameState = Global.GameState.Menu;
+                    //TODO: Is there more things that need to be destructed?
                     break;
                 #endregion //NetworkQuit
             }
@@ -570,7 +583,8 @@ namespace Games3Project2
                             Global.spriteBatch.DrawString(consolas, nGamer.Gamertag, new Vector2(playerTextStarting.X, playerTextStarting.Y + off++ * textOffset), Color.Black);
                         }
 
-                        if (Global.networkManager.networkSession.AllGamers.Count > 1 && Global.networkManager.hostSessionType == NetworkManager.HostSessionType.Host)
+                        if ((Global.networkManager.networkSession.AllGamers.Count > 1 && Global.networkManager.hostSessionType == NetworkManager.HostSessionType.Host) ||
+                            Global.numTotalGamers == 1)
                         {
                             Global.spriteBatch.DrawString(consolas, "Press A to Start the Game", promptStarting, Color.Black);
                         }
@@ -579,6 +593,14 @@ namespace Games3Project2
                     Global.spriteBatch.End();
                     break;
                 #endregion //Lobby
+
+                #region SetupSinglePlayer
+                case Global.GameState.SetupSinglePlayer:
+                    Global.spriteBatch.Begin();
+                    drawSinglePlayerSetup();
+                    Global.spriteBatch.End();
+                    break;
+                #endregion
 
                 #region SetupLocalPlayersHeatmap
                 case Global.GameState.SetupLocalPlayersHeatmap:
@@ -765,7 +787,7 @@ namespace Games3Project2
             return retval;
         }
 
-        private void setupLocalPlayers()
+        private void setupLocalPlayers() //Maintenance tip: Any adjustments may also need replicated in setupSinglePlayer().
         {
             if (Global.input.isAnyFirstPress(Buttons.A) && !Guide.IsVisible)
             {
@@ -804,6 +826,53 @@ namespace Games3Project2
 
             Global.spriteBatch.DrawString(consolas, "Signed In Players:", playerTextStarting, Color.Black);
             int off = 1;
+            foreach (SignedInGamer gamer in SignedInGamer.SignedInGamers)
+            {
+                Global.spriteBatch.DrawString(consolas, gamer.Gamertag, new Vector2(playerTextStarting.X, playerTextStarting.Y + off++ * textOffset), Color.Black);
+            }
+            off += 2;
+
+            Global.spriteBatch.DrawString(consolas, "Press A to Sign In", new Vector2(playerTextStarting.X, playerTextStarting.Y + off++ * textOffset), Color.Black);
+            if (SignedInGamer.SignedInGamers.Count > 0)
+            {
+                Global.spriteBatch.DrawString(consolas, "Press Start to Continue", new Vector2(playerTextStarting.X, playerTextStarting.Y + off * textOffset), Color.Black);
+            }
+        }
+
+        private void setupSinglePlayer() //For single player mode. Very similar to setupLocalPlayers().
+        {
+            if (Global.input.isAnyFirstPress(Buttons.A) && !Guide.IsVisible)
+            {
+#if XBOX
+                Guide.ShowSignIn(1, true); //1 instead of 4. Might be wrong.
+#else
+                Guide.ShowSignIn(1, true);
+#endif
+            }
+            else if (Global.input.isAnyFirstPress(Buttons.Start))
+            {
+                Global.numLocalGamers = (byte)SignedInGamer.SignedInGamers.Count;
+                Global.gameState = Global.GameState.LevelPicking;
+            }
+            else if (Global.input.isFirstPress(Buttons.B))
+            {
+                Global.gameState = Global.GameState.Menu;
+            }
+        }
+
+        private void drawSinglePlayerSetup() //For single player mode. Very similar to drawlocalPlayerSetup()
+        {
+            Global.spriteBatch.Draw(background, Global.viewPort, Color.White);
+            Global.spriteBatch.DrawString(mainMenu.titleFont, "Juggernaut", mainMenu.titlePosition, Color.Black);
+
+            Vector2 playerTextStarting = new Vector2(Global.viewPort.Left + 30, Global.viewPort.Height / 2 - 30);
+            Vector2 promptStarting = new Vector2(Global.viewPort.Left + 30, Global.viewPort.Height - 50);
+            float textOffset = consolas.MeasureString("A").Y + 5;
+
+            Global.spriteBatch.DrawString(consolas, "Signed In Players:", playerTextStarting, Color.Black);
+            int off = 1;
+            //TODO: Maybe use this one line of code instead of the foreach loop. mmm...maybe not...its for 
+            //SignedInGamer gamer = SignedInGamer.SignedInGamers[0];
             foreach (SignedInGamer gamer in SignedInGamer.SignedInGamers)
             {
                 Global.spriteBatch.DrawString(consolas, gamer.Gamertag, new Vector2(playerTextStarting.X, playerTextStarting.Y + off++ * textOffset), Color.Black);

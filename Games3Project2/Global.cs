@@ -26,15 +26,20 @@ namespace Games3Project2.Globals
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
         public static Game game;
-        public enum GameState { Intro, Menu, CreateMenu, JoinMenu, SetupLocalPlayers, LevelPicking, 
+        public enum GameState
+        {
+            Intro, Menu, CreateMenu, JoinMenu, SetupLocalPlayers, LevelPicking,
             Lobby, Playing, Paused, NetworkQuit,
-            GameOver, ChooseHeatmap, playingHeatmap, SetupLocalPlayersHeatmap};
+            GameOver, ChooseHeatmap, playingHeatmap, SetupLocalPlayersHeatmap,
+            SetupSinglePlayer
+        };
         public static GameState gameState = GameState.Intro;
         /// <summary>
         /// Describes the total number of gamers in the network session.
         /// </summary>
         public static byte numTotalGamers = 0;
         public static byte numLocalGamers = 0;
+        public static bool isSinglePlayerMode = false;
         public static bool debugMode 
         #region Debug Mode
         #if DEBUG
