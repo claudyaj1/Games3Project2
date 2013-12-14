@@ -371,13 +371,27 @@ namespace Networking
             {
                 LocalPlayer player = gamer.Tag as LocalPlayer;
                 player.setAsJuggernaut();
-                
+                for (int i = 0; i < Global.localPlayers.Count; i++)
+                {
+                    if (Global.localPlayers[i] != player)
+                    {
+                        Global.localPlayers[i].setAsNotJuggernaut();
+                    }
+                }
+                for (int i = 0; i < Global.remotePlayers.Count; i++)
+                {
+                    Global.remotePlayers[i].setAsNotJuggernaut();
+                }
             }
             else
             {
                 RemotePlayer rPlayer = gamer.Tag as RemotePlayer;
                 rPlayer.setAsJuggernaut();
-                for (int i = 0; i < Global.remotePlayers.Count; i++) //Loop
+                for (int i = 0; i < Global.localPlayers.Count; i++)
+                {
+                    Global.localPlayers[i].setAsNotJuggernaut();
+                }
+                for (int i = 0; i < Global.remotePlayers.Count; i++) //Loop for all remotes except the juggernaut
                 {
                     if (Global.remotePlayers[i] != rPlayer)
                     {
