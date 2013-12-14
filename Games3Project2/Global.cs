@@ -130,9 +130,12 @@ namespace Games3Project2.Globals
             public static readonly float BULLET_SPEED = .25f;
             public static readonly float BULLET_RADIUS = .5f;
             public static readonly Color BULLET_COLOR = Color.DarkOrange;
+            public static readonly float BULLET_POWER_DISTANCE = 1000f;
             public static readonly int MAX_ALLOCATED_BULLETS = 300;
-            public static readonly int FIRING_COOLDOWN = 300;
+            public static readonly int FIRING_COOLDOWN = 200;
             public static readonly int BOT_FIRING_COOLDOWN = 1000;
+            public static readonly float VIBRATION_LOW = 1f;
+            public static readonly float VIBRATION_HIGH = 1f;
 
             public static readonly float WALL_BUFFER = 5;
 

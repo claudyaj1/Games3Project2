@@ -248,10 +248,22 @@ namespace Games3Project2
             {
                 if (Global.BulletManager.bullets[i].shooter != gamer && Global.Collision.didCollide(Global.BulletManager.bullets[i], this))
                 {
-                    health -= Global.BulletManager.bullets[i].damage;
+                    if (Global.BulletManager.bullets[i].timeLived < Global.Constants.BULLET_POWER_DISTANCE)
+                    {
+                        health -= Global.BulletManager.bullets[i].damage;
+                    }
+                    else
+                    {
+                        health -= Global.BulletManager.bullets[i].damage*2;
+                    }
                     if (health < 0)
                     {
+                        GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, Global.Constants.VIBRATION_LOW, 0f);
                         killed(Global.BulletManager.bullets[i].shooter);
+                    }
+                    else
+                    {
+                        GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, Global.Constants.VIBRATION_HIGH);
                     }
                     Global.BulletManager.bullets[i].disable();
                 }
