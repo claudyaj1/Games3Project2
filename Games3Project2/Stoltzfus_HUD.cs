@@ -32,6 +32,7 @@ namespace HUDUtility
         int jetFuelHeight = 200;
         Point healthBarPosition = new Point(20, 33);
         Point jetFuelPosition;
+        Vector2 healthTextPostion, fuelTextPosition;
         Vector2 scorePosition;
 
         Rectangle goodRect, badRect;
@@ -53,15 +54,17 @@ namespace HUDUtility
             badRect = new Rectangle(healthBarPosition.X, healthBarPosition.Y, 0, healthBarHeight);
             outlineLeft = new Rectangle(healthBarPosition.X - 1, healthBarPosition.Y, 1, healthBarHeight);
             outlineRight = new Rectangle(healthBarPosition.X + healthBarLength, healthBarPosition.Y, 1, healthBarHeight);
+            healthTextPostion = new Vector2(healthBarPosition.X, healthBarPosition.Y - 30f);
 
             jetFuelPosition = new Point(20, player.camera.viewport.Height - 40 - jetFuelHeight);
             fuelFilledRect = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y, jetFuelWidth, jetFuelHeight);
             fuelEmptyRect = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y + jetFuelHeight, jetFuelWidth, 0);
+            fuelTextPosition = new Vector2(jetFuelPosition.X, jetFuelPosition.Y - 30f);
 
             fuelOutlineTop = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y + jetFuelHeight + 1, jetFuelWidth, 1);
             fuelOutlineBottom = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y - 1, jetFuelWidth, 1);
 
-            scorePosition = new Vector2(player.camera.viewport.Width - 60, 30);
+            scorePosition = new Vector2(player.camera.viewport.Width - 160, 30);
 
             fuelTexture = Global.game.Content.Load<Texture2D>(@"Textures\fuelTexture");
             healthTexture = Global.game.Content.Load<Texture2D>(@"Textures\healthTexture");
@@ -96,17 +99,19 @@ namespace HUDUtility
 
         public void Draw()
         {
+            Global.spriteBatch.DrawString(Global.consolas, "Health:", healthTextPostion, Global.HUD_COLOR);
             Global.spriteBatch.Draw(healthTexture, goodRect, healthColor);
             Global.spriteBatch.Draw(healthTexture, badRect, Color.Red);
             Global.spriteBatch.Draw(blankTexture, outlineLeft, Color.Black);
             Global.spriteBatch.Draw(blankTexture, outlineRight, Color.Black);
 
+            Global.spriteBatch.DrawString(Global.consolas, "Jet:", fuelTextPosition, Global.HUD_COLOR);
             Global.spriteBatch.Draw(fuelTexture, fuelFilledRect, Color.Orange);
             Global.spriteBatch.Draw(fuelTexture, fuelEmptyRect, Color.Gray);
             Global.spriteBatch.Draw(blankTexture, fuelOutlineTop, Color.Black);
             Global.spriteBatch.Draw(blankTexture, fuelOutlineBottom, Color.Black);
 
-            Global.spriteBatch.DrawString(Global.consolas, player.score.ToString(), scorePosition, Color.White);
+            Global.spriteBatch.DrawString(Global.consolas, "Score: " + player.score.ToString(), scorePosition, Global.HUD_COLOR);
 
             cursor.Draw();
         }
