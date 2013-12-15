@@ -35,15 +35,8 @@ namespace Games3Project2.Globals
         /// </summary>
         public static byte numTotalGamers = 0;
         public static byte numLocalGamers = 0;
-        public static bool debugMode 
-        #region Debug Mode
-        #if DEBUG
-         = true;
-        #else
-         = false;
-        #endif
+        public static bool debugMode = false;
         public static readonly Color debugColor = Color.Black;
-        #endregion
         public static readonly Color HUD_COLOR = Color.Orange;
         public static string winningPlayer = "";
         public static SpriteFont consolas;  //To be assigned in LoadContent()
