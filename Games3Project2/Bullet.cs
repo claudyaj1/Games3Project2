@@ -14,7 +14,6 @@ namespace Games3Project2
     {
         BoundingSphere bs;
         //TODO: CreateTranslation matrix
-        public const int TTL = 2000; //Milliseconds
         public int timeLived;
         /// <summary>
         /// // The NetworkGamer who shot this bullet.
