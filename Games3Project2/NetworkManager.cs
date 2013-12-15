@@ -361,11 +361,13 @@ namespace Networking
         {
             writer.Write((byte)MessageType.NewJuggernaut);
             writer.Write(gamer.Gamertag);
+            Global.msgNewJuggernaut(gamer.Gamertag); //Fires off a message to the message displayer unit.
         }
 
         private void readNewJuggernaut() //Reads in who should be the new juggernaut.
         {
             string tag = reader.ReadString();
+            Global.msgNewJuggernaut(tag); //Fires off a message to the message displayer unit.
             NetworkGamer gamer = findGamerWithTag(tag);
             if (gamer.IsLocal)
             {

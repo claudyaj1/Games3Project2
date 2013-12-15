@@ -28,7 +28,7 @@ namespace Games3Project2.Globals
         public static Game game;
         public enum GameState { Intro, Menu, CreateMenu, JoinMenu, SetupLocalPlayers, LevelPicking, 
             Lobby, Playing, Paused, NetworkQuit,
-            GameOver, ChooseHeatmap, playingHeatmap, SetupLocalPlayersHeatmap};
+            GameOver, ChooseHeatmap, playingHeatmap, SetupLocalPlayersHeatmap}; 
         public static GameState gameState = GameState.Intro;
         /// <summary>
         /// Describes the total number of gamers in the network session.
@@ -69,6 +69,7 @@ namespace Games3Project2.Globals
         //kt22377 is the author from freesound.org
         public static SoundEffectInstance actionsong;
 
+        
         public static class BulletManager
         {
             public static List<Bullet> bullets = new List<Bullet>();
@@ -145,6 +146,7 @@ namespace Games3Project2.Globals
 
             public static readonly float WALL_BUFFER = 5;
 
+            public static readonly int MSG_DURATION = 5000; //ms
             public static readonly string MSG_IS_JUG = " is the juggernaut";
             public static readonly string MSG_KILLED_JUG = " killed the juggernaut";
             public static readonly string MSG_KILLED_BY_JUG_1ST = "You were killed by the juggernaut";
@@ -155,6 +157,18 @@ namespace Games3Project2.Globals
             public static readonly string HUD_YOU_JUG = "YOU ARE THE JUGGERNAUT";
             public static readonly string MSG_JOINED = " joined";
             public static readonly string MSG_DISCONNECTED = " disconnected";
+        }
+
+        //Actually, for all the nicer this in game messaging system is, it could use a Queue...
+        public static string newestJuggernautGamertag;
+        public static int msElaspedTimeRemainingMsgDisplayed;
+        public enum InGameAlerts { None, JuggernautKilledNewJuggernaut } //More can be added later :)
+        public static InGameAlerts inGameAlerts;
+        public static void msgNewJuggernaut(string gamertagOfNewJuggernaut)
+        {
+            inGameAlerts = InGameAlerts.JuggernautKilledNewJuggernaut;
+            msElaspedTimeRemainingMsgDisplayed = Constants.MSG_DURATION;
+            newestJuggernautGamertag = gamertagOfNewJuggernaut;
         }
 
         public static class Collision

@@ -32,7 +32,7 @@ namespace HUDUtility
         int jetFuelHeight = 200;
         Point healthBarPosition = new Point(20, 33);
         Point jetFuelPosition;
-        Vector2 healthTextPostion, fuelTextPosition;
+        Vector2 healthTextPostion, fuelTextPosition, juggernautMsgTextPosition;
         Vector2 scorePosition;
 
         Rectangle goodRect, badRect;
@@ -64,6 +64,7 @@ namespace HUDUtility
             fuelOutlineTop = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y + jetFuelHeight + 1, jetFuelWidth, 1);
             fuelOutlineBottom = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y - 1, jetFuelWidth, 1);
 
+            juggernautMsgTextPosition = new Vector2((player.camera.viewport.Width / 2) - Global.consolas.MeasureString(Global.Constants.HUD_YOU_JUG).X / 2f, healthTextPostion.Y);
             scorePosition = new Vector2(player.camera.viewport.Width - 160, 30);
 
             fuelTexture = Global.game.Content.Load<Texture2D>(@"Textures\fuelTexture");
@@ -95,9 +96,17 @@ namespace HUDUtility
 
             fuelFilledRect = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y + emptyFuelHeight, jetFuelWidth, filledFuelHeight);
             fuelEmptyRect = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y, jetFuelWidth, emptyFuelHeight);
+
+            //Update the timer counter down only if the timer still has time remaining on it.
+            if (Global.msElaspedTimeRemainingMsgDisplayed > 0)
+            {
+                Global.msElaspedTimeRemainingMsgDisplayed -= Global.gameTime.ElapsedGameTime.Milliseconds;
+                if (Global.msElaspedTimeRemainingMsgDisplayed <= 0)
+                    Global.inGameAlerts = Global.InGameAlerts.None;
+            }
         }
 
-        public void Draw()
+        public void Draw() // The hud on the screen.
         {
             Global.spriteBatch.DrawString(Global.consolas, "Health:", healthTextPostion, Global.HUD_COLOR);
             Global.spriteBatch.Draw(healthTexture, goodRect, healthColor);
@@ -112,6 +121,16 @@ namespace HUDUtility
             Global.spriteBatch.Draw(blankTexture, fuelOutlineBottom, Color.Black);
 
             Global.spriteBatch.DrawString(Global.consolas, "Score: " + player.score.ToString(), scorePosition, Global.HUD_COLOR);
+
+
+            if(Global.inGameAlerts == Global.InGameAlerts.JuggernautKilledNewJuggernaut && Global.msElaspedTimeRemainingMsgDisplayed > 0 && !player.isJuggernaut)
+            {                
+                Global.spriteBatch.DrawString(Global.consolas, Global.newestJuggernautGamertag + Global.Constants.MSG_IS_JUG, juggernautMsgTextPosition, Global.HUD_COLOR);
+            }//More InGameAlerts via else if chain could be added here if desired.
+            else if (player.isJuggernaut)
+            {
+                Global.spriteBatch.DrawString(Global.consolas, Global.Constants.HUD_YOU_JUG, juggernautMsgTextPosition, Global.HUD_COLOR);
+            }
 
             cursor.Draw();
         }

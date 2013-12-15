@@ -96,6 +96,7 @@ namespace Games3Project2
             Global.actionsong = Global.game.Content.Load<SoundEffect>(@"Audio/actionsong").CreateInstance();
             Global.actionsong.IsLooped = true;
             Global.actionsong.Volume = 0.5f;
+            Global.msElaspedTimeRemainingMsgDisplayed = 0;
 
             music = new Music(this);
             //music.playBackgroundMusic();
