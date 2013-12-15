@@ -157,6 +157,7 @@ namespace Games3Project2.Globals
             public static readonly string HUD_YOU_JUG = "YOU ARE THE JUGGERNAUT";
             public static readonly string MSG_JOINED = " joined";
             public static readonly string MSG_DISCONNECTED = " disconnected";
+            public static readonly float MAX_GUN_HEAT = 100f;
         }
 
         //Actually, for all the nicer this in game messaging system is, it could use a Queue...

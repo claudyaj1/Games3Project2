@@ -39,6 +39,8 @@ namespace Games3Project2
 
         int timeSinceLastPacketSent = 0;
         const int PACKET_INTERVAL = 10;
+        public float gunHeat = 0f;
+        //TODO: increase gunHeat upon firing.
 
         public override Vector3 Position
         {

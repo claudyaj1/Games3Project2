@@ -32,13 +32,18 @@ namespace HUDUtility
         int jetFuelHeight = 200;
         Point healthBarPosition = new Point(20, 33);
         Point jetFuelPosition;
-        Vector2 healthTextPostion, fuelTextPosition, juggernautMsgTextPosition;
+        Vector2 healthTextPostion, fuelTextPosition, juggernautMsgTextPosition, overheatTextPosition;
         Vector2 scorePosition;
 
         Rectangle goodRect, badRect;
         Rectangle outlineLeft, outlineRight;
         Rectangle fuelFilledRect, fuelEmptyRect;
         Rectangle fuelOutlineTop, fuelOutlineBottom;
+
+        Point overheatPosition;
+        int overheatWidth, overheatHeight;
+        Rectangle overheatFilledRect, overheatEmptyRect;
+        Rectangle overheatBottom, overheatTop;
 
         public HUD(LocalPlayer player)
         {
@@ -49,6 +54,8 @@ namespace HUDUtility
             healthBarHeight = (int)(.055555 * player.camera.viewport.Height);
             jetFuelWidth = healthBarHeight;
             jetFuelHeight = (int)(.277777 * player.camera.viewport.Height);
+            overheatWidth = healthBarHeight;
+            overheatHeight = (int)(.277777 * player.camera.viewport.Height);
 
             goodRect = new Rectangle(healthBarPosition.X, healthBarPosition.Y, healthBarLength, healthBarHeight);
             badRect = new Rectangle(healthBarPosition.X, healthBarPosition.Y, 0, healthBarHeight);
@@ -63,6 +70,13 @@ namespace HUDUtility
 
             fuelOutlineTop = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y + jetFuelHeight + 1, jetFuelWidth, 1);
             fuelOutlineBottom = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y - 1, jetFuelWidth, 1);
+            
+            overheatPosition = new Point(player.camera.viewport.Width - overheatWidth - 20, player.camera.viewport.Height - 40 - overheatHeight);
+            overheatBottom = new Rectangle(overheatPosition.X, overheatPosition.Y + overheatHeight + 1, overheatWidth, 1);
+            overheatTop = new Rectangle(overheatPosition.X, overheatPosition.Y - 1, overheatWidth, 1);
+            overheatFilledRect = new Rectangle(overheatPosition.X, overheatPosition.Y, overheatWidth, overheatHeight);
+            overheatEmptyRect = new Rectangle(overheatPosition.X, overheatPosition.Y, overheatWidth, 0);
+            overheatTextPosition = new Vector2(overheatPosition.X - Global.consolas.MeasureString("Gun Heat").X / 1.5f, overheatPosition.Y - 30f);
 
             juggernautMsgTextPosition = new Vector2((player.camera.viewport.Width / 2) - Global.consolas.MeasureString(Global.Constants.HUD_YOU_JUG).X / 2f, healthTextPostion.Y);
             scorePosition = new Vector2(player.camera.viewport.Width - 160, 30);
@@ -97,6 +111,13 @@ namespace HUDUtility
             fuelFilledRect = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y + emptyFuelHeight, jetFuelWidth, filledFuelHeight);
             fuelEmptyRect = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y, jetFuelWidth, emptyFuelHeight);
 
+            float overheatFraction = .5f; //(float)player.gunHeat / Global.Constants.MAX_GUN_HEAT;
+            int filledOverheatHeight = (int)(overheatFraction * overheatHeight);
+            int emptyOverheatHeight = overheatHeight - filledOverheatHeight;
+
+            overheatFilledRect = new Rectangle(overheatPosition.X, overheatPosition.Y + emptyOverheatHeight, overheatWidth, filledOverheatHeight);
+            overheatEmptyRect = new Rectangle(overheatPosition.X, overheatPosition.Y, overheatWidth, emptyOverheatHeight);
+
             //Update the timer counter down only if the timer still has time remaining on it.
             if (Global.msElaspedTimeRemainingMsgDisplayed > 0)
             {
@@ -119,6 +140,12 @@ namespace HUDUtility
             Global.spriteBatch.Draw(fuelTexture, fuelEmptyRect, Color.Gray);
             Global.spriteBatch.Draw(blankTexture, fuelOutlineTop, Color.Black);
             Global.spriteBatch.Draw(blankTexture, fuelOutlineBottom, Color.Black);
+
+            Global.spriteBatch.DrawString(Global.consolas, "Gun Heat:", overheatTextPosition, Global.HUD_COLOR);
+            Global.spriteBatch.Draw(fuelTexture, overheatFilledRect, Color.OrangeRed);
+            Global.spriteBatch.Draw(fuelTexture, overheatEmptyRect, Color.Gray);
+            Global.spriteBatch.Draw(blankTexture, overheatBottom, Color.Black);
+            Global.spriteBatch.Draw(blankTexture, overheatTop, Color.Black);
 
             Global.spriteBatch.DrawString(Global.consolas, "Score: " + player.score.ToString(), scorePosition, Global.HUD_COLOR);
 
