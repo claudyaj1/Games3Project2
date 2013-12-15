@@ -28,7 +28,7 @@ namespace Games3Project2.Globals
         public static Game game;
         public enum GameState { Intro, Menu, CreateMenu, JoinMenu, SetupLocalPlayers, SetupSinglePlayer, LevelPicking, 
             Lobby, Playing, SinglePlayerPlaying, Paused, NetworkQuit,
-            GameOver, ChooseHeatmap, playingHeatmap, SetupLocalPlayersHeatmap}; 
+            GameOver, SinglePlayerGameOver, ChooseHeatmap, playingHeatmap, SetupLocalPlayersHeatmap}; 
         public static GameState gameState = GameState.Intro;
         /// <summary>
         /// Describes the total number of gamers in the network session.

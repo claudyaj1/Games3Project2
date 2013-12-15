@@ -38,6 +38,10 @@ namespace Games3Project2
         int splashTimer = 0;
         const int SPLASH_LENGTH = 3000;
 
+        int timeInSinglePlayer = 0;
+        const int SINGLE_PLAYER_LENGTH = 60000;
+        int finalScore = 0;
+
         Menu mainMenu;
         Menu levelMenu;
         Menu createGameMenu;
@@ -476,11 +480,17 @@ namespace Games3Project2
 
                 #region SinglePlayerPlaying
                 case Global.GameState.SinglePlayerPlaying:
-                    debug = true;
+                    timeInSinglePlayer += gameTime.ElapsedGameTime.Milliseconds;
                     LocalPlayer singlePlayer = Global.localPlayers[0];
                     singlePlayer.update();
                     Global.BulletManager.update();
                     levelManager.update();
+                    if (timeInSinglePlayer > SINGLE_PLAYER_LENGTH)
+                    {
+                        finalScore = Global.localPlayers[0].score;
+                        Global.networkManager.disposeNetworkSession();
+                        Global.gameState = Global.GameState.SinglePlayerGameOver;
+                    }
                     break;
                 #endregion //SinglePlayerPlaying
 
@@ -501,6 +511,15 @@ namespace Games3Project2
                     }
                     break;
                 #endregion //GameOver
+
+                #region SinglePlayerGameOver
+                case Global.GameState.SinglePlayerGameOver:
+                    if (Global.input.isAnyFirstPress(Buttons.A) || Global.input.isAnyFirstPress(Buttons.Start))
+                    {
+                        Global.gameState = Global.GameState.Menu;
+                    }
+                    break;
+                #endregion
 
                 #region NetworkQuit
                 case Global.GameState.NetworkQuit:
@@ -791,6 +810,9 @@ namespace Games3Project2
                         Global.spriteBatch.Begin();
                         drawPlayer.drawHUD();
                     }
+                    float time = SINGLE_PLAYER_LENGTH / 1000 - timeInSinglePlayer / 1000;
+                    Vector2 stringMeasure = consolas.MeasureString(time.ToString());
+                    Global.spriteBatch.DrawString(mainMenu.titleFont, time.ToString(), new Vector2(Global.viewPort.Width / 2 - stringMeasure.X / 2, Global.titleSafe.Top + 10), Color.Orange);
 
                     Global.spriteBatch.End();
                     break;
@@ -810,6 +832,18 @@ namespace Games3Project2
 
                     Global.spriteBatch.Draw(mainMenu.background, Global.viewPort, Color.White);
                     Global.spriteBatch.DrawString(consolas, "Player " + Global.winningPlayer + " Won!", new Vector2(20, Global.viewPort.Height / 2), Color.Black);
+                    Global.spriteBatch.DrawString(consolas, "Press A To Continue", new Vector2(20, Global.viewPort.Height / 2 + 50), Color.Black);
+
+                    Global.spriteBatch.End();
+                    break;
+                #endregion
+
+                #region SinglePlayerGameOver
+                case Global.GameState.SinglePlayerGameOver:
+                    Global.spriteBatch.Begin();
+
+                    Global.spriteBatch.Draw(mainMenu.background, Global.viewPort, Color.White);
+                    Global.spriteBatch.DrawString(consolas, "Your Score: " + finalScore.ToString(), new Vector2(20, Global.viewPort.Height / 2), Color.Black);
                     Global.spriteBatch.DrawString(consolas, "Press A To Continue", new Vector2(20, Global.viewPort.Height / 2 + 50), Color.Black);
 
                     Global.spriteBatch.End();
@@ -887,6 +921,7 @@ namespace Games3Project2
                 Global.networkManager.sessionType = NetworkSessionType.Local;
                 if (Global.networkManager.createSession())
                 {
+                    timeInSinglePlayer = 0;
                     Global.levelManager.currentLevel = 3;
                     Global.levelManager.setupLevel();
                     LocalNetworkGamer gamer = Global.networkManager.networkSession.LocalGamers[0];
