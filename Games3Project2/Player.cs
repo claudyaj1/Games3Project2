@@ -257,12 +257,12 @@ namespace Games3Project2
                     }
                     if (health < 0)
                     {
-                        GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, Global.Constants.VIBRATION_LOW, 0f);
+                        //GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, Global.Constants.VIBRATION_LOW, 0f);
                         killed(Global.BulletManager.bullets[i].shooter);
                     }
                     else
                     {
-                        GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, Global.Constants.VIBRATION_HIGH);
+                        //GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, Global.Constants.VIBRATION_HIGH);
                     }
                     Global.BulletManager.bullets[i].disable();
                 }
@@ -319,12 +319,19 @@ namespace Games3Project2
 
                 if (killer == null)
                 {
-                    int nextJuggernaut = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
-                    killer = Global.networkManager.networkSession.AllGamers[nextJuggernaut];
-                    while (killer == gamer)
+                    if (Global.networkManager.networkSession.AllGamers.Count == 1)
                     {
-                        nextJuggernaut = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
+                        killer = gamer;
+                    }
+                    else
+                    {
+                        int nextJuggernaut = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
                         killer = Global.networkManager.networkSession.AllGamers[nextJuggernaut];
+                        while (killer == gamer)
+                        {
+                            nextJuggernaut = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
+                            killer = Global.networkManager.networkSession.AllGamers[nextJuggernaut];
+                        }
                     }
                 }
 

@@ -26,8 +26,8 @@ namespace Games3Project2.Globals
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
         public static Game game;
-        public enum GameState { Intro, Menu, CreateMenu, JoinMenu, SetupLocalPlayers, LevelPicking, 
-            Lobby, Playing, Paused, NetworkQuit,
+        public enum GameState { Intro, Menu, CreateMenu, JoinMenu, SetupLocalPlayers, SetupSinglePlayer, LevelPicking, 
+            Lobby, Playing, SinglePlayerPlaying, Paused, NetworkQuit,
             GameOver, ChooseHeatmap, playingHeatmap, SetupLocalPlayersHeatmap}; 
         public static GameState gameState = GameState.Intro;
         /// <summary>
