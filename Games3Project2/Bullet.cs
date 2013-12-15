@@ -41,7 +41,8 @@ namespace Games3Project2
         {
             this.startPosition = startPosition;
             position = startPosition;
-            this.velocity = velocity;
+            //need a brand new velocity vector so it doesn't take on player's residual velocity
+            this.velocity = new Vector3(velocity.X, velocity.Y, velocity.Z);
             this.shooter = shooter;
             this.damage = damage;
             timeLived = 0;
