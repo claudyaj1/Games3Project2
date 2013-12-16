@@ -307,7 +307,14 @@ namespace Networking
             writer.Write((byte)MessageType.FireBullet);
             writer.Write(bullet.startPosition);
             writer.Write(bullet.Velocity);
-            writer.Write(bullet.shooter.Gamertag);
+            if (bullet.shooter == null)
+            {
+                writer.Write("bot");
+            }
+            else
+            {
+                writer.Write(bullet.shooter.Gamertag);
+            }
             writer.Write(bullet.damage);
         }
 

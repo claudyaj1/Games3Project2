@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Net;
 
+using AI;
 using Camera3D;
 using InputHandler;
 using Networking;
@@ -23,6 +24,7 @@ namespace Games3Project2.Globals
         public static List<LocalPlayer> localPlayers = new List<LocalPlayer>();
         public static List<RemotePlayer> remotePlayers = new List<RemotePlayer>();
         public static List<BugBot> bugBots = new List<BugBot>();
+        public static List<Turret> turrets = new List<Turret>();
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
         public static Game game;
@@ -121,21 +123,24 @@ namespace Games3Project2.Globals
             public static readonly float SPIN_RATE = 100f;
             public static readonly float PLAYER_RADIUS = 5f;
             public static readonly int MAX_SCORE = 10;
-
             public static readonly int MAX_HEALTH = 100;
             public static readonly int BULLET_DAMAGE = 10;
             public static readonly int MAX_JUG_HEALTH = 300;
             public static readonly int JUG_BULLET_DAMAGE = 30;
             public static readonly float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
-            public static readonly float BULLET_SPEED = 2f;
+
+            public static readonly float VIBRATION_LOW = 1f;
+            public static readonly float VIBRATION_HIGH = 1f;
+
+            public static readonly float BULLET_SPEED = .25f;//2f;
             public static readonly float BULLET_RADIUS = .5f;
             public static readonly Color BULLET_COLOR = Color.DarkOrange;
             public static readonly float BULLET_POWER_DISTANCE = 1000f;
             public static readonly int MAX_ALLOCATED_BULLETS = 300;
             public static readonly int FIRING_COOLDOWN = 200;
+
             public static readonly int BOT_FIRING_COOLDOWN = 1000;
-            public static readonly float VIBRATION_LOW = 1f;
-            public static readonly float VIBRATION_HIGH = 1f;
+            public static readonly int BOT_RADIUS = 2;
 
             public static readonly float WALL_BUFFER = 5;
 

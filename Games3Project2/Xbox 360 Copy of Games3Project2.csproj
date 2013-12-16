@@ -90,6 +90,7 @@
     <Compile Include="StoltzfusMenu.cs" />
     <Compile Include="StoltzfusPlatform.cs" />
     <Compile Include="Stoltzfus_HUD.cs" />
+    <Compile Include="Turret.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

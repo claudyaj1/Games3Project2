@@ -133,6 +133,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="JuggernautGame.cs" />
     <Compile Include="Stoltzfus_HUD.cs" />
+    <Compile Include="Turret.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

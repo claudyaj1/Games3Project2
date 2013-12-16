@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Media;
 
 using Games3Project2.Globals;
 using Camera3D;
+using AI;
 
 namespace Games3Project2
 {
@@ -182,6 +183,10 @@ namespace Games3Project2
             {
                 bot.update();
             }
+            foreach (Turret turret in Global.turrets)
+            {
+                turret.update();
+            }
             for (int i = 0; i < Global.BulletManager.bullets.Count; ++i)
             {
                 if(Global.BulletManager.bullets[i].state == Bullet.State.Active && checkForCollision(Global.BulletManager.bullets[i]))
@@ -191,26 +196,24 @@ namespace Games3Project2
             }
         }
 
-        public void drawWalls()
+        public void draw()
         {
             foreach (Platform wall in walls)
             {
                 wall.draw();
             }
-        }
-
-        public void drawPlatforms()
-        {
             foreach (Platform platform in platforms)
             {
                 platform.draw();
             }
-
             foreach (BugBot bot in Global.bugBots)
             {
                 bot.draw();
             }
-            
+            foreach (Turret turret in Global.turrets)
+            {
+                turret.draw();
+            }
         }
 
         public void respawnPlayer(LocalPlayer player)
@@ -240,6 +243,8 @@ namespace Games3Project2
             walls.Clear();
             platforms.Clear();
             spawnPoints.Clear();
+            Global.bugBots.Clear();
+            Global.turrets.Clear();
             //exterior walls
             walls.Add(new Platform(new Vector3(Global.Constants.LEVEL_ONE_WIDTH, 0, 0), Global.Constants.LEVEL_ONE_WIDTH, Global.Constants.LEVEL_ONE_HEIGHT * 2, platformWallTexture, Platform.PlatformType.VerticalZ));
             walls[0].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
@@ -275,10 +280,17 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(0, standardSpacing, -Global.Constants.LEVEL_ONE_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
             platforms.Add(new Platform(new Vector3(0, -2 * standardSpacing, -Global.Constants.LEVEL_ONE_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
 
+            //AI
             Global.bugBots.Add(new BugBot(new Vector3(75, 0, -180), .09f, new Vector3(-75, -50, -175), new Vector3(-50, 50, 190), new Vector3(92,90, 95), new Vector3(75, 0, -180)));
             Global.bugBots.Add(new BugBot(new Vector3(-75, 0, -180), .09f, new Vector3(75, -50, -175), new Vector3(50, 50, 190), new Vector3(-92, -120, 95), new Vector3(-75, 0, -180)));
             Global.bugBots.Add(new BugBot(new Vector3(-75, 0, 180), .09f, new Vector3(75, 50, 175), new Vector3(50, -50, -190), new Vector3(-92, 90, -95), new Vector3(75, 0, 180)));
             Global.bugBots.Add(new BugBot(new Vector3(75, 0, 180), .09f, new Vector3(75, 50, -175), new Vector3(50, 50, 190), new Vector3(92, 90, -95), new Vector3(75, 0, -180)));
+
+            Global.turrets.Add(new Turret(new Vector3(95, -95, 195)));
+            Global.turrets.Add(new Turret(new Vector3(95, -95, -195)));
+            Global.turrets.Add(new Turret(new Vector3(-95, -95, 195)));
+            Global.turrets.Add(new Turret(new Vector3(-95, -95, -195)));
+            Global.turrets.Add(new Turret(new Vector3(0, -95, 0)));
 
             //spawn points
             spawnPoints.Add(new Vector3(4, 50, 175));
@@ -296,6 +308,8 @@ namespace Games3Project2
             walls.Clear();
             platforms.Clear();
             spawnPoints.Clear();
+            Global.bugBots.Clear();
+            Global.turrets.Clear();
             //exterior walls
             walls.Add(new Platform(new Vector3(Global.Constants.LEVEL_TWO_WIDTH, 0, 0), Global.Constants.LEVEL_TWO_HEIGHT, Global.Constants.LEVEL_TWO_WIDTH, platformWallTexture, Platform.PlatformType.VerticalZ));
             walls[0].rotation = Matrix.CreateRotationZ((float)Math.PI / 2);
@@ -328,11 +342,17 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(Global.Constants.LEVEL_TWO_WIDTH - mediumPlatformSize, -3 * standardSpacing, 0), mediumPlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
             platforms.Add(new Platform(new Vector3(-Global.Constants.LEVEL_TWO_WIDTH + mediumPlatformSize, -3 * standardSpacing, 0), mediumPlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
 
-
+            //AI
             Global.bugBots.Add(new BugBot(new Vector3(75, 0, -18), .09f, new Vector3(-75, 130, -17), new Vector3(-50, 50, 19), new Vector3(92, 0, 95), new Vector3(75, 130, -18)));
             Global.bugBots.Add(new BugBot(new Vector3(-75, -45, -18), .09f, new Vector3(75, -45, 17), new Vector3(50, -50, 19), new Vector3(-92, 130, 95), new Vector3(-75, 0, -18)));
             Global.bugBots.Add(new BugBot(new Vector3(-75, -100, 18), .09f, new Vector3(75, -150,35), new Vector3(50, 130, -19), new Vector3(-92, 90, -95), new Vector3(75, -45, 18)));
             Global.bugBots.Add(new BugBot(new Vector3(75, -150, 18), .09f, new Vector3(75, 130, -17), new Vector3(50, -45, 19), new Vector3(92, 50, -95), new Vector3(75, -150, -18)));
+
+            Global.turrets.Add(new Turret(new Vector3(95, -160, 95)));
+            Global.turrets.Add(new Turret(new Vector3(-95, -160, 95)));
+            Global.turrets.Add(new Turret(new Vector3(95, -160, -95)));
+            Global.turrets.Add(new Turret(new Vector3(-95, -160, -95)));
+            Global.turrets.Add(new Turret(new Vector3(0, -160, 0)));
 
             spawnPoints.Add(new Vector3(0, -30, -90));
             spawnPoints.Add(new Vector3(0, -30, 90));
@@ -348,6 +368,8 @@ namespace Games3Project2
             walls.Clear();
             platforms.Clear();
             spawnPoints.Clear();
+            Global.bugBots.Clear();
+            Global.turrets.Clear();
 
             //exterior walls
             walls.Add(new Platform(new Vector3(Global.Constants.LEVEL_THREE_WIDTH, 0, 0), Global.Constants.LEVEL_THREE_HEIGHT, Global.Constants.LEVEL_THREE_WIDTH, platformWallTexture, Platform.PlatformType.VerticalZ));
@@ -374,6 +396,13 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(-standardSpacing, -standardSpacing, standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
             platforms.Add(new Platform(new Vector3(-standardSpacing, standardSpacing, -standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
             platforms.Add(new Platform(new Vector3(-standardSpacing, -standardSpacing, -standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
+
+            //AI
+            Global.turrets.Add(new Turret(new Vector3(70, -70, 70)));
+            Global.turrets.Add(new Turret(new Vector3(-70, -70, 70)));
+            Global.turrets.Add(new Turret(new Vector3(70, -70, -70)));
+            Global.turrets.Add(new Turret(new Vector3(-70, -70, -70)));
+            Global.turrets.Add(new Turret(new Vector3(0, -70, 0)));
 
             //spawn points
             spawnPoints.Add(Vector3.Zero);

@@ -20,6 +20,7 @@ using ReticuleCursor;
 using Geometry;
 using Games3Project2.Globals;
 using Networking;
+using AI;
 
 namespace Games3Project2
 {
@@ -194,8 +195,9 @@ namespace Games3Project2
 
                 #region Menu
                 case Global.GameState.Menu:
-                    Global.actionsong.Stop();
-                    Global.menusong.Play();
+                    //commented music
+                    //Global.actionsong.Stop();
+                    //Global.menusong.Play();
                     switch (mainMenu.update())
                     {
                         case 0: //Single Player
@@ -416,8 +418,9 @@ namespace Games3Project2
 
                 #region PlayHeatmap
                 case Global.GameState.playingHeatmap:
-                    Global.menusong.Stop();
-                    Global.actionsong.Play();
+                    //commented music
+                    //Global.menusong.Stop();
+                    //Global.actionsong.Play();
                     
                     debug = true;
                     if (!Global.debugMode)
@@ -447,8 +450,9 @@ namespace Games3Project2
 
                 #region Playing
                 case Global.GameState.Playing:
-                    Global.menusong.Stop();
-                    Global.actionsong.Play();
+                    //commented music
+                    //Global.menusong.Stop();
+                    //Global.actionsong.Play();
                     debug = true;
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
@@ -648,8 +652,7 @@ namespace Games3Project2
                     {
                         Global.CurrentCamera = player.camera;
 
-                        levelManager.drawWalls();
-                        levelManager.drawPlatforms();
+                        levelManager.draw();
                         foreach (LocalPlayer drawPlayer in Global.localPlayers)
                         {
                             drawPlayer.draw();
@@ -704,9 +707,8 @@ namespace Games3Project2
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
                         Global.CurrentCamera = player.camera;
-                        
-                        levelManager.drawWalls();
-                        levelManager.drawPlatforms();
+
+                        levelManager.draw();
                         foreach (LocalPlayer drawPlayer in Global.localPlayers)
                         {
                             drawPlayer.draw();
@@ -764,8 +766,7 @@ namespace Games3Project2
                     {
                         Global.CurrentCamera = player.camera;
 
-                        levelManager.drawWalls();
-                        levelManager.drawPlatforms();
+                        levelManager.draw();
                         foreach (LocalPlayer drawPlayer in Global.localPlayers)
                         {
                             drawPlayer.draw();

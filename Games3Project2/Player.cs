@@ -67,7 +67,7 @@ namespace Games3Project2
             jetFuel = Global.Constants.MAX_JET_FUEL;
 
             sphere = new Sphere(Global.game, Global.Constants.DEFAULT_PLAYER_COLOR, pos);
-            sphere.localScale = Matrix.CreateScale(5);
+            sphere.localScale = Matrix.CreateScale(Global.Constants.PLAYER_RADIUS);
             sphere.SetWireframe(1);
             Texture2D blankTexture = Global.game.Content.Load<Texture2D>(@"Textures\blankTexture");
             cube = new Cube(blankTexture, Color.Black);

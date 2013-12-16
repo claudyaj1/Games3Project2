@@ -8,13 +8,15 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+
+using Games3Project2;
 using Games3Project2.Globals;
 using Camera3D;
 using ReticuleCursor;
 using InputHandler;
 using Geometry;
 
-namespace Games3Project2
+namespace AI
 {
     
     public class BugBot
@@ -96,8 +98,18 @@ namespace Games3Project2
 
         public void ShootBullet(Vector3 dir)
         {
-            Global.BulletManager.fireBullet(position, dir * Global.Constants.BULLET_SPEED, null, Global.Constants.BULLET_DAMAGE);
+            dir = randomizeFiringVector(dir);
+            Global.networkManager.fireBullet(Global.BulletManager.fireBullet(position, dir * Global.Constants.BULLET_SPEED, null, Global.Constants.BULLET_DAMAGE));
         }
 
+        private Vector3 randomizeFiringVector(Vector3 dir)
+        {
+            Vector3 newDir = new Vector3(dir.X, dir.Y, dir.Z);
+            newDir.X += Global.rand.Next(-3, 3) / 10;
+            newDir.Y += Global.rand.Next(-3, 3) / 10;
+            newDir.Z += Global.rand.Next(-3, 3) / 10;
+
+            return newDir;
+        }
     }
 }
