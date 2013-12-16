@@ -69,7 +69,6 @@ namespace Games3Project2.Globals
         //kt22377 is the author from freesound.org
         public static SoundEffectInstance actionsong;
 
-        
         public static class BulletManager
         {
             public static List<Bullet> bullets = new List<Bullet>();
@@ -139,7 +138,8 @@ namespace Games3Project2.Globals
             public static readonly Color BULLET_COLOR = Color.DarkOrange;
             public static readonly float BULLET_POWER_DISTANCE = 1000f;
             public static readonly int MAX_ALLOCATED_BULLETS = 300;
-            public static readonly int FIRING_COOLDOWN = 200;
+            public static readonly float MAX_GUN_HEAT = 100f; //Disables gun firing when reached.
+            public static readonly int FIRING_COOLDOWN = 200; //For the timer.
             public static readonly int BOT_FIRING_COOLDOWN = 1000;
             public static readonly float VIBRATION_LOW = 1f;
             public static readonly float VIBRATION_HIGH = 1f;
@@ -157,7 +157,7 @@ namespace Games3Project2.Globals
             public static readonly string HUD_YOU_JUG = "YOU ARE THE JUGGERNAUT";
             public static readonly string MSG_JOINED = " joined";
             public static readonly string MSG_DISCONNECTED = " disconnected";
-            public static readonly float MAX_GUN_HEAT = 100f;
+            
         }
 
         //Actually, for all the nicer this in game messaging system is, it could use a Queue...

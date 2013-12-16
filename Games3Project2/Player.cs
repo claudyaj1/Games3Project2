@@ -40,7 +40,7 @@ namespace Games3Project2
         int timeSinceLastPacketSent = 0;
         const int PACKET_INTERVAL = 10;
         public float gunHeat = 0f;
-        //TODO: increase gunHeat upon firing.
+        public bool gunCoolDownModeNoShootingPermitted;
 
         public override Vector3 Position
         {
@@ -67,6 +67,7 @@ namespace Games3Project2
             jetpackDisabled = false;
             lastFiringTime = 0;
             jetFuel = Global.Constants.MAX_JET_FUEL;
+            gunCoolDownModeNoShootingPermitted = false;
 
             sphere = new Sphere(Global.game, Global.Constants.DEFAULT_PLAYER_COLOR, pos);
             sphere.localScale = Matrix.CreateScale(5);
@@ -214,12 +215,41 @@ namespace Games3Project2
             }
             velocity.Y += jetPackThrust * Global.gameTime.ElapsedGameTime.Milliseconds;
             velocity.Y -= Global.Constants.GRAVITY * Global.gameTime.ElapsedGameTime.Milliseconds;
-            if (Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Right > 0f && 
-                lastFiringTime > Global.Constants.FIRING_COOLDOWN)
+
+            //Decrement Gun Heat Every Time
+            if (!gunCoolDownModeNoShootingPermitted &&
+                lastFiringTime > Global.Constants.FIRING_COOLDOWN && 
+                gunHeat < Global.Constants.MAX_GUN_HEAT)
             {
-                lastFiringTime = 0;
-                ShootBullet();
+                if (Global.input.GamepadByID[Input.indexAsInt(playerIndex)].Triggers.Right > 0f)
+                {
+                    lastFiringTime = 0;
+                    ShootBullet();
+                    gunHeat += 15f; //Gun Heat Increase per gun fire rate 
+                    //TODO: AT CLAUDY MAKE THIS gunHeat += 10f + gunHeat * .2f so that it grows more
+                    if (gunHeat > Global.Constants.MAX_GUN_HEAT) {
+                        gunHeat = Global.Constants.MAX_GUN_HEAT;    //Prevent weird above max values.
+                        gunCoolDownModeNoShootingPermitted = true;  //Disable gun firing.
+                    }
+                }
             }
+            if (gunCoolDownModeNoShootingPermitted /*gunHeat > 0*/)
+            {
+                gunHeat -= 1.50f; //Steady Gun Heat Dissipation Rate.
+                if (gunHeat <= 5) //If cooldown has finished.
+                {
+                    gunHeat = 0; //Prevent weird negative values.
+                    gunCoolDownModeNoShootingPermitted = false; //Permit gun firing again.
+                }
+            }
+            else if (lastFiringTime > 500 /*ms*/)
+            {
+                gunHeat -= 0.03f + (gunHeat * .04f); //A little bit every update call + a percentage (4%) of overall remaining heat.
+                if (gunHeat < 0)
+                    gunHeat = 0; //Prevent weird negative values.
+            }
+
+            
             #endregion
 
             #region Camera/Geometry/HUD
@@ -289,8 +319,9 @@ namespace Games3Project2
             {
                 sphere.Draw(Global.CurrentCamera);
                 cube.Draw(Global.CurrentCamera, cubeTransformation * 
-                    Matrix.CreateRotationX(MathHelper.ToRadians(camera.pitch)) * Matrix.CreateRotationY(MathHelper.ToRadians(camera.yaw)) 
-                    * Matrix.CreateTranslation(position));
+                    Matrix.CreateRotationX(MathHelper.ToRadians(camera.pitch)) *
+                    Matrix.CreateRotationY(MathHelper.ToRadians(camera.yaw)) *
+                    Matrix.CreateTranslation(position));
             }
         }
 

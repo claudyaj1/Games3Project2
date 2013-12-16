@@ -21,6 +21,7 @@ namespace HUDUtility
         Cursor cursor;
 
         Color healthColor;
+        Color gunHeatColor;
 
         Texture2D fuelTexture;
         Texture2D healthTexture;
@@ -97,6 +98,15 @@ namespace HUDUtility
                 healthColor = Color.Green;
             }
 
+            if (!player.gunCoolDownModeNoShootingPermitted)
+            {
+                gunHeatColor = Color.Tomato;
+            }
+            else
+            {
+                gunHeatColor = Color.OrangeRed;
+            }
+
             float healthFraction = (float)player.health / Global.Constants.MAX_HEALTH;
             int goodHealthLength = (int)(healthFraction * healthBarLength);
             int badHealthLength = healthBarLength - goodHealthLength;
@@ -111,7 +121,7 @@ namespace HUDUtility
             fuelFilledRect = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y + emptyFuelHeight, jetFuelWidth, filledFuelHeight);
             fuelEmptyRect = new Rectangle(jetFuelPosition.X, jetFuelPosition.Y, jetFuelWidth, emptyFuelHeight);
 
-            float overheatFraction = .5f; //(float)player.gunHeat / Global.Constants.MAX_GUN_HEAT;
+            float overheatFraction = (float)player.gunHeat / Global.Constants.MAX_GUN_HEAT;
             int filledOverheatHeight = (int)(overheatFraction * overheatHeight);
             int emptyOverheatHeight = overheatHeight - filledOverheatHeight;
 
@@ -142,7 +152,7 @@ namespace HUDUtility
             Global.spriteBatch.Draw(blankTexture, fuelOutlineBottom, Color.Black);
 
             Global.spriteBatch.DrawString(Global.consolas, "Gun Heat:", overheatTextPosition, Global.HUD_COLOR);
-            Global.spriteBatch.Draw(fuelTexture, overheatFilledRect, Color.OrangeRed);
+            Global.spriteBatch.Draw(fuelTexture, overheatFilledRect, gunHeatColor);
             Global.spriteBatch.Draw(fuelTexture, overheatEmptyRect, Color.Gray);
             Global.spriteBatch.Draw(blankTexture, overheatBottom, Color.Black);
             Global.spriteBatch.Draw(blankTexture, overheatTop, Color.Black);
