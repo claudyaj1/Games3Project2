@@ -38,6 +38,10 @@ namespace Games3Project2
         int splashTimer = 0;
         const int SPLASH_LENGTH = 3000;
 
+        int timeInSinglePlayer = 0;
+        const int SINGLE_PLAYER_LENGTH = 60000;
+        int finalScore = 0;
+
         Menu mainMenu;
         Menu levelMenu;
         Menu createGameMenu;
@@ -195,14 +199,14 @@ namespace Games3Project2
                     switch (mainMenu.update())
                     {
                         case 0: //Single Player
-
+                            Global.networkManager.hostSessionType = NetworkManager.HostSessionType.Host;
+                            Global.gameState = Global.GameState.SetupSinglePlayer;
                             break;
                         case 1: //Create New Game (Networking or Local)
                             Global.networkManager.hostSessionType = NetworkManager.HostSessionType.Host;
                             Global.gameState = Global.GameState.SetupLocalPlayers;
                             break;
                         case 2: //Join Game
-                            //local player joining code
                             Global.gameState = Global.GameState.SetupLocalPlayers;
                             Global.networkManager.hostSessionType = NetworkManager.HostSessionType.Client;
                             break;
@@ -287,6 +291,12 @@ namespace Games3Project2
                     setupLocalPlayers();
                     break;
                 #endregion //SetupLocalPlayers
+
+                #region SetupSinglePlayer
+                case Global.GameState.SetupSinglePlayer:
+                    setupSinglePlayer();
+                    break;
+                #endregion //SetupSinglePlayer
 
                 #region LevelPicking
                 case Global.GameState.LevelPicking:
@@ -468,6 +478,22 @@ namespace Games3Project2
                     break;
                 #endregion //Playing
 
+                #region SinglePlayerPlaying
+                case Global.GameState.SinglePlayerPlaying:
+                    timeInSinglePlayer += gameTime.ElapsedGameTime.Milliseconds;
+                    LocalPlayer singlePlayer = Global.localPlayers[0];
+                    singlePlayer.update();
+                    Global.BulletManager.update();
+                    levelManager.update();
+                    if (timeInSinglePlayer > SINGLE_PLAYER_LENGTH)
+                    {
+                        finalScore = Global.localPlayers[0].score;
+                        Global.networkManager.disposeNetworkSession();
+                        Global.gameState = Global.GameState.SinglePlayerGameOver;
+                    }
+                    break;
+                #endregion //SinglePlayerPlaying
+
                 #region Paused
                 case Global.GameState.Paused:
 
@@ -485,6 +511,15 @@ namespace Games3Project2
                     }
                     break;
                 #endregion //GameOver
+
+                #region SinglePlayerGameOver
+                case Global.GameState.SinglePlayerGameOver:
+                    if (Global.input.isAnyFirstPress(Buttons.A) || Global.input.isAnyFirstPress(Buttons.Start))
+                    {
+                        Global.gameState = Global.GameState.Menu;
+                    }
+                    break;
+                #endregion
 
                 #region NetworkQuit
                 case Global.GameState.NetworkQuit:
@@ -543,6 +578,14 @@ namespace Games3Project2
                     Global.spriteBatch.End();
                     break;
                 #endregion //SetupLocalPlayers
+
+                #region SetupSinglePlayer
+                case Global.GameState.SetupSinglePlayer:
+                    Global.spriteBatch.Begin();
+                    drawLocalPlayerSetup();
+                    Global.spriteBatch.End();
+                    break;
+                #endregion //SetupSinglePlayer
 
                 #region LevelPicking:
                 case Global.GameState.LevelPicking:
@@ -675,8 +718,6 @@ namespace Games3Project2
                         }
                     }
 
-                    
-
                     //SpriteBatch Drawing Section
                     Global.spriteBatch.Begin();
                     
@@ -715,6 +756,68 @@ namespace Games3Project2
                     break;
                 #endregion
 
+                #region SinglePlayerPlaying
+                case Global.GameState.SinglePlayerPlaying:
+                    //3D Drawing Section
+                    resetGraphicsDevice();
+                    foreach (LocalPlayer player in Global.localPlayers)
+                    {
+                        Global.CurrentCamera = player.camera;
+
+                        levelManager.drawWalls();
+                        levelManager.drawPlatforms();
+                        foreach (LocalPlayer drawPlayer in Global.localPlayers)
+                        {
+                            drawPlayer.draw();
+                        }
+                        Global.BulletManager.draw();
+                        foreach (RemotePlayer rPlayer in Global.remotePlayers)
+                        {
+                            rPlayer.draw();
+                        }
+                    }
+
+                    //SpriteBatch Drawing Section
+                    Global.spriteBatch.Begin();
+
+                    if (Global.debugMode)
+                    {
+                        //draw the heatmaps when debug mode is ran.
+                        Global.heatmapKills.draw();
+                        Global.heatmapDeaths.draw();
+                        Global.heatmapUsedJetpack.draw();
+
+                        axisReference.Draw(Matrix.Identity, Global.CurrentCamera.view, Global.CurrentCamera.projection);
+                        Global.spriteBatch.DrawString(consolas, "Press ~ to exit debug mode.",
+                                new Vector2(5f, 35f), Color.PaleGreen);
+                        Global.spriteBatch.DrawString(consolas, "Camera Position and View=\n" +
+                            "X:" + Global.CurrentCamera.cameraPos.X.ToString() +
+                            " Y:" + Global.CurrentCamera.cameraPos.Y.ToString() +
+                            " Z:" + Global.CurrentCamera.cameraPos.Z.ToString(),
+                            new Vector2(5f, 53f), Global.debugColor);
+                        Global.spriteBatch.DrawString(consolas,
+                            "Up:" + Global.CurrentCamera.view.Up.ToString() +
+                            "\nLookAt: " + debug.ToString() +
+                            "\nRight: " + Global.CurrentCamera.view.Right.ToString(),
+                            new Vector2(5f, 95f), Global.debugColor);
+
+                    }
+
+                    foreach (LocalPlayer drawPlayer in Global.localPlayers)
+                    {
+                        Global.spriteBatch.End();
+                        Global.CurrentCamera = drawPlayer.camera;
+                        Global.spriteBatch.Begin();
+                        drawPlayer.drawHUD();
+                    }
+                    float time = SINGLE_PLAYER_LENGTH / 1000 - timeInSinglePlayer / 1000;
+                    Vector2 stringMeasure = consolas.MeasureString(time.ToString());
+                    Global.spriteBatch.DrawString(mainMenu.titleFont, time.ToString(), new Vector2(Global.viewPort.Width / 2 - stringMeasure.X / 2, Global.titleSafe.Top + 10), Color.Orange);
+
+                    Global.spriteBatch.End();
+                    break;
+                #endregion //SinglePlayerPlaying
+
                 #region Paused
                 case Global.GameState.Paused:
                     Global.spriteBatch.Begin();
@@ -729,6 +832,18 @@ namespace Games3Project2
 
                     Global.spriteBatch.Draw(mainMenu.background, Global.viewPort, Color.White);
                     Global.spriteBatch.DrawString(consolas, "Player " + Global.winningPlayer + " Won!", new Vector2(20, Global.viewPort.Height / 2), Color.Black);
+                    Global.spriteBatch.DrawString(consolas, "Press A To Continue", new Vector2(20, Global.viewPort.Height / 2 + 50), Color.Black);
+
+                    Global.spriteBatch.End();
+                    break;
+                #endregion
+
+                #region SinglePlayerGameOver
+                case Global.GameState.SinglePlayerGameOver:
+                    Global.spriteBatch.Begin();
+
+                    Global.spriteBatch.Draw(mainMenu.background, Global.viewPort, Color.White);
+                    Global.spriteBatch.DrawString(consolas, "Your Score: " + finalScore.ToString(), new Vector2(20, Global.viewPort.Height / 2), Color.Black);
                     Global.spriteBatch.DrawString(consolas, "Press A To Continue", new Vector2(20, Global.viewPort.Height / 2 + 50), Color.Black);
 
                     Global.spriteBatch.End();
@@ -776,7 +891,7 @@ namespace Games3Project2
                 Guide.ShowSignIn(1, true);
 #endif
             }
-            else if (Global.input.isAnyFirstPress(Buttons.Start))
+            else if (SignedInGamer.SignedInGamers.Count > 0 && Global.input.isAnyFirstPress(Buttons.Start))
             {
                 Global.numLocalGamers = (byte)SignedInGamer.SignedInGamers.Count;
                 if (Global.networkManager.hostSessionType == NetworkManager.HostSessionType.Host)
@@ -786,6 +901,33 @@ namespace Games3Project2
                 else
                 {
                     Global.gameState = Global.GameState.JoinMenu;
+                }
+            }
+            else if (Global.input.isFirstPress(Buttons.B))
+            {
+                Global.gameState = Global.GameState.Menu;
+            }
+        }
+
+        private void setupSinglePlayer()
+        {
+            if (Global.input.isAnyFirstPress(Buttons.A) && !Guide.IsVisible)
+            {
+                Guide.ShowSignIn(1, true);
+            }
+            else if (SignedInGamer.SignedInGamers.Count > 0 && Global.input.isAnyFirstPress(Buttons.Start))
+            {
+                Global.numLocalGamers = (byte)SignedInGamer.SignedInGamers.Count;
+                Global.networkManager.sessionType = NetworkSessionType.Local;
+                if (Global.networkManager.createSession())
+                {
+                    timeInSinglePlayer = 0;
+                    Global.levelManager.currentLevel = 3;
+                    Global.levelManager.setupLevel();
+                    LocalNetworkGamer gamer = Global.networkManager.networkSession.LocalGamers[0];
+                    gamer.Tag = new LocalPlayer(Vector3.Zero, PlayerIndex.One, 1, gamer);
+                    Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                    Global.gameState = Global.GameState.SinglePlayerPlaying;
                 }
             }
             else if (Global.input.isFirstPress(Buttons.B))

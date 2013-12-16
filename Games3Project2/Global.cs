@@ -26,24 +26,17 @@ namespace Games3Project2.Globals
         public static SpriteBatch spriteBatch;
         public static GameTime gameTime;
         public static Game game;
-        public enum GameState { Intro, Menu, CreateMenu, JoinMenu, SetupLocalPlayers, LevelPicking, 
-            Lobby, Playing, Paused, NetworkQuit,
-            GameOver, ChooseHeatmap, playingHeatmap, SetupLocalPlayersHeatmap}; 
+        public enum GameState { Intro, Menu, CreateMenu, JoinMenu, SetupLocalPlayers, SetupSinglePlayer, LevelPicking, 
+            Lobby, Playing, SinglePlayerPlaying, Paused, NetworkQuit,
+            GameOver, SinglePlayerGameOver, ChooseHeatmap, playingHeatmap, SetupLocalPlayersHeatmap}; 
         public static GameState gameState = GameState.Intro;
         /// <summary>
         /// Describes the total number of gamers in the network session.
         /// </summary>
         public static byte numTotalGamers = 0;
         public static byte numLocalGamers = 0;
-        public static bool debugMode 
-        #region Debug Mode
-        #if DEBUG
-         = true;
-        #else
-         = false;
-        #endif
+        public static bool debugMode = false;
         public static readonly Color debugColor = Color.Black;
-        #endregion
         public static readonly Color HUD_COLOR = Color.Orange;
         public static string winningPlayer = "";
         public static SpriteFont consolas;  //To be assigned in LoadContent()
