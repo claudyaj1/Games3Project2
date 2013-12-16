@@ -184,8 +184,11 @@ namespace Games3Project2.Globals
 
             public static bool didCollide(Collidable a, Collidable b)
             {
-                Vector3 difference = a.Position - b.Position;
-                if (difference.LengthSquared() < (a.Radius * a.Radius) + (b.Radius * b.Radius))
+                Vector3 A = a.Position - b.Position;
+                Vector3 B = a.Velocity - b.Velocity;
+                Vector3 DSquared = A * A - (A * B) / (B * B);
+
+                if (DSquared.Length() < Math.Pow(a.Radius, 2) + Math.Pow(b.Radius, 2))
                 {
                     return true;
                 }
@@ -193,6 +196,16 @@ namespace Games3Project2.Globals
                 {
                     return false;
                 }
+
+                //Vector3 difference = a.Position - b.Position;
+                //if (difference.LengthSquared() < (a.Radius * a.Radius) + (b.Radius * b.Radius))
+                //{
+                //    return true;
+                //}
+                //else
+                //{
+                //    return false;
+                //}
             }
         }
     }
