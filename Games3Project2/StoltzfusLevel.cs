@@ -398,6 +398,9 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(-standardSpacing, -standardSpacing, -standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
 
             //AI
+            Global.bugBots.Add(new BugBot(new Vector3(-50, 60, 0), .09f, new Vector3(0, 60, 50), new Vector3(0, -60, 50), new Vector3(50, -60, 0), new Vector3(50, 60, 0)));
+            Global.bugBots.Add(new BugBot(new Vector3(50, 60, 0), .09f, new Vector3(0, 60, -50), new Vector3(0, -60, -50), new Vector3(0, -60, 50), new Vector3(0, 60, 50)));
+
             Global.turrets.Add(new Turret(new Vector3(70, -70, 70)));
             Global.turrets.Add(new Turret(new Vector3(-70, -70, 70)));
             Global.turrets.Add(new Turret(new Vector3(70, -70, -70)));
