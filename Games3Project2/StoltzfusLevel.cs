@@ -296,7 +296,7 @@ namespace Games3Project2
             spawnPoints.Add(new Vector3(4, 50, 175));
             spawnPoints.Add(new Vector3(5, 50, -175));
             spawnPoints.Add(new Vector3(5, -70, 180));
-            spawnPoints.Add(new Vector3(5, -170, -180));
+            spawnPoints.Add(new Vector3(5, -70, -180));
             spawnPoints.Add(new Vector3(0, 10, 0));
 
             spawnAllPlayers();
@@ -406,9 +406,9 @@ namespace Games3Project2
 
             //spawn points
             spawnPoints.Add(Vector3.Zero);
-            spawnPoints.Add(new Vector3(40, 45, 40));
-            spawnPoints.Add(new Vector3(-40, 45, -40));
-            spawnPoints.Add(new Vector3(40, -45, 40));
+            spawnPoints.Add(new Vector3(40, 50, 40));
+            spawnPoints.Add(new Vector3(-40, 50, -40));
+            spawnPoints.Add(new Vector3(40, -40, 40));
             spawnPoints.Add(new Vector3(-40, -40, -40));
         }
 
