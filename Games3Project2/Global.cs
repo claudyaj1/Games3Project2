@@ -131,10 +131,10 @@ namespace Games3Project2.Globals
             public static readonly float VIBRATION_LOW = 1f;
             public static readonly float VIBRATION_HIGH = 1f;
 
-            public static readonly float BULLET_SPEED = .25f;//2f;
+            public static readonly float BULLET_SPEED = 2f;
             public static readonly float BULLET_RADIUS = .5f;
             public static readonly Color BULLET_COLOR = Color.DarkOrange;
-            public static readonly float BULLET_POWER_DISTANCE = 1000f;
+            public static readonly float BULLET_POWER_DISTANCE = 100f;
             public static readonly int MAX_ALLOCATED_BULLETS = 300;
             public static readonly float MAX_GUN_HEAT = 100f; //Disables gun firing when reached.
             public static readonly int FIRING_COOLDOWN = 200; //For the timer.
@@ -186,9 +186,9 @@ namespace Games3Project2.Globals
             {
                 Vector3 A = a.Position - b.Position;
                 Vector3 B = a.Velocity - b.Velocity;
-                Vector3 DSquared = A * A - (A * B) / (B * B);
+                float DSquared = Vector3.Dot(A, A) - (Vector3.Dot(A,B) / Vector3.Dot(B, B));
 
-                if (DSquared.Length() < Math.Pow(a.Radius, 2) + Math.Pow(b.Radius, 2))
+                if (DSquared < Math.Pow(a.Radius + b.Radius, 2))
                 {
                     return true;
                 }
