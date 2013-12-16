@@ -225,7 +225,7 @@ namespace Games3Project2
                 {
                     lastFiringTime = 0;
                     ShootBullet();
-                    gunHeat += 15f; //Gun Heat Increase per gun fire rate 
+                    gunHeat += 10f + gunHeat * 0.20f; //Gun Heat Increase per gun fire rate 
                     //TODO: AT CLAUDY MAKE THIS gunHeat += 10f + gunHeat * .2f so that it grows more
                     if (gunHeat > Global.Constants.MAX_GUN_HEAT) {
                         gunHeat = Global.Constants.MAX_GUN_HEAT;    //Prevent weird above max values.
@@ -242,9 +242,9 @@ namespace Games3Project2
                     gunCoolDownModeNoShootingPermitted = false; //Permit gun firing again.
                 }
             }
-            else if (lastFiringTime > 500 /*ms*/)
+            else if (lastFiringTime > 400 /*ms*/)
             {
-                gunHeat -= 0.03f + (gunHeat * .04f); //A little bit every update call + a percentage (4%) of overall remaining heat.
+                gunHeat -= 0.03f + (gunHeat * .05f); //A little bit every update call + a percentage (4%) of overall remaining heat.
                 if (gunHeat < 0)
                     gunHeat = 0; //Prevent weird negative values.
             }
