@@ -64,9 +64,9 @@ namespace AI
         private Vector3 randomizeFiringVector(Vector3 dir)
         {
             Vector3 newDir = new Vector3(dir.X, dir.Y, dir.Z);
-            newDir.X += Global.rand.Next(-3, 3) / 10;
-            newDir.Y += Global.rand.Next(-3, 3) / 10;
-            newDir.Z += Global.rand.Next(-3, 3) / 10;
+            newDir.X += Global.rand.Next(-500, 500) / 1000;
+            newDir.Y += Global.rand.Next(-500, 500) / 1000;
+            newDir.Z += Global.rand.Next(-500, 500) / 1000;
 
             return newDir;
         }
