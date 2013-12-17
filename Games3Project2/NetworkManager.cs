@@ -204,7 +204,17 @@ namespace Networking
 
         void GameStartedEventHandler(object sender, GameStartedEventArgs e)
         {
-            Global.levelManager.setupLevel();
+            if (hostSessionType == HostSessionType.Host)
+            {
+                int firstJugIndex = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
+                NetworkGamer firstJug = networkSession.AllGamers[firstJugIndex];
+                newJuggernaut(firstJug);
+                if (firstJug.IsLocal)
+                {
+                    LocalPlayer player = firstJug.Tag as LocalPlayer;
+                    player.setAsJuggernaut();
+                }
+            }
             Global.gameState = Global.GameState.Playing;
         }
 
@@ -242,7 +252,7 @@ namespace Networking
         {
             foreach (LocalNetworkGamer lnGamer in networkSession.LocalGamers)
             {
-                if (writer.Length > 0)
+                while (writer.Length > 0)
                 {
                     lnGamer.SendData(writer, dataOptions);
                 }
@@ -336,7 +346,7 @@ namespace Networking
         public void announceLevel(int levelNumber)
         {
             writer.Write((byte)MessageType.Level);
-            writer.Write(levelNumber);
+            writer.Write((int)levelNumber);
         }
 
         private void readLevel()
