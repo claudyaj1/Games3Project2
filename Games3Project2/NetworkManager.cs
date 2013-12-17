@@ -302,6 +302,9 @@ namespace Networking
                         case MessageType.BotUpdate:
                             readBotUpdate();
                             break;
+                        case MessageType.AnnounceWinner:
+                            readAnnounceWinner();
+                            break;
                         default: 
                             break;
                     }
