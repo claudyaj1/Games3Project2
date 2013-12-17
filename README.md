@@ -12,15 +12,15 @@ Cole Stoltzfus
 Requirements we must meet:
 =============
 ```
-- [x] The game must be a shooter, racing, or platformer.
-- [x] The game shall only use primative 3D geometry
-- [X] There must be two levels
-- [x] Game shall support Windows and Xbox 360 platforms.
-- [ ] Game must have cheat codes labeled in the code.(e.g. infinte lives, infinite bullets)
+- [X] The game must be a shooter, racing, or platformer.
+- [X] The game shall only use primitive 3D geometry.
+- [X] There must be three levels.
+- [X] Game shall support Windows and Xbox 360 platforms.
+- [X] Game must have cheat codes labelled in the code.(e.g. infinite lives, infinite bullets)
 - [ ] The two levels shall be thematically connected so game flow is preserved.
-- [X] Game must have a defined color pallete and theme.
+- [X] Game must have a defined color pallet and theme.
 - [X] Game shall be immersive world.
-- [x] Game shall have 3D Graphics.
+- [X] Game shall have 3D Graphics.
 - [X] Background music shall be appropriate to the game.
 - [X] Sound Fx shall be appropriate to the game.
 - [X] Game shall use Xbox 360 controller.
@@ -29,27 +29,27 @@ Requirements we must meet:
 ```
 ```
 - [X] Game must have good performance for multiplayer local play
-- [ ] Game must have good performance for multiplayer system-link network play.
+- [X] Game must have good performance for multiplayer system-link network play.
 ```
 ```
 - [ ] Game shall be compelling and exhibit flow.
 - [X] Game shall be fun and enjoyable.
 - [X] Game shall be well-tuned.
 - [X] Game shall generate a heat map.
+- [ ] A class of NPC must have a learning component
 ```
 ```
 - [X] All members shall participate in coding, sound FX, and graphics development.
 - [ ] All members shall submit a peer evaluation.
+- [ ] The group must create a video recording to upload to tumblr
 ```
 ```
-Team shall submit a description of the tradeoffs considered during the game design such as:
-- [ ] How state was divided among machines? (networked machines, I beleive)
-- [ ] How various algorithms where implemented and why?
-- [ ] How was collision detection handled?
-- [ ] Describe the information architecture of the game and bandwidth calculation.
-- [ ] Does the game support in-game voice chat? Does voice chat contribute to networked gameplay?
+Team shall submit a description of:
+- [ ] The network messaging system with calculations of bandwidth use.
+- [ ] Description of network smoothing implementation.
+- [ ] Description of AI NPC, which high-level algorithms of the learning methods.
 ```
-^^ This report shall be 20% of the grade ^^ 
+^^ This report shall be part of the grade ^^ 
 
 Requirements we have created for our game:
 =============
