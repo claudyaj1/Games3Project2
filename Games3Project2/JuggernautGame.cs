@@ -461,6 +461,7 @@ namespace Games3Project2
                             Global.graphics.GraphicsDevice.Viewport = new Viewport(0, 0, Global.viewPort.Width, Global.viewPort.Height);
                             Global.networkManager.announceWinner(player.gamer);
                             Global.networkManager.disposeNetworkSession();
+                            break;
                         }
                     }
 
