@@ -26,6 +26,7 @@ namespace HUDUtility
         Texture2D fuelTexture;
         Texture2D healthTexture;
         Texture2D blankTexture;
+        Texture2D HUD_Backing;
 
         int healthBarLength = 400;
         int healthBarHeight = 40;
@@ -85,6 +86,8 @@ namespace HUDUtility
             fuelTexture = Global.game.Content.Load<Texture2D>(@"Textures\fuelTexture");
             healthTexture = Global.game.Content.Load<Texture2D>(@"Textures\healthTexture");
             blankTexture = Global.game.Content.Load<Texture2D>(@"Textures\blankTexture");
+            HUD_Backing = Global.game.Content.Load<Texture2D>(@"Textures\HUD_Backing");
+
         }
 
         public void Update()
@@ -139,6 +142,8 @@ namespace HUDUtility
 
         public void Draw() // The hud on the screen.
         {
+            Global.spriteBatch.Draw(HUD_Backing, player.camera.viewport.Bounds, Color.White);
+
             Global.spriteBatch.DrawString(Global.consolas, "Health:", healthTextPostion, Global.HUD_COLOR);
             Global.spriteBatch.Draw(healthTexture, goodRect, healthColor);
             Global.spriteBatch.Draw(healthTexture, badRect, Color.Red);
