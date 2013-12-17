@@ -89,6 +89,26 @@ namespace Networking
                         break;
                     readIncomingPackets();
                     writeOutgoingPackets();
+                    if (Global.input.isAnyFirstPress(Buttons.Y))
+                    {
+                        if (networkSession.SimulatedLatency == TimeSpan.FromMilliseconds(0))
+                        {
+                            networkSession.SimulatedLatency = TimeSpan.FromMilliseconds(200);
+                        }
+                        else
+                        {
+                            networkSession.SimulatedLatency = TimeSpan.FromMilliseconds(0);
+                        }
+
+                        if (networkSession.SimulatedPacketLoss == 0)
+                        {
+                            networkSession.SimulatedPacketLoss = .2f;
+                        }
+                        else
+                        {
+                            networkSession.SimulatedPacketLoss = 0;
+                        }
+                    }
                     break;
                 case CurrentState.JoinFailed:
                 case CurrentState.CreateFailed:
