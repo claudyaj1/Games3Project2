@@ -128,7 +128,7 @@ namespace Games3Project2.Globals
             public static readonly int JUG_BULLET_DAMAGE = 30;
             public static readonly float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
 
-            public static readonly float VIBRATION_LOW = 1f;
+            public static readonly float VIBRATION_LOW = .75f;
             public static readonly float VIBRATION_HIGH = 1f;
 
             public static readonly float BULLET_SPEED = 2f;
@@ -188,11 +188,21 @@ namespace Games3Project2.Globals
             {
                 Vector3 A = a.Position - b.Position;
                 Vector3 B = a.Velocity - b.Velocity;
-                float DSquared = Vector3.Dot(A, A) - (Vector3.Dot(A,B) / Vector3.Dot(B, B));
+                float BSquared = Vector3.Dot(B, B);
 
-                if (DSquared < Math.Pow(a.Radius + b.Radius, 2))
+                if (BSquared != 0)
                 {
-                    return true;
+                    float DSquared = Vector3.Dot(A, A) - ((float)Math.Pow((Vector3.Dot(A, B)), 2) / BSquared);
+
+                    if (DSquared < Math.Pow(a.Radius + b.Radius, 2))
+                    //if(DSquared < a.Radius * a.Radius + b.Radius * b.Radius)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {

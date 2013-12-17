@@ -218,8 +218,8 @@ namespace Games3Project2
 
         public void respawnPlayer(LocalPlayer player)
         {
-            int spawnIndex = Global.rand.Next(0, spawnPoints.Count);
-            player.respawn(spawnPoints[spawnIndex]);
+            int index = Global.rand.Next(0, spawnPoints.Count * 100) / 100; //better distribution C# Random sucks
+            player.respawn(spawnPoints[index]);
         }
 
         public void setupLevel()
@@ -296,7 +296,7 @@ namespace Games3Project2
             spawnPoints.Add(new Vector3(4, 50, 175));
             spawnPoints.Add(new Vector3(5, 50, -175));
             spawnPoints.Add(new Vector3(5, -70, 180));
-            spawnPoints.Add(new Vector3(5, -170, -180));
+            spawnPoints.Add(new Vector3(5, -70, -180));
             spawnPoints.Add(new Vector3(0, 10, 0));
 
             spawnAllPlayers();
@@ -398,6 +398,9 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(-standardSpacing, -standardSpacing, -standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
 
             //AI
+            Global.bugBots.Add(new BugBot(new Vector3(-50, 60, 0), .09f, new Vector3(0, 60, 50), new Vector3(0, -60, 50), new Vector3(50, -60, 0), new Vector3(50, 60, 0)));
+            Global.bugBots.Add(new BugBot(new Vector3(50, 60, 0), .09f, new Vector3(0, 60, -50), new Vector3(0, -60, -50), new Vector3(0, -60, 50), new Vector3(0, 60, 50)));
+
             Global.turrets.Add(new Turret(new Vector3(70, -70, 70)));
             Global.turrets.Add(new Turret(new Vector3(-70, -70, 70)));
             Global.turrets.Add(new Turret(new Vector3(70, -70, -70)));
@@ -406,10 +409,10 @@ namespace Games3Project2
 
             //spawn points
             spawnPoints.Add(Vector3.Zero);
-            spawnPoints.Add(new Vector3(40, 45, 40));
-            spawnPoints.Add(new Vector3(-40, 45, -40));
-            spawnPoints.Add(new Vector3(40, -45, 40));
-            spawnPoints.Add(new Vector3(-40, -40, -40));
+            spawnPoints.Add(new Vector3(40, 50, 40));
+            spawnPoints.Add(new Vector3(-40, 50, -40));
+            spawnPoints.Add(new Vector3(40, -30, 40));
+            spawnPoints.Add(new Vector3(-40, -30, -40));
         }
 
         public void spawnAllPlayers()
@@ -417,7 +420,7 @@ namespace Games3Project2
             List<Vector3> takenSpawns = new List<Vector3>();
             for (int i = 0; i < Global.localPlayers.Count; ++i)
             {
-                int index = Global.rand.Next(0, spawnPoints.Count);
+                int index = Global.rand.Next(0, spawnPoints.Count * 100) / 100; //better distribution C# Random sucks
                 while(takenSpawns.Contains(spawnPoints[index]))
                     index = Global.rand.Next(0, spawnPoints.Count);
                 Global.localPlayers[i].respawn(spawnPoints[index]);

@@ -42,6 +42,10 @@ namespace Games3Project2
         public float gunHeat = 0f;
         public bool gunCoolDownModeNoShootingPermitted;
 
+        bool isVibrating;
+        int vibratingCountdown;
+        const int VIBRATE_MAX = 250;
+
         public override Vector3 Position
         {
             get
@@ -225,7 +229,7 @@ namespace Games3Project2
                 {
                     lastFiringTime = 0;
                     ShootBullet();
-                    gunHeat += 10f + gunHeat * 0.20f; //Gun Heat Increase per gun fire rate 
+                    gunHeat += 7f + gunHeat * 0.20f; //Gun Heat Increase per gun fire rate 
                     //TODO: AT CLAUDY MAKE THIS gunHeat += 10f + gunHeat * .2f so that it grows more
                     if (gunHeat > Global.Constants.MAX_GUN_HEAT) {
                         gunHeat = Global.Constants.MAX_GUN_HEAT;    //Prevent weird above max values.
@@ -235,7 +239,7 @@ namespace Games3Project2
             }
             if (gunCoolDownModeNoShootingPermitted /*gunHeat > 0*/)
             {
-                gunHeat -= 1.50f; //Steady Gun Heat Dissipation Rate.
+                gunHeat -= .50f; //Steady Gun Heat Dissipation Rate.
                 if (gunHeat <= 5) //If cooldown has finished.
                 {
                     gunHeat = 0; //Prevent weird negative values.
@@ -277,7 +281,7 @@ namespace Games3Project2
 
             for (int i = 0; i < Global.BulletManager.bullets.Count; ++i)
             {
-                if (Global.BulletManager.bullets[i].shooter != gamer && Global.Collision.didCollide(Global.BulletManager.bullets[i], this))
+                if (Global.BulletManager.bullets[i].shooter != gamer && Global.BulletManager.bullets[i].state == Bullet.State.Active && Global.Collision.didCollide(Global.BulletManager.bullets[i], this))
                 {
                     if (Global.BulletManager.bullets[i].timeLived < Global.Constants.BULLET_POWER_DISTANCE)
                     {
@@ -287,18 +291,21 @@ namespace Games3Project2
                     {
                         health -= Global.BulletManager.bullets[i].damage*2;
                     }
+
                     if (health < 0)
                     {
-                        //GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, Global.Constants.VIBRATION_LOW, 0f);
+                        startVibrating();
                         killed(Global.BulletManager.bullets[i].shooter);
                     }
                     else
                     {
-                        //GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, Global.Constants.VIBRATION_HIGH);
+                        startVibrating();
                     }
                     Global.BulletManager.bullets[i].disable();
                 }
             }
+
+            manageVibrations();
 
             #endregion
             #region Networking
@@ -325,6 +332,26 @@ namespace Games3Project2
             }
         }
 
+        private void startVibrating()
+        {
+            isVibrating = true;
+            vibratingCountdown = VIBRATE_MAX;
+        }
+
+        private void manageVibrations()
+        {
+            if (isVibrating)
+            {
+                vibratingCountdown -= Global.gameTime.ElapsedGameTime.Milliseconds;
+                GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, Global.Constants.VIBRATION_LOW);
+                if (vibratingCountdown < 0)
+                {
+                    isVibrating = false;
+                    GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, 0);
+                    vibratingCountdown = 0;
+                }
+            }
+        }
 
         public void setAsJuggernaut()
         {

@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 using Games3Project2;
 using Games3Project2.Globals;
+using AI;
 
 namespace Networking
 {
@@ -31,7 +32,7 @@ namespace Networking
         /// Progress is a message to announce to the other player how much progress has been made
         /// Winning message is sent to announce that the other player has won and to end the play state.
         /// </summary>
-        public enum MessageType { Level, FireBullet, PlayerUpdate, NewJuggernaut, JuggernautKill, AnnounceWinner };
+        public enum MessageType { Level, FireBullet, PlayerUpdate, NewJuggernaut, JuggernautKill, AnnounceWinner, BotUpdate };
         string lastErrorMessage;
 
         public enum CurrentState { Idle, Joining, Creating, Running, JoinFailed, CreateFailed }
@@ -203,7 +204,22 @@ namespace Networking
 
         void GameStartedEventHandler(object sender, GameStartedEventArgs e)
         {
-            Global.levelManager.setupLevel();
+            if (hostSessionType == HostSessionType.Host)
+            {
+                int firstJugIndex = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
+                NetworkGamer firstJug = networkSession.AllGamers[firstJugIndex];
+                newJuggernaut(firstJug);
+                if (firstJug.IsLocal)
+                {
+                    LocalPlayer player = firstJug.Tag as LocalPlayer;
+                    player.setAsJuggernaut();
+                }
+                else
+                {
+                    RemotePlayer player = firstJug.Tag as RemotePlayer;
+                    player.setAsJuggernaut();
+                }
+            }
             Global.gameState = Global.GameState.Playing;
         }
 
@@ -241,7 +257,7 @@ namespace Networking
         {
             foreach (LocalNetworkGamer lnGamer in networkSession.LocalGamers)
             {
-                if (writer.Length > 0)
+                while (writer.Length > 0)
                 {
                     lnGamer.SendData(writer, dataOptions);
                 }
@@ -279,6 +295,9 @@ namespace Networking
                             break;
                         case MessageType.JuggernautKill:
                             readJuggernautKill();
+                            break;
+                        case MessageType.BotUpdate:
+                            readBotUpdate();
                             break;
                         default: 
                             break;
@@ -332,7 +351,7 @@ namespace Networking
         public void announceLevel(int levelNumber)
         {
             writer.Write((byte)MessageType.Level);
-            writer.Write(levelNumber);
+            writer.Write((int)levelNumber);
         }
 
         private void readLevel()
@@ -440,6 +459,20 @@ namespace Networking
             Global.winningPlayer = reader.ReadString();
             Global.gameState = Global.GameState.GameOver;
             disposeNetworkSession();
+        }
+
+        public void botUpdate(BugBot bot)
+        {
+            //Write bot ID
+            //Write index of vector update
+            //Write vector update
+        }
+
+        private void readBotUpdate()
+        {
+            //Read bot ID
+            //Read index of vector update
+            //Read vector update
         }
     }
 }

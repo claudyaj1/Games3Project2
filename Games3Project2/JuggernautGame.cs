@@ -160,12 +160,6 @@ namespace Games3Project2
             Global.gameTime = gameTime;
             Global.input.Update();
             Global.networkManager.update();
-            // Allows the game to exit
-            if (Global.input.DetectBackPressedByAnyPlayer())
-            {
-                // TODO: Depending on the game state...behavior of back button will differ.
-                this.Exit();
-            }
             if (Global.input.isFirstPress(Keys.OemTilde) ||
                 Global.input.isFirstPress(Buttons.DPadDown, PlayerIndex.One) ||
                 Global.input.isFirstPress(Buttons.DPadDown, PlayerIndex.Two) ||
@@ -198,6 +192,13 @@ namespace Games3Project2
                     //commented music
                     //Global.actionsong.Stop();
                     //Global.menusong.Play();
+
+                    // Allows the game to exit
+                    if (Global.input.DetectBackPressedByAnyPlayer())
+                    {
+                        // TODO: Depending on the game state...behavior of back button will differ.
+                        this.Exit();
+                    }
                     switch (mainMenu.update())
                     {
                         case 0: //Single Player
@@ -362,16 +363,9 @@ namespace Games3Project2
                             //Global.networkManager.networkSession.AllGamers.Count > 1 && 
                             (Global.input.isFirstPress(Buttons.A) || Global.input.isFirstPress(Buttons.Start)))
                         {
-                            int firstJugIndex = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
-                            NetworkGamer firstJug = Global.networkManager.networkSession.AllGamers[firstJugIndex];
-                            Global.networkManager.newJuggernaut(firstJug);
-                            if (firstJug.IsLocal)
-                            {
-                                LocalPlayer player = firstJug.Tag as LocalPlayer;
-                                player.isJuggernaut = true;
-                            }
-                            Global.gameState = Global.GameState.Playing;
+                            Global.networkManager.announceLevel(Global.levelManager.currentLevel);
                             Global.networkManager.networkSession.StartGame();
+                            Global.levelManager.setupLevel();
                         }
                     }
                     break;
@@ -453,7 +447,6 @@ namespace Games3Project2
                     //commented music
                     //Global.menusong.Stop();
                     //Global.actionsong.Play();
-                    debug = true;
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
                         player.update();
@@ -479,6 +472,15 @@ namespace Games3Project2
                     Global.BulletManager.update();
 
                     levelManager.update();
+
+                    // Allows the game to exit
+                    if (Global.input.DetectBackPressedByAnyPlayer())
+                    {
+                        Global.actionsong.Stop();
+                        Global.jetpack.Stop();
+                        Global.networkManager.disposeNetworkSession();
+                        Global.gameState = Global.GameState.Menu;
+                    }
                     break;
                 #endregion //Playing
 
@@ -494,6 +496,15 @@ namespace Games3Project2
                         finalScore = Global.localPlayers[0].score;
                         Global.networkManager.disposeNetworkSession();
                         Global.gameState = Global.GameState.SinglePlayerGameOver;
+                    }
+
+                    // Allows the game to exit
+                    if (Global.input.DetectBackPressedByAnyPlayer())
+                    {
+                        Global.actionsong.Stop();
+                        Global.jetpack.Stop();
+                        Global.networkManager.disposeNetworkSession();
+                        Global.gameState = Global.GameState.Menu;
                     }
                     break;
                 #endregion //SinglePlayerPlaying
