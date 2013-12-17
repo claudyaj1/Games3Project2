@@ -356,7 +356,7 @@ namespace Games3Project2
                             Global.networkManager.disposeNetworkSession();
                         }
                         else if(Global.networkManager.hostSessionType == NetworkManager.HostSessionType.Host &&
-                            //Global.networkManager.networkSession.AllGamers.Count > 1 && 
+                            Global.networkManager.networkSession.AllGamers.Count > 1 && 
                             (Global.input.isFirstPress(Buttons.A) || Global.input.isFirstPress(Buttons.Start)))
                         {
                             Global.networkManager.announceLevel(Global.levelManager.currentLevel);
