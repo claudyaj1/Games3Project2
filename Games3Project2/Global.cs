@@ -123,9 +123,9 @@ namespace Games3Project2.Globals
             public static readonly float PLAYER_RADIUS = 5f;
             public static readonly int MAX_SCORE = 10;
             public static readonly int MAX_HEALTH = 100;
-            public static readonly int BULLET_DAMAGE = 10;
+            public static readonly int BULLET_DAMAGE = 5;
             public static readonly int MAX_JUG_HEALTH = 300;
-            public static readonly int JUG_BULLET_DAMAGE = 30;
+            public static readonly int JUG_BULLET_DAMAGE = 15;
             public static readonly float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
 
             public static readonly float VIBRATION_LOW = .75f;
@@ -137,7 +137,7 @@ namespace Games3Project2.Globals
             public static readonly float BULLET_POWER_DISTANCE = 100f;
             public static readonly int MAX_ALLOCATED_BULLETS = 300;
             public static readonly float MAX_GUN_HEAT = 100f; //Disables gun firing when reached.
-            public static readonly int FIRING_COOLDOWN = 200; //For the timer.
+            public static readonly int FIRING_COOLDOWN = 100; //For the timer. Lower numbers means more firing.
 
             public static readonly int BOT_FIRING_COOLDOWN = 1000;
             public static readonly int BOT_RADIUS = 2;
