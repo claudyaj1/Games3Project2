@@ -29,13 +29,13 @@ namespace AI
         public int pointCount = 0;
         public int lastFiringTime;
         public const int ATTACK_RADIUS = 100;
-        public readonly int npcID;
+        public int npcID;
         private int health;
         public int spawnerTimer;
 
         Sphere body;
 
-        public BugBot(Vector3 position, float speed, Vector3 point1, Vector3 point2, Vector3 point3, Vector3 point4)
+        public BugBot(Vector3 position, int id, float speed, Vector3 point1, Vector3 point2, Vector3 point3, Vector3 point4)
             : base(Global.game, position, Vector3.Zero, Global.Constants.PLAYER_RADIUS/2)
         {
             this.position = position;
@@ -50,7 +50,7 @@ namespace AI
             points[3] = point4;
             Alive = true;
             lastFiringTime = 0;
-            npcID = -(new Random().Next(100));
+            npcID = id;
             spawnerTimer = 600;
             health = Global.Constants.MAX_HEALTH;
 
@@ -184,6 +184,7 @@ namespace AI
             Vector3 ptDir = target - points[ptIndex];
             ptDir.Normalize();
             points[ptIndex] += Global.Constants.ptSpeed * ptDir;
+            Global.networkManager.botUpdate(this, ptIndex, target);
         }
 
         public Vector3[] getBotTrajectoryPoints()

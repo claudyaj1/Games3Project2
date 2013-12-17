@@ -478,18 +478,39 @@ namespace Networking
             Global.gameState = Global.GameState.GameOver;
         }
 
-        public void botUpdate(BugBot bot)
+        public void botUpdate(BugBot bot, int index, Vector3 newDirection)
         {
+            writer.Write((byte)MessageType.BotUpdate);
             //Write bot ID
+            writer.Write((int)bot.npcID);
             //Write index of vector update
+            writer.Write((int)index);
             //Write vector update
+            writer.Write(newDirection);
         }
 
         private void readBotUpdate()
         {
             //Read bot ID
+            int botID = reader.ReadInt32();
             //Read index of vector update
+            int index = reader.ReadInt32();
+            Vector3 newDir = reader.ReadVector3();
             //Read vector update
+
+            BugBot leBot = null;
+            foreach (BugBot bot in Global.bugBots)
+            {
+                if (bot.npcID == botID)
+                {
+                    leBot = bot;
+                    break;
+                }
+            }
+            if (leBot != null)
+            {
+                leBot.movePoint(index, newDir);
+            }
         }
     }
 }
