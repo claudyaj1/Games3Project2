@@ -182,6 +182,8 @@ namespace Games3Project2
                         Global.input.isFirstPress(Keys.A))
                     {
                         splashTimer = 0;
+                        Global.actionsong.Stop();
+                        Global.menusong.Play();
                         Global.gameState = Global.GameState.Menu;
                     }
                     break;
@@ -189,10 +191,6 @@ namespace Games3Project2
 
                 #region Menu
                 case Global.GameState.Menu:
-                    //commented music
-                    //Global.actionsong.Stop();
-                    //Global.menusong.Play();
-
                     // Allows the game to exit
                     if (Global.input.DetectBackPressedByAnyPlayer())
                     {
@@ -391,6 +389,8 @@ namespace Games3Project2
                                     Global.localPlayers.Add((LocalPlayer)gamer.Tag);
                                 }
                             }
+                            Global.menusong.Stop();
+                            Global.actionsong.Play();
                             Global.gameState = Global.GameState.playingHeatmap;
                             break;
                         case 1: //Level 2
@@ -405,6 +405,8 @@ namespace Games3Project2
                                     Global.localPlayers.Add((LocalPlayer)gamer.Tag);
                                 }
                             }
+                            Global.menusong.Stop();
+                            Global.actionsong.Play();
                             Global.gameState = Global.GameState.playingHeatmap;
                             break;
                         case 2: //Level 3
@@ -419,6 +421,8 @@ namespace Games3Project2
                                     Global.localPlayers.Add((LocalPlayer)gamer.Tag);
                                 }
                             }
+                            Global.menusong.Stop();
+                            Global.actionsong.Play();
                             Global.gameState = Global.GameState.playingHeatmap;
                             break;
                     }
@@ -461,6 +465,8 @@ namespace Games3Project2
                         Global.actionsong.Stop();
                         Global.jetpack.Stop();
                         Global.networkManager.disposeNetworkSession();
+                        Global.actionsong.Stop();
+                        Global.menusong.Play();
                         Global.gameState = Global.GameState.Menu;
                     }
                     break;
@@ -480,6 +486,8 @@ namespace Games3Project2
                             {
                                 Global.localPlayers[i].score = 0;
                             }
+                            Global.actionsong.Stop();
+                            Global.menusong.Play();
                             Global.gameState = Global.GameState.GameOver;
                             Global.winningPlayer = player.gamer.Gamertag;
                             Global.graphics.GraphicsDevice.Viewport = new Viewport(0, 0, Global.viewPort.Width, Global.viewPort.Height);
@@ -501,6 +509,7 @@ namespace Games3Project2
                     if (Global.input.DetectBackPressedByAnyPlayer())
                     {
                         Global.actionsong.Stop();
+                        Global.menusong.Play();
                         Global.jetpack.Stop();
                         Global.networkManager.disposeNetworkSession();
                         Global.gameState = Global.GameState.Menu;
@@ -519,6 +528,8 @@ namespace Games3Project2
                     {
                         finalScore = Global.localPlayers[0].score;
                         Global.networkManager.disposeNetworkSession();
+                        Global.actionsong.Stop();
+                        Global.menusong.Play();
                         Global.gameState = Global.GameState.SinglePlayerGameOver;
                     }
 
@@ -526,6 +537,8 @@ namespace Games3Project2
                     if (Global.input.DetectBackPressedByAnyPlayer())
                     {
                         Global.networkManager.disposeNetworkSession();
+                        Global.actionsong.Stop();
+                        Global.menusong.Play();
                         Global.gameState = Global.GameState.Menu;
                     }
                     break;
@@ -542,6 +555,8 @@ namespace Games3Project2
                     if (Global.input.isAnyFirstPress(Buttons.A))
                     {
                         Global.networkManager.disposeNetworkSession();
+                        Global.actionsong.Stop();
+                        Global.menusong.Play();
                         Global.gameState = Global.GameState.Menu;
                     }
                     break;
@@ -977,6 +992,8 @@ namespace Games3Project2
                     gamer.Tag = new LocalPlayer(Vector3.Zero, PlayerIndex.One, 1, gamer);
                     Global.localPlayers.Add((LocalPlayer)gamer.Tag);
                     Global.localPlayers[0].setAsJuggernaut();
+                    Global.menusong.Stop();
+                    Global.actionsong.Play();
                     Global.gameState = Global.GameState.SinglePlayerPlaying;
                 }
             }
