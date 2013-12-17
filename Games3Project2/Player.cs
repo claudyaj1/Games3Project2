@@ -62,8 +62,6 @@ namespace Games3Project2
         public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex, LocalNetworkGamer associatedGamer)
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
-            
-            playerIndex = index;
             localPlayerIndex = localIndex;
             score = 0;
             health = Global.Constants.MAX_HEALTH;
@@ -83,6 +81,7 @@ namespace Games3Project2
             cube.textured = false;
 
             gamer = associatedGamer;
+            playerIndex = gamer.SignedInGamer.PlayerIndex;
             setupViewport();
         }
 

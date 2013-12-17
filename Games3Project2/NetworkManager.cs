@@ -184,12 +184,13 @@ namespace Networking
         {
             if (networkSession != null)
             {
-                foreach (LocalNetworkGamer gamer in networkSession.LocalGamers)
-                {
-                    GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0, 0);
-                }
                 networkSession.Dispose();
                 networkSession = null;
+            }
+
+            foreach (LocalPlayer player in Global.localPlayers)
+            {
+                GamePad.SetVibration(player.playerIndex, 0, 0);
             }
 
             Global.graphics.GraphicsDevice.Viewport = new Viewport(Global.viewPort);
