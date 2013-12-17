@@ -21,7 +21,6 @@ namespace AI
 
     public class BugBot : Collidable
     {
-        public Vector3 position;
         public Vector3 direction;
         public float speed;
         public Vector3[] points;
@@ -35,14 +34,14 @@ namespace AI
 
         Sphere body;
 
-        public BugBot(Vector3 position, int id, float speed, Vector3 point1, Vector3 point2, Vector3 point3, Vector3 point4)
-            : base(Global.game, position, Vector3.Zero, Global.Constants.PLAYER_RADIUS/2)
+        public BugBot(Vector3 position, int id, Vector3 point1, Vector3 point2, Vector3 point3, Vector3 point4)
+            : base(Global.game, position, Vector3.Zero, Global.Constants.BOT_RADIUS)
         {
             this.position = position;
             body = new Sphere(Global.game, Color.GhostWhite, this.position);
-            body.localScale = Matrix.CreateScale(2);
+            body.localScale = Matrix.CreateScale(Global.Constants.BOT_RADIUS);
             body.SetWireframe(1);
-            this.speed = speed;
+            this.speed = Global.Constants.BOT_SPEED;
             points = new Vector3[4];
             points[0] = point1;
             points[1] = point2;
@@ -52,7 +51,7 @@ namespace AI
             lastFiringTime = 0;
             npcID = id;
             spawnerTimer = 600;
-            health = Global.Constants.MAX_HEALTH;
+            health = Global.Constants.BOT_MAX_HEALTH;
 
         }
         
@@ -104,7 +103,9 @@ namespace AI
                 }
                 for (int i = 0; i < Global.BulletManager.bullets.Count; ++i)
                 {
-                    if (Global.Collision.didCollide(Global.BulletManager.bullets[i], this))
+                    if (Global.BulletManager.bullets[i].state == Bullet.State.Active  &&
+                        Global.BulletManager.bullets[i].shooter != null
+                        && Global.Collision.didCollide(Global.BulletManager.bullets[i], this))
                     {
                         if (Global.BulletManager.bullets[i].timeLived < Global.Constants.BULLET_POWER_DISTANCE)
                         {
@@ -116,12 +117,12 @@ namespace AI
                         }
                         if (health < 0)
                         {
-                            //GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, Global.Constants.VIBRATION_LOW, 0f);
                             killBot();
-                        }
-                        else
-                        {
-                            //GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, Global.Constants.VIBRATION_HIGH);
+                            if (Global.gameState == Global.GameState.SinglePlayerPlaying)
+                            {
+                                LocalPlayer player = Global.localPlayers[0];
+                                player.score++;
+                            }
                         }
                         Global.BulletManager.bullets[i].disable();
                     }
@@ -148,7 +149,7 @@ namespace AI
         public void reviveBot()
         {
             Alive = true;
-            health = Global.Constants.MAX_HEALTH;
+            health = Global.Constants.BOT_MAX_HEALTH;
         }
 
         public void draw()

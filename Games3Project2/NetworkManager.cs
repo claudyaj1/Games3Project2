@@ -192,7 +192,9 @@ namespace Networking
                 networkSession = null;
             }
 
+            Global.debugMode = false;
             Global.actionsong.Stop();
+            Global.menusong.Play();
             Global.jetpack.Stop();
             Global.localPlayers.Clear();
             Global.remotePlayers.Clear();
@@ -227,6 +229,8 @@ namespace Networking
                 }
             }
             Global.gameState = Global.GameState.Playing;
+            Global.menusong.Stop();
+            Global.actionsong.Play();
         }
 
         void GamerJoinedEventHandler(object sender, GamerJoinedEventArgs e)

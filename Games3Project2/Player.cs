@@ -274,6 +274,7 @@ namespace Games3Project2
             {
                 if (Global.Collision.didCollide(this, collidePlayer))
                 {
+                    Global.Collision.bounceCollidables(this, collidePlayer);
                     collidePlayer.Velocity = Vector3.Zero;
                 }
             }
@@ -378,6 +379,11 @@ namespace Games3Project2
 
                 if (killer == null)
                 {
+                    if (Global.gameState == Global.GameState.SinglePlayerPlaying)
+                    {
+                        Global.localPlayers[0].score--;
+                    }
+
                     if (Global.networkManager.networkSession.AllGamers.Count == 1)
                     {
                         killer = gamer;

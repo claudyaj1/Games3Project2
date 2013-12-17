@@ -151,15 +151,11 @@ namespace Games3Project2
                 Vector2 xyPos = new Vector2(collider.Position.X, collider.Position.Y);
                 Vector2 displacement = xyPos - collisionPosition;
                 
-                if(false)// ((xyPos - collisionPosition).LengthSquared() < collider.Radius * collider.Radius)
-                    time = 0;
-                else
-                {
-                    time = -Vector2.Dot(displacement, xyPos) / (Vector3.Dot(collider.Velocity, collider.Velocity));
-                    Vector2 xyVelocity = new Vector2(collider.Velocity.X, collider.Velocity.Y);
-                    time = (float)(-Vector2.Dot(displacement, xyVelocity) - Math.Sqrt(Math.Pow(Vector2.Dot(displacement, xyVelocity), 2.0) - Vector3.Dot(collider.Velocity, collider.Velocity) *
-                        (Vector2.Dot(displacement, displacement) - collider.Radius * collider.Radius))) / Vector3.Dot(collider.Velocity, collider.Velocity);
-                }
+                time = -Vector2.Dot(displacement, xyPos) / (Vector3.Dot(collider.Velocity, collider.Velocity));
+                Vector2 xyVelocity = new Vector2(collider.Velocity.X, collider.Velocity.Y);
+                time = (float)(-Vector2.Dot(displacement, xyVelocity) - Math.Sqrt(Math.Pow(Vector2.Dot(displacement, xyVelocity), 2.0) - Vector3.Dot(collider.Velocity, collider.Velocity) *
+                    (Vector2.Dot(displacement, displacement) - collider.Radius * collider.Radius))) / Vector3.Dot(collider.Velocity, collider.Velocity);
+                
 
                 Vector3 newPos = collider.PrevPosition + collider.Velocity * time;
                 collider.Position = new Vector3(collider.Position.X, newPos.Y, collider.Position.Z);
@@ -181,15 +177,10 @@ namespace Games3Project2
                 Vector2 xzPos = new Vector2(collider.Position.X, collider.Position.Z);
                 Vector2 displacement = xzPos - collisionPosition;
 
-                if(false)// ((xzPos - collisionPosition).LengthSquared() < collider.Radius * collider.Radius)
-                    time = 0;
-                else
-                {
-                    time = -Vector2.Dot(displacement, xzPos) / (Vector3.Dot(collider.Velocity, collider.Velocity));
-                    Vector2 xzVelocity = new Vector2(collider.Velocity.X, collider.Velocity.Z);
-                    time = (float)(-Vector2.Dot(displacement, xzVelocity) - Math.Sqrt(Math.Pow(Vector2.Dot(displacement, xzVelocity), 2.0) - Vector3.Dot(collider.Velocity, collider.Velocity) *
-                        (Vector2.Dot(displacement, displacement) - collider.Radius * collider.Radius))) / Vector3.Dot(collider.Velocity, collider.Velocity);
-                }
+                time = -Vector2.Dot(displacement, xzPos) / (Vector3.Dot(collider.Velocity, collider.Velocity));
+                Vector2 xzVelocity = new Vector2(collider.Velocity.X, collider.Velocity.Z);
+                time = (float)(-Vector2.Dot(displacement, xzVelocity) - Math.Sqrt(Math.Pow(Vector2.Dot(displacement, xzVelocity), 2.0) - Vector3.Dot(collider.Velocity, collider.Velocity) *
+                    (Vector2.Dot(displacement, displacement) - collider.Radius * collider.Radius))) / Vector3.Dot(collider.Velocity, collider.Velocity);                
 
                 Vector3 newPos = collider.PrevPosition + collider.Velocity * time;
                 collider.Position = new Vector3(collider.Position.X, collider.Position.Y, newPos.Z);
@@ -211,15 +202,10 @@ namespace Games3Project2
                 Vector2 xzPos = new Vector2(collider.Position.Z, collider.Position.X);
                 Vector2 displacement = xzPos - collisionPosition;
 
-                if(false)// ((xzPos - collisionPosition).LengthSquared() < collider.Radius * collider.Radius)
-                    time = 0;
-                else
-                {
-                    time = -Vector2.Dot(displacement, xzPos) / (Vector3.Dot(collider.Velocity, collider.Velocity));
-                    Vector2 xzVelocity = new Vector2(collider.Velocity.Z, collider.Velocity.X);
-                    time = (float)(-Vector2.Dot(displacement, xzVelocity) - Math.Sqrt(Math.Pow(Vector2.Dot(displacement, xzVelocity), 2.0) - Vector3.Dot(collider.Velocity, collider.Velocity) *
-                        (Vector2.Dot(displacement, displacement) - collider.Radius * collider.Radius))) / Vector3.Dot(collider.Velocity, collider.Velocity);
-                }
+                time = -Vector2.Dot(displacement, xzPos) / (Vector3.Dot(collider.Velocity, collider.Velocity));
+                Vector2 xzVelocity = new Vector2(collider.Velocity.Z, collider.Velocity.X);
+                time = (float)(-Vector2.Dot(displacement, xzVelocity) - Math.Sqrt(Math.Pow(Vector2.Dot(displacement, xzVelocity), 2.0) - Vector3.Dot(collider.Velocity, collider.Velocity) *
+                    (Vector2.Dot(displacement, displacement) - collider.Radius * collider.Radius))) / Vector3.Dot(collider.Velocity, collider.Velocity);
 
                 Vector3 newPos = collider.PrevPosition + collider.Velocity * time;
                 collider.Position = new Vector3(newPos.X, collider.Position.Y, collider.Position.Z);
