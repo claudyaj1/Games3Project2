@@ -517,14 +517,10 @@ namespace Games3Project2
 
                 #region GameOver
                 case Global.GameState.GameOver:
-                    foreach (LocalPlayer player in Global.localPlayers)
+                    if (Global.input.isAnyFirstPress(Buttons.A))
                     {
-                        if (Global.input.isFirstPress(Buttons.A, player.playerIndex))
-                        {
-                            Global.networkManager.disposeNetworkSession();
-                            Global.gameState = Global.GameState.Menu;
-                            break;
-                        }
+                        Global.networkManager.disposeNetworkSession();
+                        Global.gameState = Global.GameState.Menu;
                     }
                     break;
                 #endregion //GameOver
