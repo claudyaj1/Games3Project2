@@ -142,9 +142,9 @@ namespace HUDUtility
 
         public void Draw() // The hud on the screen.
         {
-            Global.spriteBatch.Draw(HUD_Backing, player.camera.viewport.Bounds, Color.White);
+            //Global.spriteBatch.Draw(HUD_Backing, Global.CurrentCamera.viewport.Bounds, Color.White);
 
-            Global.spriteBatch.DrawString(Global.consolas, "Health:", healthTextPostion, Global.HUD_COLOR);
+            //Global.spriteBatch.DrawString(Global.consolas, "Health:", healthTextPostion, Global.HUD_COLOR);
             Global.spriteBatch.Draw(healthTexture, goodRect, healthColor);
             Global.spriteBatch.Draw(healthTexture, badRect, Color.Red);
             Global.spriteBatch.Draw(blankTexture, outlineLeft, Color.Black);

@@ -182,16 +182,17 @@ namespace Networking
 
         public void disposeNetworkSession()
         {
-            foreach (LocalNetworkGamer gamer in networkSession.LocalGamers)
-            {
-                GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0, 0);
-            }
             if (networkSession != null)
             {
+                foreach (LocalNetworkGamer gamer in networkSession.LocalGamers)
+                {
+                    GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0, 0);
+                }
                 networkSession.Dispose();
                 networkSession = null;
             }
 
+            Global.graphics.GraphicsDevice.Viewport = new Viewport(Global.viewPort);
             Global.debugMode = false;
             Global.actionsong.Stop();
             Global.menusong.Play();

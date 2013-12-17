@@ -336,20 +336,17 @@ namespace Games3Project2
         {
             isVibrating = true;
             vibratingCountdown = VIBRATE_MAX;
+            GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, Global.Constants.VIBRATION_LOW);
         }
 
         private void manageVibrations()
         {
-            if (isVibrating)
+            vibratingCountdown -= Global.gameTime.ElapsedGameTime.Milliseconds;
+            if (vibratingCountdown < 0)
             {
-                vibratingCountdown -= Global.gameTime.ElapsedGameTime.Milliseconds;
-                GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, Global.Constants.VIBRATION_LOW);
-                if (vibratingCountdown < 0)
-                {
-                    isVibrating = false;
-                    GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, 0);
-                    vibratingCountdown = 0;
-                }
+                isVibrating = false;
+                GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, 0);
+                vibratingCountdown = 0;
             }
         }
 
