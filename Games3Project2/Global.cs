@@ -128,7 +128,7 @@ namespace Games3Project2.Globals
             public static readonly int JUG_BULLET_DAMAGE = 30;
             public static readonly float RIGHT_HANDED_WEAPON_OFFSET = 0.1f;
 
-            public static readonly float VIBRATION_LOW = 1f;
+            public static readonly float VIBRATION_LOW = .75f;
             public static readonly float VIBRATION_HIGH = 1f;
 
             public static readonly float BULLET_SPEED = 2f;

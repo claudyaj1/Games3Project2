@@ -42,6 +42,10 @@ namespace Games3Project2
         public float gunHeat = 0f;
         public bool gunCoolDownModeNoShootingPermitted;
 
+        bool isVibrating;
+        int vibratingCountdown;
+        const int VIBRATE_MAX = 250;
+
         public override Vector3 Position
         {
             get
@@ -289,16 +293,18 @@ namespace Games3Project2
                     }
                     if (health < 0)
                     {
-                        //GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, Global.Constants.VIBRATION_LOW, 0f);
+                        startVibrating();
                         killed(Global.BulletManager.bullets[i].shooter);
                     }
                     else
                     {
-                        //GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, Global.Constants.VIBRATION_HIGH);
+                        startVibrating();
                     }
                     Global.BulletManager.bullets[i].disable();
                 }
             }
+
+            manageVibrations();
 
             #endregion
             #region Networking
@@ -325,6 +331,26 @@ namespace Games3Project2
             }
         }
 
+        private void startVibrating()
+        {
+            isVibrating = true;
+            vibratingCountdown = VIBRATE_MAX;
+        }
+
+        private void manageVibrations()
+        {
+            if (isVibrating)
+            {
+                vibratingCountdown -= Global.gameTime.ElapsedGameTime.Milliseconds;
+                GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, Global.Constants.VIBRATION_LOW);
+                if (vibratingCountdown < 0)
+                {
+                    isVibrating = false;
+                    GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, 0);
+                    vibratingCountdown = 0;
+                }
+            }
+        }
 
         public void setAsJuggernaut()
         {
