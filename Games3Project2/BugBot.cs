@@ -133,7 +133,9 @@ namespace AI
                 if (spawnerTimer <= 0)
                 {
                     reviveBot();
+                    spawnerTimer = 600;
                 }
+                spawnerTimer--;
             }
 
         }

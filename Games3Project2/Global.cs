@@ -156,7 +156,7 @@ namespace Games3Project2.Globals
             public static readonly string MSG_JOINED = " joined";
             public static readonly string MSG_DISCONNECTED = " disconnected";
 
-            public static readonly int ptSpeed = 2;
+            public static readonly float ptSpeed = 0.2f;
             
         }
 
