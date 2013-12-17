@@ -229,7 +229,7 @@ namespace Games3Project2
                 {
                     lastFiringTime = 0;
                     ShootBullet();
-                    gunHeat += 4f + gunHeat * 0.20f; //Gun Heat Increase per gun fire rate 
+                    gunHeat += 4f + gunHeat * 0.10f; //Gun Heat Increase per gun fire rate 
                     if (gunHeat > Global.Constants.MAX_GUN_HEAT) {
                         gunHeat = Global.Constants.MAX_GUN_HEAT;    //Prevent weird above max values.
                         gunCoolDownModeNoShootingPermitted = true;  //Disable gun firing.
