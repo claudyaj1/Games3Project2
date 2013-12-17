@@ -214,6 +214,11 @@ namespace Networking
                     LocalPlayer player = firstJug.Tag as LocalPlayer;
                     player.setAsJuggernaut();
                 }
+                else
+                {
+                    RemotePlayer player = firstJug.Tag as RemotePlayer;
+                    player.setAsJuggernaut();
+                }
             }
             Global.gameState = Global.GameState.Playing;
         }
