@@ -363,16 +363,9 @@ namespace Games3Project2
                             //Global.networkManager.networkSession.AllGamers.Count > 1 && 
                             (Global.input.isFirstPress(Buttons.A) || Global.input.isFirstPress(Buttons.Start)))
                         {
-                            int firstJugIndex = Global.rand.Next(0, Global.networkManager.networkSession.AllGamers.Count);
-                            NetworkGamer firstJug = Global.networkManager.networkSession.AllGamers[firstJugIndex];
-                            Global.networkManager.newJuggernaut(firstJug);
-                            if (firstJug.IsLocal)
-                            {
-                                LocalPlayer player = firstJug.Tag as LocalPlayer;
-                                player.isJuggernaut = true;
-                            }
-                            Global.gameState = Global.GameState.Playing;
+                            Global.networkManager.announceLevel(Global.levelManager.currentLevel);
                             Global.networkManager.networkSession.StartGame();
+                            Global.levelManager.setupLevel();
                         }
                     }
                     break;
