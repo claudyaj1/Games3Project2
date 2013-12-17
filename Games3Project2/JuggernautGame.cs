@@ -523,6 +523,7 @@ namespace Games3Project2
                         {
                             Global.networkManager.disposeNetworkSession();
                             Global.gameState = Global.GameState.Menu;
+                            break;
                         }
                     }
                     break;
