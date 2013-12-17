@@ -460,7 +460,6 @@ namespace Games3Project2
                             Global.winningPlayer = player.gamer.Gamertag;
                             Global.graphics.GraphicsDevice.Viewport = new Viewport(0, 0, Global.viewPort.Width, Global.viewPort.Height);
                             Global.networkManager.announceWinner(player.gamer);
-                            Global.networkManager.disposeNetworkSession();
                             break;
                         }
                     }
@@ -522,6 +521,7 @@ namespace Games3Project2
                     {
                         if (Global.input.isFirstPress(Buttons.A, player.playerIndex))
                         {
+                            Global.networkManager.disposeNetworkSession();
                             Global.gameState = Global.GameState.Menu;
                         }
                     }
