@@ -182,12 +182,18 @@ namespace Networking
 
         public void disposeNetworkSession()
         {
+            foreach (LocalNetworkGamer gamer in networkSession.LocalGamers)
+            {
+                GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0, 0);
+            }
             if (networkSession != null)
             {
                 networkSession.Dispose();
                 networkSession = null;
             }
 
+            Global.actionsong.Stop();
+            Global.jetpack.Stop();
             Global.localPlayers.Clear();
             Global.remotePlayers.Clear();
             currentState = CurrentState.Idle;

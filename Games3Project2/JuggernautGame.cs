@@ -501,8 +501,6 @@ namespace Games3Project2
                     // Allows the game to exit
                     if (Global.input.DetectBackPressedByAnyPlayer())
                     {
-                        Global.actionsong.Stop();
-                        Global.jetpack.Stop();
                         Global.networkManager.disposeNetworkSession();
                         Global.gameState = Global.GameState.Menu;
                     }
