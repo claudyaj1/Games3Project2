@@ -37,7 +37,7 @@ namespace Games3Project2
         public bool jetpackDisabled;
         public LocalNetworkGamer gamer;
 
-        int timeSinceLastPacketSent = 0;
+        int timeSinceLastPacketSent;
         const int PACKET_INTERVAL = 10;
         public float gunHeat = 0f;
         public bool gunCoolDownModeNoShootingPermitted;
@@ -65,6 +65,7 @@ namespace Games3Project2
             
             playerIndex = index;
             localPlayerIndex = localIndex;
+            timeSinceLastPacketSent = (localIndex - 1) * 2;
             score = 0;
             health = Global.Constants.MAX_HEALTH;
             isJuggernaut = false;

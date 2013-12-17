@@ -382,7 +382,7 @@ namespace Networking
 
         public void playerUpdate(LocalPlayer player)
         {
-            dataOptions = SendDataOptions.Chat;
+            dataOptions = SendDataOptions.Reliable;
             writer.Write((byte)MessageType.PlayerUpdate);
             writer.Write(player.gamer.Gamertag);
             writer.Write(player.Position);
