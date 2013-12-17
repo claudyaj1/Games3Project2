@@ -281,7 +281,7 @@ namespace Games3Project2
 
             for (int i = 0; i < Global.BulletManager.bullets.Count; ++i)
             {
-                if (Global.BulletManager.bullets[i].shooter != gamer && Global.Collision.didCollide(Global.BulletManager.bullets[i], this))
+                if (Global.BulletManager.bullets[i].shooter != gamer && Global.BulletManager.bullets[i].state == Bullet.State.Active && Global.Collision.didCollide(Global.BulletManager.bullets[i], this))
                 {
                     if (Global.BulletManager.bullets[i].timeLived < Global.Constants.BULLET_POWER_DISTANCE)
                     {
@@ -291,6 +291,7 @@ namespace Games3Project2
                     {
                         health -= Global.BulletManager.bullets[i].damage*2;
                     }
+
                     if (health < 0)
                     {
                         startVibrating();
