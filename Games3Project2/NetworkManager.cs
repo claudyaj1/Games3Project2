@@ -235,7 +235,10 @@ namespace Networking
         void SessionEndedEventHandler(object sender, NetworkSessionEndedEventArgs e)
         {
             disposeNetworkSession();
-            Global.gameState = Global.GameState.NetworkQuit;
+            if (Global.gameState != Global.GameState.GameOver)
+            {
+                Global.gameState = Global.GameState.NetworkQuit;
+            }
         }
 
         void GamerLeftEventHandler(object sender, GamerLeftEventArgs e)
