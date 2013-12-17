@@ -449,8 +449,6 @@ namespace Networking
                     }
                 }
             }
-
-            //TODO: Announce msg "Who is Juggernaut" ,tag so that remote players know who is the new juggernaut is.
         }
 
         public void juggernautKill() //Juggernaut earns a kill.

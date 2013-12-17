@@ -194,7 +194,6 @@ namespace Games3Project2
                     // Allows the game to exit
                     if (Global.input.DetectBackPressedByAnyPlayer())
                     {
-                        // TODO: Depending on the game state...behavior of back button will differ.
                         this.Exit();
                     }
                     switch (mainMenu.update())
@@ -441,7 +440,7 @@ namespace Games3Project2
                     foreach (LocalPlayer player in Global.localPlayers)
                     {
                         player.update();
-                        //TODO:if(player.isJuggernaught == true) then do the bugbot check else do nothing
+                        //if(player.isJuggernaught == true) then do the bugbot check else do nothing
                         foreach (BugBot bot in Global.bugBots)
                         {
                             if ((bot.Position - player.Position).Length() < BugBot.ATTACK_RADIUS)
