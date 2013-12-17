@@ -214,11 +214,9 @@ namespace Games3Project2
                             Global.networkManager.hostSessionType = NetworkManager.HostSessionType.Client;
                             break;
                         case 3: //Heatmaps
-                            this.Exit();
+                            Global.debugMode = true;
                             Global.gameState = Global.GameState.SetupLocalPlayersHeatmap;
-                            Global.numLocalGamers = 1;
-                            joinedPlayers.Clear();
-                            joinedPlayers.Add(PlayerIndex.One);
+                            Global.networkManager.hostSessionType = NetworkManager.HostSessionType.Host;
                             break;
                         case 4: //Exit
                             this.Exit();
@@ -373,18 +371,7 @@ namespace Games3Project2
 
                 #region SetupLocalPlayersHeatmap
                 case Global.GameState.SetupLocalPlayersHeatmap:
-                    //if (setupLocalPlayers())
-                    {
-                        if (Global.networkManager.hostSessionType == NetworkManager.HostSessionType.Host)
-                        {
-                            Global.gameState = Global.GameState.ChooseHeatmap;
-                        }
-                        
-                    }
-                    if (Global.input.isFirstPress(Keys.Back))
-                    {
-                        Global.gameState = Global.GameState.Menu;
-                    }
+                    setupLocalPlayersHeatmap();
                     break;
                 #endregion
 
@@ -393,18 +380,46 @@ namespace Games3Project2
                     switch (levelMenu.update())
                     {
                         case 0: //Level 1
-                            levelManager.currentLevel = 1;
-                            levelManager.setupLevel();
+                            Global.levelManager.currentLevel = 1;
+                            Global.levelManager.setupLevel();
+                            int localIndex = 1;
+                            if (Global.networkManager.createSession())
+                            {
+                                foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                                {
+                                    gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex++, gamer);
+                                    Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                                }
+                            }
                             Global.gameState = Global.GameState.playingHeatmap;
                             break;
                         case 1: //Level 2
-                            levelManager.currentLevel = 2;
-                            levelManager.setupLevel();
+                            Global.levelManager.currentLevel = 2;
+                            Global.levelManager.setupLevel();
+                            int localIndex2 = 1;
+                            if (Global.networkManager.createSession())
+                            {
+                                foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                                {
+                                    gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex2++, gamer);
+                                    Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                                }
+                            }
                             Global.gameState = Global.GameState.playingHeatmap;
                             break;
                         case 2: //Level 3
-                            levelManager.currentLevel = 3;
-                            levelManager.setupLevel();
+                            Global.levelManager.currentLevel = 3;
+                            Global.levelManager.setupLevel();
+                            int localIndex3 = 1;
+                            if (Global.networkManager.createSession())
+                            {
+                                foreach (LocalNetworkGamer gamer in Global.networkManager.networkSession.LocalGamers)
+                                {
+                                    gamer.Tag = new LocalPlayer(Vector3.Zero, gamer.SignedInGamer.PlayerIndex, localIndex3++, gamer);
+                                    Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                                }
+                            }
+                            Global.gameState = Global.GameState.playingHeatmap;
                             break;
                     }
                     break;
@@ -439,6 +454,15 @@ namespace Games3Project2
                     Global.BulletManager.update();
 
                     levelManager.update();
+
+                    // Allows the game to exit
+                    if (Global.input.DetectBackPressedByAnyPlayer())
+                    {
+                        Global.actionsong.Stop();
+                        Global.jetpack.Stop();
+                        Global.networkManager.disposeNetworkSession();
+                        Global.gameState = Global.GameState.Menu;
+                    }
                     break;
                 #endregion
 
@@ -910,6 +934,23 @@ namespace Games3Project2
                 {
                     Global.gameState = Global.GameState.JoinMenu;
                 }
+            }
+            else if (Global.input.isFirstPress(Buttons.B))
+            {
+                Global.gameState = Global.GameState.Menu;
+            }
+        }
+
+        private void setupLocalPlayersHeatmap()
+        {
+            if (Global.input.isAnyFirstPress(Buttons.A) && !Guide.IsVisible)
+            {
+                Guide.ShowSignIn(1, true);
+            }
+            else if (SignedInGamer.SignedInGamers.Count > 0 && Global.input.isAnyFirstPress(Buttons.Start))
+            {
+                Global.numLocalGamers = (byte)SignedInGamer.SignedInGamers.Count;
+                Global.gameState = Global.GameState.ChooseHeatmap;
             }
             else if (Global.input.isFirstPress(Buttons.B))
             {

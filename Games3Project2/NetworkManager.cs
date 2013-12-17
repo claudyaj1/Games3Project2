@@ -192,6 +192,7 @@ namespace Networking
                 networkSession = null;
             }
 
+            Global.debugMode = false;
             Global.actionsong.Stop();
             Global.jetpack.Stop();
             Global.localPlayers.Clear();
