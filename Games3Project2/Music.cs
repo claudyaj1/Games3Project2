@@ -16,7 +16,6 @@ namespace MusicClasses
         // CTOR
         public Music(Game game)
         {
-            //TODO: Add real background music instead of this demo sound.
             backgroundMusic = game.Content.Load<Song>(@"Audio/nenadsimic__picked-coin-echo-2");
             MediaPlayer.Volume = 1.0f;
             MediaPlayer.Stop();

@@ -13,7 +13,6 @@ namespace Games3Project2
     public class Bullet : Collidable
     {
         BoundingSphere bs;
-        //TODO: CreateTranslation matrix
         public int timeLived;
         /// <summary>
         /// // The NetworkGamer who shot this bullet.

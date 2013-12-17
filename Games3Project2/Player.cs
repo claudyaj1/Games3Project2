@@ -62,8 +62,6 @@ namespace Games3Project2
         public LocalPlayer(Vector3 pos, PlayerIndex index, int localIndex, LocalNetworkGamer associatedGamer)
             : base(Global.game, pos, Vector3.Zero, Global.Constants.PLAYER_RADIUS)
         {
-            
-            playerIndex = index;
             localPlayerIndex = localIndex;
             timeSinceLastPacketSent = (localIndex - 1) * 2;
             score = 0;
@@ -84,6 +82,7 @@ namespace Games3Project2
             cube.textured = false;
 
             gamer = associatedGamer;
+            playerIndex = gamer.SignedInGamer.PlayerIndex;
             setupViewport();
         }
 
@@ -435,22 +434,6 @@ namespace Games3Project2
             hud.Draw();
         }
 
-        ///// <summary>
-        ///// Fires a solid, non-projectile laser beam blast.
-        ///// </summary>
-        //public void ShootLaserBurstWeapon()
-        //{
-            
-        //    //Step one, drawWalls a line from just a smidge to the right of the avatar.
-        //    //TODO: Oh baby, Line_Primative...but when?
-        //    //Step two calculate collisions that might have occurred.
-        //    //TODO: Ray intersection
-        //    //Step three, Send message to the network to announce the event of the laser firing.
-        //    //TODO: step 3
-        //    //Step four, Play sound fx.
-        //    //TODO: Upht.wav
-        //}
-
         public void ShootBullet()
         {
             if (isJuggernaut)
@@ -463,8 +446,6 @@ namespace Games3Project2
                 Global.networkManager.fireBullet(Global.BulletManager.fireBullet(position + camera.view.Right * Global.Constants.RIGHT_HANDED_WEAPON_OFFSET,
                     -camera.lookRotation.Forward * Global.Constants.BULLET_SPEED, gamer, Global.Constants.BULLET_DAMAGE));
             }
-        }
-
-        
+        }        
     }
 }
