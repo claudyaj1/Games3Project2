@@ -189,6 +189,7 @@ namespace Games3Project2.Globals
                 float DSquared = Vector3.Dot(A, A) - (Vector3.Dot(A,B) / Vector3.Dot(B, B));
 
                 if (DSquared < Math.Pow(a.Radius + b.Radius, 2))
+                //if(DSquared < a.Radius * a.Radius + b.Radius * b.Radius)
                 {
                     return true;
                 }
