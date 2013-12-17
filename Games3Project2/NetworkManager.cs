@@ -464,7 +464,6 @@ namespace Networking
         {
             Global.winningPlayer = reader.ReadString();
             Global.gameState = Global.GameState.GameOver;
-            disposeNetworkSession();
         }
 
         public void botUpdate(BugBot bot)
