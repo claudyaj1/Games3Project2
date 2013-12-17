@@ -425,10 +425,10 @@ namespace Games3Project2
                         //TODO:if(player.isJuggernaught == true) then do the bugbot check else do nothing
                         foreach (BugBot bot in Global.bugBots)
                         {
-                            if ((bot.position - player.Position).Length() < BugBot.ATTACK_RADIUS)
+                            if ((bot.Position - player.Position).Length() < BugBot.ATTACK_RADIUS)
                             {
                                 //shoot a bullet at the player if he is the juggernaught
-                                Vector3 dir = player.Position - bot.position;
+                                Vector3 dir = player.Position - bot.Position;
                                 dir.Normalize();
                                 //bot.ShootBullet(dir);
                                 debug = false;
@@ -820,7 +820,7 @@ namespace Games3Project2
                     }
                     float time = SINGLE_PLAYER_LENGTH / 1000 - timeInSinglePlayer / 1000;
                     Vector2 stringMeasure = consolas.MeasureString(time.ToString());
-                    Global.spriteBatch.DrawString(mainMenu.titleFont, time.ToString(), new Vector2(Global.viewPort.Width / 2 - stringMeasure.X / 2, Global.titleSafe.Top + 10), Color.Orange);
+                    Global.spriteBatch.DrawString(mainMenu.titleFont, time.ToString(), new Vector2(Global.viewPort.Width / 2 - stringMeasure.X / 2, Global.titleSafe.Top + 15), Color.Orange);
 
                     Global.spriteBatch.End();
                     break;
@@ -930,11 +930,12 @@ namespace Games3Project2
                 if (Global.networkManager.createSession())
                 {
                     timeInSinglePlayer = 0;
-                    Global.levelManager.currentLevel = 3;
+                    Global.levelManager.currentLevel = 1;
                     Global.levelManager.setupLevel();
                     LocalNetworkGamer gamer = Global.networkManager.networkSession.LocalGamers[0];
                     gamer.Tag = new LocalPlayer(Vector3.Zero, PlayerIndex.One, 1, gamer);
                     Global.localPlayers.Add((LocalPlayer)gamer.Tag);
+                    Global.localPlayers[0].setAsJuggernaut();
                     Global.gameState = Global.GameState.SinglePlayerPlaying;
                 }
             }

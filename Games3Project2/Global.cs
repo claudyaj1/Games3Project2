@@ -141,6 +141,8 @@ namespace Games3Project2.Globals
 
             public static readonly int BOT_FIRING_COOLDOWN = 1000;
             public static readonly int BOT_RADIUS = 2;
+            public static readonly float BOT_SPEED = .04f;
+            public static readonly int BOT_MAX_HEALTH = 40;
 
             public static readonly float WALL_BUFFER = 5;
 

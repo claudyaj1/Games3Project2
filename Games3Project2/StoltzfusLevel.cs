@@ -281,10 +281,10 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(0, -2 * standardSpacing, -Global.Constants.LEVEL_ONE_LENGTH + mediumPlatformSize), largePlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
 
             //AI
-            Global.bugBots.Add(new BugBot(new Vector3(75, 0, -180), 1, .09f, new Vector3(-75, -50, -175), new Vector3(-50, 50, 190), new Vector3(92,90, 95), new Vector3(75, 0, -180)));
-            Global.bugBots.Add(new BugBot(new Vector3(-75, 0, -180), 2, .09f, new Vector3(75, -50, -175), new Vector3(50, 50, 190), new Vector3(-92, -120, 95), new Vector3(-75, 0, -180)));
-            Global.bugBots.Add(new BugBot(new Vector3(-75, 0, 180), 3, .09f, new Vector3(75, 50, 175), new Vector3(50, -50, -190), new Vector3(-92, 90, -95), new Vector3(75, 0, 180)));
-            Global.bugBots.Add(new BugBot(new Vector3(75, 0, 180), 4, .09f, new Vector3(75, 50, -175), new Vector3(50, 50, 190), new Vector3(92, 90, -95), new Vector3(75, 0, -180)));
+            Global.bugBots.Add(new BugBot(new Vector3(75, 0, -180), 1, new Vector3(-75, -50, -175), new Vector3(-50, 50, 190), new Vector3(92,90, 95), new Vector3(75, 0, -180)));
+            Global.bugBots.Add(new BugBot(new Vector3(-75, 0, -180), 2, new Vector3(75, -50, -175), new Vector3(50, 50, 190), new Vector3(-92, -120, 95), new Vector3(-75, 0, -180)));
+            Global.bugBots.Add(new BugBot(new Vector3(-75, 0, 180), 3, new Vector3(75, 50, 175), new Vector3(50, -50, -190), new Vector3(-92, 90, -95), new Vector3(75, 0, 180)));
+            Global.bugBots.Add(new BugBot(new Vector3(75, 0, 180), 4, new Vector3(75, 50, -175), new Vector3(50, 50, 190), new Vector3(92, 90, -95), new Vector3(75, 0, -180)));
 
             Global.turrets.Add(new Turret(new Vector3(95, -95, 195)));
             Global.turrets.Add(new Turret(new Vector3(95, -95, -195)));
@@ -343,10 +343,10 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(-Global.Constants.LEVEL_TWO_WIDTH + mediumPlatformSize, -3 * standardSpacing, 0), mediumPlatformSize, largePlatformSize, platformTexture, Platform.PlatformType.Horizontal));
 
             //AI
-            Global.bugBots.Add(new BugBot(new Vector3(75, 0, -18), 1, .09f, new Vector3(-75, 130, -17), new Vector3(-50, 50, 19), new Vector3(92, 0, 95), new Vector3(75, 130, -18)));
-            Global.bugBots.Add(new BugBot(new Vector3(-75, -45, -18), 2, .09f, new Vector3(75, -45, 17), new Vector3(50, -50, 19), new Vector3(-92, 130, 95), new Vector3(-75, 0, -18)));
-            Global.bugBots.Add(new BugBot(new Vector3(-75, -100, 18), 3, .09f, new Vector3(75, -150,35), new Vector3(50, 130, -19), new Vector3(-92, 90, -95), new Vector3(75, -45, 18)));
-            Global.bugBots.Add(new BugBot(new Vector3(75, -150, 18), 4, .09f, new Vector3(75, 130, -17), new Vector3(50, -45, 19), new Vector3(92, 50, -95), new Vector3(75, -150, -18)));
+            Global.bugBots.Add(new BugBot(new Vector3(75, 0, -18), 1, new Vector3(-75, 130, -17), new Vector3(-50, 50, 19), new Vector3(92, 0, 95), new Vector3(75, 130, -18)));
+            Global.bugBots.Add(new BugBot(new Vector3(-75, -45, -18), 2, new Vector3(75, -45, 17), new Vector3(50, -50, 19), new Vector3(-92, 130, 95), new Vector3(-75, 0, -18)));
+            Global.bugBots.Add(new BugBot(new Vector3(-75, -100, 18), 3, new Vector3(75, -150,35), new Vector3(50, 130, -19), new Vector3(-92, 90, -95), new Vector3(75, -45, 18)));
+            Global.bugBots.Add(new BugBot(new Vector3(75, -150, 18), 4, new Vector3(75, 130, -17), new Vector3(50, -45, 19), new Vector3(92, 50, -95), new Vector3(75, -150, -18)));
 
             Global.turrets.Add(new Turret(new Vector3(95, -160, 95)));
             Global.turrets.Add(new Turret(new Vector3(-95, -160, 95)));
@@ -398,8 +398,8 @@ namespace Games3Project2
             platforms.Add(new Platform(new Vector3(-standardSpacing, -standardSpacing, -standardSpacing), mediumPlatformSize, mediumPlatformSize, platformTexture, Platform.PlatformType.Horizontal));
 
             //AI
-            Global.bugBots.Add(new BugBot(new Vector3(-50, 60, 0), 1, .09f, new Vector3(0, 60, 50), new Vector3(0, -60, 50), new Vector3(50, -60, 0), new Vector3(50, 60, 0)));
-            Global.bugBots.Add(new BugBot(new Vector3(50, 60, 0), 2, .09f, new Vector3(0, 60, -50), new Vector3(0, -60, -50), new Vector3(0, -60, 50), new Vector3(0, 60, 50)));
+            Global.bugBots.Add(new BugBot(new Vector3(-50, 60, 0), 1, new Vector3(0, 60, 50), new Vector3(0, -60, 50), new Vector3(50, -60, 0), new Vector3(50, 60, 0)));
+            Global.bugBots.Add(new BugBot(new Vector3(50, 60, 0), 2, new Vector3(0, 60, -50), new Vector3(0, -60, -50), new Vector3(0, -60, 50), new Vector3(0, 60, 50)));
 
             Global.turrets.Add(new Turret(new Vector3(70, -70, 70)));
             Global.turrets.Add(new Turret(new Vector3(-70, -70, 70)));

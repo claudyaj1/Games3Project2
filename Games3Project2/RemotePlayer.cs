@@ -25,7 +25,6 @@ namespace Games3Project2
         public NetworkGamer gamer;
         const int PACKET_INTERVAL = 10;
         float currentSmoothing;
-        int framesSinceLastPacket;
         
         struct RemotePlayerState
         {
@@ -64,7 +63,6 @@ namespace Games3Project2
             previousState.velocity = velocity;
             previousState.pitch = pitch;
             previousState.yaw = yaw;
-            framesSinceLastPacket = 0;
             currentSmoothing = 1;
         }
 
@@ -104,7 +102,6 @@ namespace Games3Project2
             yaw = newYaw;
             pitch = newPitch;
 
-            framesSinceLastPacket = 0;
             currentSmoothing = 1;
         }
 

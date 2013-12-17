@@ -378,6 +378,11 @@ namespace Games3Project2
 
                 if (killer == null)
                 {
+                    if (Global.gameState == Global.GameState.SinglePlayerPlaying)
+                    {
+                        Global.localPlayers[0].score--;
+                    }
+
                     if (Global.networkManager.networkSession.AllGamers.Count == 1)
                     {
                         killer = gamer;
