@@ -136,7 +136,7 @@ namespace Games3Project2.Globals
             public static readonly Color BULLET_COLOR = Color.DarkOrange;
             public static readonly float BULLET_POWER_DISTANCE = 100f;
             public static readonly int MAX_ALLOCATED_BULLETS = 300;
-            public static readonly float MAX_GUN_HEAT = 100f; //Disables gun firing when reached.
+            public static readonly float MAX_GUN_HEAT = 100f; //Disables gun firing when reached. essentially...100% is max.
             public static readonly int FIRING_COOLDOWN = 100; //For the timer. Lower numbers means faster rate of bullets per minute.
 
             public static readonly int BOT_FIRING_COOLDOWN = 1000;
