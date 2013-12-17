@@ -26,7 +26,7 @@ namespace Networking
         public NetworkSession networkSession = null;
         public PacketReader reader;
         public PacketWriter writer;
-        public SendDataOptions dataOptions = SendDataOptions.Reliable;
+        public SendDataOptions dataOptions = SendDataOptions.ReliableInOrder;
 
         /// <summary>
         /// Progress is a message to announce to the other player how much progress has been made
@@ -335,6 +335,7 @@ namespace Networking
 
         public void fireBullet(Bullet bullet)
         {
+            dataOptions = SendDataOptions.Reliable;
             writer.Write((byte)MessageType.FireBullet);
             writer.Write(bullet.startPosition);
             writer.Write(bullet.Velocity);
@@ -362,6 +363,7 @@ namespace Networking
 
         public void announceLevel(int levelNumber)
         {
+            dataOptions = SendDataOptions.ReliableInOrder;
             writer.Write((byte)MessageType.Level);
             writer.Write((int)levelNumber);
         }
@@ -375,6 +377,7 @@ namespace Networking
 
         public void playerUpdate(LocalPlayer player)
         {
+            dataOptions = SendDataOptions.Chat;
             writer.Write((byte)MessageType.PlayerUpdate);
             writer.Write(player.gamer.Gamertag);
             writer.Write(player.Position);
@@ -397,6 +400,7 @@ namespace Networking
 
         public void newJuggernaut(NetworkGamer gamer) //Announces who shall be the new juggernaut.
         {
+            dataOptions = SendDataOptions.ReliableInOrder;
             writer.Write((byte)MessageType.NewJuggernaut);
             writer.Write(gamer.Gamertag);
             Global.msgNewJuggernaut(gamer.Gamertag); //Fires off a message to the message displayer unit.
@@ -445,6 +449,7 @@ namespace Networking
 
         public void juggernautKill() //Juggernaut earns a kill.
         {
+            dataOptions = SendDataOptions.ReliableInOrder;
             writer.Write((byte)MessageType.JuggernautKill);
         }
 
@@ -462,6 +467,7 @@ namespace Networking
 
         public void announceWinner(NetworkGamer gamer)
         {
+            dataOptions = SendDataOptions.ReliableInOrder;
             writer.Write((byte)MessageType.AnnounceWinner);
             writer.Write(gamer.Gamertag);
         }
