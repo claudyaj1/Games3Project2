@@ -18,8 +18,8 @@ using Geometry;
 
 namespace AI
 {
-    
-    public class BugBot
+
+    public class BugBot : Collidable
     {
         public Vector3 position;
         public Vector3 direction;
@@ -30,10 +30,13 @@ namespace AI
         public int lastFiringTime;
         public const int ATTACK_RADIUS = 100;
         public readonly int npcID;
+        private int health;
+        public int spawnerTimer;
 
         Sphere body;
 
         public BugBot(Vector3 position, float speed, Vector3 point1, Vector3 point2, Vector3 point3, Vector3 point4)
+            : base(Global.game, position, Vector3.Zero, Global.Constants.PLAYER_RADIUS/2)
         {
             this.position = position;
             body = new Sphere(Global.game, Color.GhostWhite, this.position);
@@ -48,6 +51,8 @@ namespace AI
             Alive = true;
             lastFiringTime = 0;
             npcID = -(new Random().Next(100));
+            spawnerTimer = 600;
+            health = Global.Constants.MAX_HEALTH;
 
         }
         
@@ -84,16 +89,74 @@ namespace AI
                             dir.Normalize();
                             ShootBullet(dir);
                             lastFiringTime = 0;
+
                         }
                     }
                 }
+                foreach (LocalPlayer player in Global.localPlayers)
+                {
+                    if (player.isJuggernaut && (position - player.Position).Length() < BugBot.ATTACK_RADIUS)
+                    {
+                        //move point if player is in range of bot
+                        movePoint(pointCount, player.Position);
+
+                    }
+                }
+                for (int i = 0; i < Global.BulletManager.bullets.Count; ++i)
+                {
+                    if (Global.Collision.didCollide(Global.BulletManager.bullets[i], this))
+                    {
+                        if (Global.BulletManager.bullets[i].timeLived < Global.Constants.BULLET_POWER_DISTANCE)
+                        {
+                            health -= Global.BulletManager.bullets[i].damage;
+                        }
+                        else
+                        {
+                            health -= Global.BulletManager.bullets[i].damage * 2;
+                        }
+                        if (health < 0)
+                        {
+                            //GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, Global.Constants.VIBRATION_LOW, 0f);
+                            killBot();
+                        }
+                        else
+                        {
+                            //GamePad.SetVibration(gamer.SignedInGamer.PlayerIndex, 0f, Global.Constants.VIBRATION_HIGH);
+                        }
+                        Global.BulletManager.bullets[i].disable();
+                    }
+                }
+
+            }
+            else
+            {
+                if (spawnerTimer <= 0)
+                {
+                    reviveBot();
+                    spawnerTimer = 600;
+                }
+                spawnerTimer--;
             }
 
         }
 
+        public void killBot()
+        {
+            Alive = false;
+        }
+
+        public void reviveBot()
+        {
+            Alive = true;
+            health = Global.Constants.MAX_HEALTH;
+        }
+
         public void draw()
         {
-            body.Draw(Global.CurrentCamera);
+            if (Alive)
+            {
+                body.Draw(Global.CurrentCamera);
+            }
         }
 
         public void ShootBullet(Vector3 dir)
@@ -110,6 +173,22 @@ namespace AI
             newDir.Z += Global.rand.Next(-1500, 1500) / 1000;
 
             return newDir;
+        }
+
+        //movePoint is for the AI to change trajectory points based on 
+        //player interaction.
+        //int ptIndex -- passes in the index of the point to move.
+        //Vector3 target -- passes in the direction from the point to the player being shot.
+        public void movePoint(int ptIndex, Vector3 target)
+        {
+            Vector3 ptDir = target - points[ptIndex];
+            ptDir.Normalize();
+            points[ptIndex] += Global.Constants.ptSpeed * ptDir;
+        }
+
+        public Vector3[] getBotTrajectoryPoints()
+        {
+            return points;
         }
     }
 }
