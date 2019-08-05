@@ -77,7 +77,7 @@ Menu
 ```
 Flow
 ```
-- [X] Each round will end when an abritrary hard-coded score limit is reached.
+- [X] Each round will end when an arbitrary hard-coded score limit is reached.
 - [ ] A new round will load the other map and spawn the players.
 - [ ] Scores shall be reset to zero for all players at the start of a new round.
 ```
